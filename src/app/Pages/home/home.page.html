@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;">
+      Menú
+      <div class="user-label">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  
+  <ion-item lines="none">
+    <ion-icon *ngIf="leftHiden"  name="chevron-back-outline" (click)="prev()" class="custom-button-left"></ion-icon>
+    <ion-label style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;" class="ion-text-center">{{actualDayName}}, {{actualDayNumber}}</ion-label>
+    <ion-icon *ngIf="rightHiden"  name="chevron-forward-outline" (click)="next()" class="custom-button-right"></ion-icon>
+  </ion-item>
+    
+  <div class="carousel-container">
+    <div class="card-container">
+      <ion-card color="primary" class="card" data-text="Estandar"></ion-card>
+      <ion-card color="secondary" class="card" data-text="Light"></ion-card>
+      <ion-card color="tertiary" class="card" data-text="Proteico"></ion-card>
+    </div>
+
+
+
+    <div class="carousel-content-wrapper">
+      <div class="carousel-content">
+        <div class="carousel-set" *ngFor="let set of carouselSets">
+          <div class="carousel-item" *ngFor="let item of set">{{ item }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

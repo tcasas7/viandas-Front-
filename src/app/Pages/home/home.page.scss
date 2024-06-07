@@ -1,0 +1,150 @@
+#container {
+  text-align: center;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#container p {
+  font-size: 16px;
+  line-height: 22px;
+
+  color: #8c8c8c;
+
+  margin: 0;
+}
+
+#container a {
+  text-decoration: none;
+}
+
+.user-label {
+  float: right;
+  cursor: pointer;
+  display: inline-block;
+  width: 30px;
+  height: 24px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.user-label ion-icon {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.user-label ion-icon:hover {
+  transform: scale(1.15);
+}
+
+ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.carousel-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 20px;
+}
+
+.card {
+  width: 50px;
+  height: 200px;
+  margin-top: 20px;
+  margin-left: -50%;
+  margin-right: -50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: rotate(-90deg);
+  transform-origin: left top;
+  font-size: 16px;
+  color: #333;
+}
+
+.carousel-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 20px;
+  margin-right: 10px;
+}
+
+.carousel-content-wrapper {
+  overflow: hidden;
+  height: calc(200px * 3 + 90px);
+  max-width: 120px;
+}
+
+.carousel-content {
+  display: flex;
+  transition: transform 0.3s ease;
+}
+
+.carousel-set {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  margin-right: 10px;
+}
+
+.carousel-item {
+  width: 110px; /* Ajusta el ancho de los elementos del carrusel */
+  height: 200px; /* Ajusta la altura de los elementos del carrusel */
+  flex-shrink: 0;
+  padding: 10px;
+  padding-top: 10px;
+  box-sizing: border-box;
+  background-color: #ffbdb4;
+  border: 1px solid #ccc;
+  margin-bottom: 30px; /* Espacio entre los elementos del carrusel */
+  text-align: center;
+}
+
+
+.custom-button-left {
+  position: absolute;
+  cursor: pointer;
+  left: 10px;
+  margin: auto;
+  transition: transform 0.3s ease;
+}
+
+.custom-button-right {
+  position: absolute;
+  cursor: pointer;
+  right: 20px;
+  margin: auto;
+}
+
+.custom-button-left:hover {
+  transition: transform 0.3s ease;
+  color: #8c8c8c;
+}
+
+.custom-button-right:hover {
+  transition: transform 0.3s ease;
+  color: #8c8c8c;
+}
+
