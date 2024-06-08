@@ -37,9 +37,9 @@ export class HomePage {
 
   updateCarousel() {
     const carouselContent = document.querySelector('.carousel-content') as HTMLElement;
-    const setWidth = 120; // Ancho del set + margen derecho
+    const setWidth = 77; // Ancho del set + margen derecho
     const translateX = -this.currentIndex * setWidth;
-    carouselContent.style.transform = `translateX(${translateX}px)`;
+    carouselContent.style.transform = `translateX(${translateX}vw)`;
     this.actualDayName = this.dayOfWeek[this.currentIndex];
 
     if(this.currentIndex == 0) {

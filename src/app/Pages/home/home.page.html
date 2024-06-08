@@ -2,15 +2,14 @@
   <ion-toolbar>
     <ion-title style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;">
       Menú
-      <div class="user-label">
-        <ion-icon name="person-outline"></ion-icon>
-      </div>
+      <ion-icon class="user-label" name="person-outline"></ion-icon>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
+<div style="padding-bottom: 1vw;"></div>
 
-<ion-content>
+<ion-content >
   
   <ion-item lines="none">
     <ion-icon *ngIf="leftHiden"  name="chevron-back-outline" (click)="prev()" class="custom-button-left"></ion-icon>
@@ -34,5 +33,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div style="text-align: center;">
+    <ion-button color="primary" class="order-button">Realizar pedido</ion-button>
   </div>
 </ion-content>
