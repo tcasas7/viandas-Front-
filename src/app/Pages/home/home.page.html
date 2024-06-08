@@ -1,13 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;">
-      Menú
-      <ion-icon class="user-label" name="person-outline"></ion-icon>
-    </ion-title>
+    <div class="menu">Menú</div>
+    <div class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="person-outline"></ion-icon></div>
   </ion-toolbar>
 </ion-header>
-
-<div style="padding-bottom: 1vw;"></div>
 
 <ion-content >
   
@@ -19,22 +15,36 @@
     
   <div class="carousel-container">
     <div class="card-container">
-      <ion-card color="primary" class="card" data-text="Estandar"></ion-card>
-      <ion-card color="secondary" class="card" data-text="Light"></ion-card>
-      <ion-card color="tertiary" class="card" data-text="Proteico"></ion-card>
+      <ion-card color="success" class="card" data-text="Estandar"></ion-card>
+      <ion-card color="danger" class="card" data-text="Light"></ion-card>
+      <ion-card color="warning" class="card" data-text="Proteico"></ion-card>
     </div>
 
 
 
     <div class="carousel-content-wrapper">
       <div class="carousel-content">
-        <div class="carousel-set" *ngFor="let set of carouselSets">
-          <div class="carousel-item" *ngFor="let item of set">{{ item }}</div>
+        <div class="carousel-set" *ngFor="let set of carouselSets">         
+          <div class="carousel-item" *ngFor="let item of set">
+              <div class="image-container">
+                <ion-img src="./assets/media/Almondigas.jpg"></ion-img>
+              </div>
+              <div style="margin-top: 0.5vh; margin-bottom: 0px; padding-top: 0px;">
+                {{item.name}}
+              </div>
+              <div style="padding-top: 0.15vh; font-size: 1.6rem;">
+                ${{item.price}}
+                <ion-icon *ngIf="item.cartPressed === true"  class="cart-badge" name="add-outline" (click)="addToCart(item)"></ion-icon>
+                <ion-icon *ngIf="item.cartPressed === false" class="cart-badge" [name]=icon (click)="pressCart(item)"></ion-icon>
+                <ion-badge style="font-size: 1.2rem;" *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
+                <ion-icon *ngIf="item.cartPressed === true && item.total >= 1" class="cart-badge" name="remove-outline" (click)="removeFromCart(item)"></ion-icon>
+              </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div style="text-align: center;">
-    <ion-button color="primary" class="order-button">Realizar pedido</ion-button>
+    <ion-button lines="none" color="primary" class="order-button" (click)="makeOrder()">Realizar pedido</ion-button>
   </div>
 </ion-content>

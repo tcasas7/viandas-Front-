@@ -26,22 +26,28 @@
   text-decoration: none;
 }
 
-.user-label {
-  float: right;
-  cursor: pointer;
-  width: 30px;
+.menu {
+  float: left;
+  width: 50%;
+  text-align: left;
+  vertical-align: bottom;
+  font-size: 1.5rem;
+  width: 50%;
   height: 24px;
-  text-align: center;
-  vertical-align: middle;
+  padding-left: 2vw;
+  font-weight: bold;
 }
 
-.user-label ion-icon {
-  font-size: 24px;
-  transition: transform 0.3s ease;
+.user-label {
+  margin-right: 2vw;
+  cursor: pointer;
+  font-size: 1.5rem;
 }
 
-.user-label ion-icon:hover {
-  transform: scale(1.15);
+.user-div {
+  float: right;
+  width: 50%;
+  text-align: right;
 }
 
 ion-content {
@@ -62,15 +68,17 @@ ion-content {
 }
 
 .card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   width: 14vw;
   height: 22vh;
   min-height: 22vh;
   margin-top: 1vw;
-  margin-bottom: 6vw;
+  margin-bottom: 2vw;
   margin-left: -50%;
   margin-right: -50%;
   position: relative;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .card::before {
@@ -87,13 +95,13 @@ ion-content {
 
 .carousel-content-wrapper {
   overflow: hidden;
-  height: calc(22vh * 3 + 20vw);
+  height: calc(22vh * 3 + 10vw);
   max-width: 76vw;
 }
 
 .carousel-content {
   display: flex;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease;
 }
 
 .carousel-set {
@@ -106,14 +114,11 @@ ion-content {
 .carousel-item {
   width: 76vw; 
   height: 22vh;
-  flex-shrink: 0;
-  padding: 10px;
-  padding-top: 10px;
-  box-sizing: border-box;
-  background-color: #ffbdb4;
-  border: 1px solid #ccc;
-  margin-bottom: 7vw;
-  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 3vw;
+  user-select: none;
 }
 
 
@@ -143,14 +148,40 @@ ion-content {
 }
 
 .order-button {
-  margin-top: 0px;
+  margin-top: 2vh;
   font-size: 16px;
   font-weight: bold;
   height: 6vh;
   width: 88vw;
+  color: #595755;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 ion-button {
   text-transform: none;
  }
  
+ .image-container {
+  width: 100%;
+  height: 16vh;
+  margin: 0px;
+  padding: 0px;
+}
+
+ion-img {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-badge {
+  float: right; 
+  margin-right: 1vh;
+  cursor: pointer;
+  user-select: none;
+}
