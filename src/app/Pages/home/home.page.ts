@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import { CartItem } from 'src/app/Models/CartItem';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 
@@ -34,14 +35,20 @@ export class HomePage {
   carouselSets: any[][] = [];
   currentIndex = 0;
   itemsPerSlide = 3;
-  dayOfWeek = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
+  daysOfWeek: any[] = [
+    { "day": 'Lunes', "class": 'monday'},
+    { "day": 'Martes', "class": 'tuestday'},
+    { "day": 'Miercoles', "class": 'wednesday'},
+    { "day": 'Jueves', "class": 'thursday'},
+    { "day": 'Viernes', "class": 'friday'}
+  ]
   icon: string = "cart-outline"
 
   leftHiden: boolean = false;
   rightHiden: boolean = true;
 
   actualDayNumber = 1;
-  actualDayName: string;
+  actualDayName: any;
 
   totalUnits: number = 0;
 
@@ -51,14 +58,25 @@ export class HomePage {
   priceLight!: 4500;
   priceProteic!: 5200;
 
+  isDesktop!: boolean;
+
   constructor(
     private alertTool: AlertTool,
-    private router: Router
-  ) {
+    private router: Router,
+    private platform: Platform
+    ) {
+      this.initializeApp();
 
-    this.instanceItems();
+      this.instanceItems();
     
-    this.actualDayName = this.dayOfWeek[this.currentIndex];
+      this.actualDayName = this.daysOfWeek[this.currentIndex].day;
+  }
+
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.isDesktop = this.platform.is('desktop');
+    });
   }
 
   instanceItems() {
@@ -115,7 +133,7 @@ export class HomePage {
     const setWidth = 77; // Ancho del set + margen derecho
     const translateX = -this.currentIndex * setWidth;
     carouselContent.style.transform = `translateX(${translateX}vw)`;
-    this.actualDayName = this.dayOfWeek[this.currentIndex];
+    this.actualDayName = this.daysOfWeek[this.currentIndex].day;
 
     if(this.currentIndex == 0) {
       this.leftHiden = false;

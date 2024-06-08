@@ -64,7 +64,7 @@ ion-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-left: 20px;
+  padding-left: 1vw;
 }
 
 .card {
@@ -187,3 +187,67 @@ ion-img {
   cursor: pointer;
   user-select: none;
 }
+
+@media (min-width: 769px) {
+  .carousel-content-wrapper {
+    overflow: hidden;
+    height: calc(22vh * 3 + 10vw);
+    max-width: 78vw;
+  }
+
+  .carousel-item {
+    width: 14.5vw; 
+    height: 22vh;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 3vw;
+    user-select: none;
+  }
+}
+
+.monday {
+  width: 14.5vw;
+  margin-left: 0.5vw;
+  margin-right: 2.5vw;
+  text-align: center;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.tuestday {
+  width: 14.5vw;
+  margin-left: 0.75vw;
+  margin-right: 2vw;
+  text-align: center;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.wednesday{
+  width: 14.5vw;
+  margin-left: 1.5vw;
+  margin-right: 1.5vw;
+  text-align: center;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.thursday {
+  width: 14.5vw;
+  margin-left: 2vw;
+  margin-right: 0.75vw;
+  text-align: center;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.friday {
+  width: 14.5vw;
+  margin-left: 2.5vw;
+  margin-right: 0.5vw;
+  text-align: center;
+  font-weight: bold;
+  font-size: larger;
+}
+

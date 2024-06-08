@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="dark">
+  <ion-toolbar>
     <div class="menu">Menú</div>
     <div class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="person-outline"></ion-icon></div>
   </ion-toolbar>
@@ -7,10 +7,14 @@
 
 <ion-content >
   
-  <ion-item lines="none">
+  <ion-item *ngIf="!isDesktop"  lines="none">
     <ion-icon *ngIf="leftHiden"  name="chevron-back-outline" (click)="prev()" class="custom-button-left"></ion-icon>
     <ion-label style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;" class="ion-text-center">{{actualDayName}}, {{actualDayNumber}}</ion-label>
     <ion-icon *ngIf="rightHiden"  name="chevron-forward-outline" (click)="next()" class="custom-button-right"></ion-icon>
+  </ion-item>
+  
+  <ion-item *ngIf="isDesktop"  color="none" lines="none" style="margin-left: 14.99vw; width: 76.5vw;">
+    <div [class]="day.class" *ngFor="let day of daysOfWeek">{{day.day}}, {{daysOfWeek.indexOf(day) + 1}}</div>
   </ion-item>
     
   <div class="carousel-container">
@@ -36,7 +40,7 @@
                 ${{item.price}}
                 <ion-icon *ngIf="item.cartPressed === true"  class="cart-badge" name="add-outline" (click)="addToCart(item)"></ion-icon>
                 <ion-icon *ngIf="item.cartPressed === false" class="cart-badge" [name]=icon (click)="pressCart(item)"></ion-icon>
-                <ion-badge *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
+                <ion-badge style="cursor:default;" *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
                 <ion-icon *ngIf="item.cartPressed === true && item.total >= 1" class="cart-badge" name="remove-outline" (click)="removeFromCart(item)"></ion-icon>
               </div>
           </div>
