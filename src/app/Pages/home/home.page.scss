@@ -101,7 +101,7 @@ ion-content {
 
 .carousel-content {
   display: flex;
-  transition: transform 0.25s ease;
+  transition: transform 0.5s ease;
 }
 
 .carousel-set {
@@ -121,13 +121,13 @@ ion-content {
   user-select: none;
 }
 
-
 .custom-button-left {
   position: absolute;
   cursor: pointer;
   left: 10px;
   margin: auto;
   transition: transform 0.3s ease;
+  color: #3d3d3d;
 }
 
 .custom-button-right {
@@ -135,6 +135,8 @@ ion-content {
   cursor: pointer;
   right: 20px;
   margin: auto;
+  transition: transform 0.3s ease;
+  color: #3d3d3d;
 }
 
 .custom-button-left:hover {

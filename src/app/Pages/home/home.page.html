@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="dark">
     <div class="menu">Menú</div>
     <div class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="person-outline"></ion-icon></div>
   </ion-toolbar>
@@ -29,14 +29,14 @@
               <div class="image-container">
                 <ion-img src="./assets/media/Almondigas.jpg"></ion-img>
               </div>
-              <div style="margin-top: 0.5vh; margin-bottom: 0px; padding-top: 0px;">
+              <div style="margin-top: 0.5vh; margin-bottom: 0px; padding-top: 0px; font-size: 2vh;">
                 {{item.name}}
               </div>
-              <div style="padding-top: 0.15vh; font-size: 1.6rem;">
+              <div style="padding-top: 0.15vh; font-size: 2.5vh;  font-weight: bold;">
                 ${{item.price}}
                 <ion-icon *ngIf="item.cartPressed === true"  class="cart-badge" name="add-outline" (click)="addToCart(item)"></ion-icon>
                 <ion-icon *ngIf="item.cartPressed === false" class="cart-badge" [name]=icon (click)="pressCart(item)"></ion-icon>
-                <ion-badge style="font-size: 1.2rem;" *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
+                <ion-badge *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
                 <ion-icon *ngIf="item.cartPressed === true && item.total >= 1" class="cart-badge" name="remove-outline" (click)="removeFromCart(item)"></ion-icon>
               </div>
           </div>

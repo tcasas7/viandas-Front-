@@ -43,7 +43,7 @@ export class HomePage {
   actualDayNumber = 1;
   actualDayName: string;
 
-  total: number = 0;
+  totalUnits: number = 0;
 
   modalOpened: boolean = false;
 
@@ -56,6 +56,12 @@ export class HomePage {
     private router: Router
   ) {
 
+    this.instanceItems();
+    
+    this.actualDayName = this.dayOfWeek[this.currentIndex];
+  }
+
+  instanceItems() {
     this.item1.name = "Albondigas con arroz";
     this.item1.price = 4900;
     this.item4.name = "Tallarines";
@@ -96,7 +102,6 @@ export class HomePage {
       this.item10, this.item11, this.item12,
       this.item13, this.item14, this.item15,);
     this.initializeCarouselSets();
-    this.actualDayName = this.dayOfWeek[this.currentIndex];
   }
 
   initializeCarouselSets() {
@@ -140,7 +145,7 @@ export class HomePage {
 
   addToCart(item: CartItem) {
     item.total ++;
-    this.total++;
+    this.totalUnits++;
   }
 
   removeFromCart(item: CartItem) {
@@ -148,7 +153,7 @@ export class HomePage {
       item.cartPressed = false;
 
     item.total--;
-    this.total--;
+    this.totalUnits--;
   }
 
   pressCart(item: CartItem) {
@@ -160,7 +165,7 @@ export class HomePage {
   }
 
   makeOrder() {
-    if(this.total === 0) {
+    if(this.totalUnits === 0) {
       this.alertTool.presentToast("No tenes ningún producto en tu carrito");
     } else {
       this.alertTool.presentToast("Mostrar modal");
