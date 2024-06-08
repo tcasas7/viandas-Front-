@@ -9,7 +9,7 @@
   
   <ion-item *ngIf="!isDesktop"  lines="none">
     <ion-icon *ngIf="leftHiden"  name="chevron-back-outline" (click)="prev()" class="custom-button-left"></ion-icon>
-    <ion-label style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;" class="ion-text-center">{{actualDayName}}, {{actualDayNumber}}</ion-label>
+    <ion-label style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;" class="ion-text-center"><b>{{actualDayName}}</b>, {{actualDayNumber}}</ion-label>
     <ion-icon *ngIf="rightHiden"  name="chevron-forward-outline" (click)="next()" class="custom-button-right"></ion-icon>
   </ion-item>
   
@@ -40,7 +40,7 @@
                 ${{item.price}}
                 <ion-icon *ngIf="item.cartPressed === true"  class="cart-badge" name="add-outline" (click)="addToCart(item)"></ion-icon>
                 <ion-icon *ngIf="item.cartPressed === false" class="cart-badge" [name]=icon (click)="pressCart(item)"></ion-icon>
-                <ion-badge style="cursor:default;" *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
+                <ion-badge style="cursor:;" *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
                 <ion-icon *ngIf="item.cartPressed === true && item.total >= 1" class="cart-badge" name="remove-outline" (click)="removeFromCart(item)"></ion-icon>
               </div>
           </div>
