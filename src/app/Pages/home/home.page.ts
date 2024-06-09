@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { CartItem } from 'src/app/Models/CartItem';
+import { MenuDTO } from 'src/app/Models/MenuDTO';
+import { ResponseObjectList } from 'src/app/Models/Response/ResponseObjList';
+import { MenusService } from 'src/app/Services/MenusService/menus.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 
 @Component({
@@ -54,17 +58,35 @@ export class HomePage {
 
   modalOpened: boolean = false;
 
-  priceStandard!: 4900;
-  priceLight!: 4500;
-  priceProteic!: 5200;
+  priceStandard: number = 4900;
+  priceLight: number = 4500;
+  priceProteic: number = 5200;
 
   isDesktop!: boolean;
+
+  profileImageUrl: any;
+
+  message!: ResponseObjectList<MenuDTO>;
+
+  menus: MenuDTO[];
+
+  standardItems: CartItem[];
+  lightItems: CartItem[];
+  proteicItems: CartItem[];
 
   constructor(
     private alertTool: AlertTool,
     private router: Router,
-    private platform: Platform
+    private platform: Platform, 
+    private sanitizer: DomSanitizer, 
+    private menuService: MenusService
     ) {
+      this.menus = new Array<MenuDTO>();
+      this.standardItems = new Array<CartItem>()
+      this.lightItems = new Array<CartItem>()
+      this.proteicItems = new Array<CartItem>()
+      this.carouselItems = new Array<CartItem>()
+
       this.initializeApp();
 
       this.instanceItems();
@@ -72,6 +94,9 @@ export class HomePage {
       this.actualDayName = this.daysOfWeek[this.currentIndex].day;
   }
 
+  ionViewDidEnter(){
+    this.makeImageGuid();
+  }
 
   initializeApp() {
     this.platform.ready().then(() => {
@@ -80,7 +105,7 @@ export class HomePage {
   }
 
   instanceItems() {
-    this.item1.name = "Albondigas con arroz";
+    /*this.item1.name = "Albondigas con arroz";
     this.item1.price = 4900;
     this.item4.name = "Tallarines";
     this.item4.price = 4900;
@@ -118,8 +143,16 @@ export class HomePage {
       this.item4, this.item5, this.item6,
       this.item7, this.item8, this.item9,
       this.item10, this.item11, this.item12,
-      this.item13, this.item14, this.item15,);
-    this.initializeCarouselSets();
+      this.item13, this.item14, this.item15,);*/
+
+    this.menuService.GetAll().subscribe( response => {
+      this.message = response as ResponseObjectList<MenuDTO>;
+      this.menus = this.message.model;
+
+      this.formatToCartItems();
+
+      this.initializeCarouselSets();
+    })
   }
 
   initializeCarouselSets() {
@@ -187,6 +220,45 @@ export class HomePage {
       this.alertTool.presentToast("No tenes ningún producto en tu carrito");
     } else {
       this.alertTool.presentToast("Mostrar modal");
+    }
+  }
+
+  makeImageGuid() {
+    this.menuService.Image(3).subscribe(
+      (response) => {
+        const objectURL = URL.createObjectURL(response);
+        this.profileImageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+      },
+      (error) => {
+        console.error('Error loading profile image', error);
+      }
+    );
+  }
+
+  formatToCartItems() {
+    this.menus.forEach(menu => {
+      menu.products.forEach(prod => {
+        var item = new CartItem();
+        item.Id = prod.Id;
+        item.day = prod.day;
+        item.name = prod.name;
+        item.category = menu.category;
+
+        if(item.category === "Estandar") {
+          item.price = this.priceStandard;
+          this.standardItems.push(item);
+        } else if(item.category === "Light") {
+          item.price = this.priceLight;
+          this.lightItems.push(item);
+        } else if(item.category === "Proteico") {
+          item.price = this.priceProteic;
+          this.proteicItems.push(item);
+        }
+      });
+    });
+
+    for(let i = 0; i < 5; i++) {
+      this.carouselItems.push(this.standardItems[i], this.lightItems[i], this.proteicItems[i]);
     }
   }
 }

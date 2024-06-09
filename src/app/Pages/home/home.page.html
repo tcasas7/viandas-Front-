@@ -31,7 +31,8 @@
         <div class="carousel-set" *ngFor="let set of carouselSets">         
           <div class="carousel-item" *ngFor="let item of set">
               <div class="image-container">
-                <ion-img src="./assets/media/Almondigas.jpg"></ion-img>
+                <img class="image-default" *ngIf="!((set.indexOf(item) + 1) % 2)" src="./assets/media/Default.png">
+                <img class="image-good" *ngIf="(set.indexOf(item) + 1) % 2" [src]="profileImageUrl || './assets/media/Calabezas.jpg'">
               </div>
               <div style="margin-top: 0.5vh; margin-bottom: 0px; padding-top: 0px; font-size: 2vh;">
                 {{item.name}}
@@ -40,7 +41,7 @@
                 ${{item.price}}
                 <ion-icon *ngIf="item.cartPressed === true"  class="cart-badge" name="add-outline" (click)="addToCart(item)"></ion-icon>
                 <ion-icon *ngIf="item.cartPressed === false" class="cart-badge" [name]=icon (click)="pressCart(item)"></ion-icon>
-                <ion-badge style="cursor:;" *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
+                <ion-badge style="cursor: default;" *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
                 <ion-icon *ngIf="item.cartPressed === true && item.total >= 1" class="cart-badge" name="remove-outline" (click)="removeFromCart(item)"></ion-icon>
               </div>
           </div>
