@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
@@ -35,13 +35,13 @@ export class HomePage {
   item14: CartItem = new CartItem();
   item15: CartItem = new CartItem();
 
-  carouselItems = new Array;
+  carouselItems: CartItem[];
   carouselSets: any[][] = [];
   currentIndex = 0;
   itemsPerSlide = 3;
   daysOfWeek: any[] = [
     { "day": 'Lunes', "class": 'monday'},
-    { "day": 'Martes', "class": 'tuestday'},
+    { "day": 'Martes', "class": 'tuesday'},
     { "day": 'Miercoles', "class": 'wednesday'},
     { "day": 'Jueves', "class": 'thursday'},
     { "day": 'Viernes', "class": 'friday'}
@@ -79,7 +79,8 @@ export class HomePage {
     private router: Router,
     private platform: Platform, 
     private sanitizer: DomSanitizer, 
-    private menuService: MenusService
+    private menuService: MenusService,
+    private cdr: ChangeDetectorRef
     ) {
       this.menus = new Array<MenuDTO>();
       this.standardItems = new Array<CartItem>()
@@ -89,13 +90,9 @@ export class HomePage {
 
       this.initializeApp();
 
-      this.instanceItems();
+      
     
       this.actualDayName = this.daysOfWeek[this.currentIndex].day;
-  }
-
-  ionViewDidEnter(){
-    this.makeImageGuid();
   }
 
   initializeApp() {
@@ -104,55 +101,21 @@ export class HomePage {
     });
   }
 
-  instanceItems() {
-    /*this.item1.name = "Albondigas con arroz";
-    this.item1.price = 4900;
-    this.item4.name = "Tallarines";
-    this.item4.price = 4900;
-    this.item7.name = "Carbonada de pollo";
-    this.item7.price = 4900;
-    this.item10.name = "Brochette de cerdo";
-    this.item10.price = 4900;
-    this.item13.name = "Ternera";
-    this.item13.price = 4900;
-
-    this.item2.name = "Omelette de zanahoria y zuccini";
-    this.item2.price = 4500;
-    this.item5.name = "Milanesa de calabaza";
-    this.item5.price = 4500;
-    this.item8.name = "Wok de fideos de arroz";
-    this.item8.price = 4500;
-    this.item11.name = "Cazuela veggie";
-    this.item11.price = 4500;
-    this.item14.name = "Tarta capresse";
-    this.item14.price = 4500;
-
-    this.item3.name = "Lasagna proteica";
-    this.item3.price = 5200;
-    this.item6.name = "Pollo al disco";
-    this.item6.price = 5200;
-    this.item9.name = "Pastel de cerdo braseado";
-    this.item9.price = 5200;
-    this.item12.name = "Ternera con zapallitos";
-    this.item12.price = 5200;
-    this.item15.name = "Planchita de pollo";
-    this.item15.price = 5200;
-
-    this.carouselItems.push(
-      this.item1, this.item2, this.item3,
-      this.item4, this.item5, this.item6,
-      this.item7, this.item8, this.item9,
-      this.item10, this.item11, this.item12,
-      this.item13, this.item14, this.item15,);*/
-
-    this.menuService.GetAll().subscribe( response => {
+  async instanceItems() {
+    try {
+      const response = await this.menuService.GetAll().toPromise();
       this.message = response as ResponseObjectList<MenuDTO>;
       this.menus = this.message.model;
-
-      this.formatToCartItems();
-
+  
+      await this.formatToCartItems();
       this.initializeCarouselSets();
-    })
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  ionViewWillEnter(){
+    this.instanceItems();
   }
 
   initializeCarouselSets() {
@@ -223,42 +186,69 @@ export class HomePage {
     }
   }
 
-  makeImageGuid() {
-    this.menuService.Image(3).subscribe(
-      (response) => {
-        const objectURL = URL.createObjectURL(response);
-        this.profileImageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-      },
-      (error) => {
-        console.error('Error loading profile image', error);
-      }
-    );
+  makeImageGuid(id: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.menuService.Image(id).subscribe(
+        (response) => {
+          const objectURL = URL.createObjectURL(response);
+          resolve(objectURL);
+        },
+        (error) => {
+          reject(null);
+        }
+      );
+    });
   }
+  
 
-  formatToCartItems() {
-    this.menus.forEach(menu => {
-      menu.products.forEach(prod => {
-        var item = new CartItem();
-        item.Id = prod.Id;
+  async setImageForItem(item: any) {
+    try {
+      const url = await this.makeImageGuid(item.id);
+      const sanitizedUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+      item.image = sanitizedUrl;
+    } catch (error) {
+      console.log('Error fetching image', error);
+      item.image = '';
+    }
+  }
+  
+
+  async formatToCartItems() {
+    for (const menu of this.menus) {
+      for (const prod of menu.products) {
+        const item = new CartItem();
+        item.id = prod.id;
         item.day = prod.day;
         item.name = prod.name;
+
+        var hasImage = true;
+        if(prod.imageName === "Default")
+          hasImage = false;
+
+        item.hasImage = hasImage;
         item.category = menu.category;
 
-        if(item.category === "Estandar") {
+        await this.setImageForItem(item);
+        if (item.category === 'Estandar') {
           item.price = this.priceStandard;
           this.standardItems.push(item);
-        } else if(item.category === "Light") {
+        } else if (item.category === 'Light') {
           item.price = this.priceLight;
           this.lightItems.push(item);
-        } else if(item.category === "Proteico") {
+        } else if (item.category === 'Proteico') {
           item.price = this.priceProteic;
           this.proteicItems.push(item);
         }
-      });
-    });
-
-    for(let i = 0; i < 5; i++) {
-      this.carouselItems.push(this.standardItems[i], this.lightItems[i], this.proteicItems[i]);
+      }
     }
+  
+    for (let i = 0; i < 5; i++) {
+      this.carouselItems.push(this.standardItems[i], this.lightItems[i], this.proteicItems[i]);  
+    }
+    this.cdr.detectChanges();
+  }
+
+  getSanitizedUrl(imageUrl: any) {
+    return this.sanitizer.bypassSecurityTrustUrl(imageUrl);
   }
 }

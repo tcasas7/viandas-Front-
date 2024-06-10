@@ -1,5 +1,5 @@
 export class CartItem {
-    Id!: number;
+    id!: number;
     day!: number
     name: string = "";
     price: number = 0;
@@ -7,5 +7,6 @@ export class CartItem {
     img!: any;
     cartPressed: boolean = false;
     total: number = 0;
-    image!: string;
+    image!: any;
+    hasImage!: boolean;
 }

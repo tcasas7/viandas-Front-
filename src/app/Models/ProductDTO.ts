@@ -1,5 +1,6 @@
 export class ProductDTO {
-    Id!: number
+    id!: number
     day!: number
     name!: string
+    imageName!: string;
 }
