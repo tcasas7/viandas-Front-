@@ -1,3 +1,4 @@
+import { AuthService } from './../../Services/AuthService/auth.service';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -80,7 +81,8 @@ export class HomePage {
     private platform: Platform, 
     private sanitizer: DomSanitizer, 
     private menuService: MenusService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
     ) {
       this.menus = new Array<MenuDTO>();
       this.standardItems = new Array<CartItem>()
