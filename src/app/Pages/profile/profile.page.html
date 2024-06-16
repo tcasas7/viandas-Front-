@@ -1,11 +1,34 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Perfil</ion-title>
+    <div class="user-div"><ion-icon (click)="navigateToHome()" class="user-label" name="arrow-back-outline"></ion-icon></div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div>
+  <div style="text-align: center;">
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="person-outline"></ion-icon>
+        <b> Nombre: </b>Francisco Fernandez
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="mail-outline"></ion-icon>
+        <b> Correo electronico: </b> cejita678"gmail.com
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="call-outline"></ion-icon>
+        <b> Telefono: </b> +54 2235834483
+      </ion-label>
+
+    </ion-item>
+  </div>
+  <div style="text-align: center;">
     <ion-button (click)="navigateToHome()">Menú</ion-button>
   </div>
 </ion-content>

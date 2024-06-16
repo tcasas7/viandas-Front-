@@ -1,22 +1,22 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <div class="menu">Menú</div>
-    <div class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="person-outline"></ion-icon></div>
+    <div *ngIf="logged === true" class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="person-outline"></ion-icon></div>
+    <div *ngIf="logged === false" class="user-div"><ion-icon (click)="navigateToLogin()" class="user-label" name="log-in-outline"></ion-icon></div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
-  
+<ion-content>
   <ion-item *ngIf="!isDesktop"  lines="none">
     <ion-icon *ngIf="leftHiden"  name="chevron-back-outline" (click)="prev()" class="custom-button-left"></ion-icon>
     <ion-label style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;" class="ion-text-center"><b>{{actualDayName}}</b>, {{actualDayNumber}}</ion-label>
     <ion-icon *ngIf="rightHiden"  name="chevron-forward-outline" (click)="next()" class="custom-button-right"></ion-icon>
   </ion-item>
-  
+
   <ion-item *ngIf="isDesktop"  color="none" lines="none" style="margin-left: 14.99vw; width: 76.5vw;">
     <div [class]="day.class" *ngFor="let day of daysOfWeek">{{day.day}}, {{daysOfWeek.indexOf(day) + 1}}</div>
   </ion-item>
-    
+
   <div class="carousel-container">
     <div class="card-container">
       <ion-card color="warning" class="card" data-text="Estandar"></ion-card>
@@ -26,7 +26,7 @@
 
     <div class="carousel-content-wrapper">
       <div class="carousel-content">
-        <div class="carousel-set" *ngFor="let set of carouselSets">         
+        <div class="carousel-set" *ngFor="let set of carouselSets">
           <div class="carousel-item" *ngFor="let item of set">
               <div class="image-container">
                 <img class="image-default" *ngIf="!item.image || !item.hasImage" src="./assets/media/Default.png">
@@ -35,7 +35,7 @@
               <div style="margin-top: 0.5vh; margin-bottom: 0px; padding-top: 0px; font-size: 2vh;">
                 {{item.name}}
               </div>
-              <div style="padding-top: 0.15vh; font-size: 2.5vh;  font-weight: bold;">
+              <div style="padding-top: 0.15vh; font-size: 2.5vh; font-weight: bold;">
                 ${{item.price}}
                 <ion-icon *ngIf="item.cartPressed === true"  class="cart-badge" name="add-outline" (click)="addToCart(item)"></ion-icon>
                 <ion-icon *ngIf="item.cartPressed === false" class="cart-badge" [name]=icon (click)="pressCart(item)"></ion-icon>

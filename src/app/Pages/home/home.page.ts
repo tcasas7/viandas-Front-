@@ -1,12 +1,14 @@
-import { AuthService } from './../../Services/AuthService/auth.service';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
+import { LoadingController, Platform } from '@ionic/angular';
 import { CartItem } from 'src/app/Models/CartItem';
 import { MenuDTO } from 'src/app/Models/MenuDTO';
 import { ResponseObjectList } from 'src/app/Models/Response/ResponseObjList';
+import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
+import { UserDTO } from 'src/app/Models/UserDTO';
 import { MenusService } from 'src/app/Services/MenusService/menus.service';
+import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 
 @Component({
@@ -15,6 +17,10 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+
+  dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
+
+  logged: boolean = false;
 
   item1: CartItem = new CartItem();
   item2: CartItem = new CartItem();
@@ -82,7 +88,8 @@ export class HomePage {
     private sanitizer: DomSanitizer, 
     private menuService: MenusService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private userService: UsersService,
+    private loadingCtrl: LoadingController
     ) {
       this.menus = new Array<MenuDTO>();
       this.standardItems = new Array<CartItem>()
@@ -91,8 +98,6 @@ export class HomePage {
       this.carouselItems = new Array<CartItem>()
 
       this.initializeApp();
-
-      
     
       this.actualDayName = this.daysOfWeek[this.currentIndex].day;
   }
@@ -111,12 +116,33 @@ export class HomePage {
   
       await this.formatToCartItems();
       this.initializeCarouselSets();
+      this.closeLoader();
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
 
   ionViewWillEnter(){
+
+    if(localStorage.getItem("Logged") === "true") {
+      this.logged = true;
+    }
+    else {
+      this.logged = false;
+    }
+
+    this.makeLoadingAnimation();
+
+    if(this.logged) {
+      this.userService.GetData().subscribe( response => {
+        this.dataResponse = response as ResponseObjectModel<UserDTO>;
+
+        localStorage.setItem("firstName", this.dataResponse.model.firstName);
+        localStorage.setItem("lastName", this.dataResponse.model.lastName);
+
+        console.log(this.dataResponse);
+      })
+    }
     this.instanceItems();
   }
 
@@ -174,17 +200,22 @@ export class HomePage {
 
   pressCart(item: CartItem) {
     item.cartPressed = true;
+    this.addToCart(item);
   }
 
   navigateToProfile() {
-    this.router.navigate(["/profile"])
+    this.router.navigate(["/profile"]);
+  }
+
+  navigateToLogin() {
+    this.router.navigate(["/login"]);
   }
 
   makeOrder() {
     if(this.totalUnits === 0) {
       this.alertTool.presentToast("No tenes ningún producto en tu carrito");
     } else {
-      this.alertTool.presentToast("Mostrar modal");
+      this.alertTool.presentAlert("Debes iniciar sesión para poder realizar el pedido", "Iniciar sesión", "Viandas del Sur");
     }
   }
 
@@ -253,4 +284,31 @@ export class HomePage {
   getSanitizedUrl(imageUrl: any) {
     return this.sanitizer.bypassSecurityTrustUrl(imageUrl);
   }
+
+  makeLoadingAnimation() {
+    this.loadingCtrl.getTop().then(hasLoading => {
+      if (!hasLoading) {
+          this.loadingCtrl.create({
+              spinner: 'circular',
+              cssClass: "custom-loading"
+          }).then(loading => loading.present());
+      }
+  })
+}
+
+async closeLoader() {
+  
+    this.checkAndCloseLoader();
+  
+    setTimeout(() => this.checkAndCloseLoader(), 500);
+}
+
+async checkAndCloseLoader() {
+   
+   const loader = await this.loadingCtrl.getTop();
+   
+    if(loader !== undefined) { 
+      await this.loadingCtrl.dismiss();
+    }
+}
 }

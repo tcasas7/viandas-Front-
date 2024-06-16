@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { Injectable } from "@angular/core";
 import { AlertController, ToastController } from "@ionic/angular";
 
@@ -9,8 +8,8 @@ import { AlertController, ToastController } from "@ionic/angular";
 export class AlertTool {
     constructor(
       private alertController: AlertController, 
-      private toastController: ToastController,
-      private router: Router){}
+      private toastController: ToastController
+    ){}
 
     async presentAlert(message: string, subHeader: string, header: string) {
         const alert = await this.alertController.create({
@@ -18,6 +17,7 @@ export class AlertTool {
           subHeader: subHeader,
           message: message,
           buttons: ['OK'],
+          cssClass: "alertMessage"
         });
 
         await alert.present();
@@ -29,6 +29,7 @@ export class AlertTool {
           duration: 2000,
           position: 'bottom',
           cssClass: "centeredToast",
+          color: 'dark'
         }).then(res => res.present());
       }
 }
