@@ -9,26 +9,26 @@
     <ion-item>
       <ion-label style="padding-right: 0px; font-size: 2vh;">
         <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="person-outline"></ion-icon>
-        <b> Nombre: </b>Francisco Fernandez
+        <b> Nombre: </b> {{user.firstName}} {{user.lastName}}
       </ion-label>
     </ion-item>
 
     <ion-item>
       <ion-label style="padding-right: 0px; font-size: 2vh;">
         <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="mail-outline"></ion-icon>
-        <b> Correo electronico: </b> cejita678"gmail.com
+        <b> Correo electrónico: </b> {{user.email}}
       </ion-label>
     </ion-item>
 
     <ion-item>
       <ion-label style="padding-right: 0px; font-size: 2vh;">
         <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="call-outline"></ion-icon>
-        <b> Telefono: </b> +54 2235834483
+        <b> Teléfono: </b> {{user.phone}}
       </ion-label>
 
     </ion-item>
   </div>
   <div style="text-align: center;">
-    <ion-button (click)="navigateToHome()">Menú</ion-button>
+    <ion-button color="primary" (click)="logOut()">Cerrar sesión</ion-button>
   </div>
 </ion-content>

@@ -51,7 +51,6 @@ ion-loading.custom-loading {
     .loading-wrapper {
       background: transparent !important;
       box-shadow: none !important;
-      
     }
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(3px);
   }

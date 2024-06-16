@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div class="user-div"><ion-icon (click)="navigateToHome()" class="user-label" name="arrow-back-outline"></ion-icon></div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div style="margin-bottom: 20vh;"></div>
+    <ion-card color="dark" style=" width: 77vw; margin: 0 auto;">
+      <ion-item lines="none" color="translucent" class="tittle-item">Iniciar sesión</ion-item>
+      <form [formGroup]="loginForm">
+      <ion-item color="translucent">
+        <ion-input 
+        style="margin: 0 auto; border-radius: 20px;"
+        label="Email"
+        labelPlacement="floating" 
+        placeholder="ejemplo@dominio.com"
+        formControlName="email"
+        type="email"
+        fill="clear"></ion-input>
+      </ion-item>
+      <ion-item color="translucent">
+        <ion-input
+        style="margin: 0 auto;"
+        label="Contraseña"
+        labelPlacement="floating"
+        placeholder="Contraseña"
+        formControlName="password"
+        type="password"
+        fill="clear"></ion-input>
+      </ion-item>
+    </form>
+      <div class="button-container">
+        <ion-button class="login-button" (click)="loginUser()">Iniciar sesión</ion-button>
+      </div>
+      <div class="register-button">
+        No tienes cuenta?
+      </div>
+      <div class="retrieve-password-button">
+        Olvidé mi contraseña
+      </div>
+    </ion-card>
+</ion-content>

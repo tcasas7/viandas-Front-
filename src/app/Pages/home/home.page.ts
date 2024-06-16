@@ -118,6 +118,8 @@ export class HomePage {
       this.initializeCarouselSets();
       this.closeLoader();
     } catch (error) {
+      this.closeLoader();
+      this.alertTool.presentToast("Oops... Ocurrió un error");
       console.error('Error fetching data:', error);
     }
   }

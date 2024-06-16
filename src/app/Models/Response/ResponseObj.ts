@@ -1,4 +1,4 @@
 export class ResponseObject {
     statusCode!: number
-    responseMessage!: string
+    message!: string
 }
