@@ -26,8 +26,9 @@
         labelPlacement="floating"
         placeholder="Contraseña"
         formControlName="password"
-        type="password"
+        type="{{ showPassword ? 'text' : 'password' }}"
         fill="clear"></ion-input>
+        <ion-icon name="{{ showPassword ? 'eye-off' : 'eye' }}" slot="end" (click)="togglePasswordVisibility()"></ion-icon>
       </ion-item>
     </form>
       <div class="button-container">

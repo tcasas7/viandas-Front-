@@ -16,6 +16,8 @@ export class LoginPage {
   loginData: LoginDTO;
   loginForm: FormGroup;
   response!: ResponseObjectModel<string>;
+  password: string = '';
+  showPassword: boolean = false;
 
   constructor(
     private router: Router,
@@ -90,5 +92,8 @@ export class LoginPage {
     if(loader !== undefined) { 
       await this.loadingCtrl.dismiss();
     }
+  }
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }

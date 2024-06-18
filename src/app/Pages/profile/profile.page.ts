@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { LocationDTO } from 'src/app/Models/LocationDTO';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
@@ -17,6 +18,10 @@ export class ProfilePage {
   logged: boolean = false;
   didLoad: boolean = false;
   user: UserDTO;
+  locations: Array<LocationDTO>
+  loc1: LocationDTO;
+  loc2: LocationDTO;
+  loc3: LocationDTO;
 
   constructor(
     private router: Router,
@@ -25,6 +30,21 @@ export class ProfilePage {
     private alertTool: AlertTool
   )
   {
+    this.loc1 = new LocationDTO();
+    this.loc2 = new LocationDTO();
+    this.loc3 = new LocationDTO();
+
+    this.locations = new Array<LocationDTO>();
+
+    this.loc1.Id = 1;
+    this.loc2.Id = 2;
+    this.loc3.Id = 3;
+
+    this.loc1.dir = "José Hernández, 720";
+    this.loc2.dir = "Mendez Funes de Millán, 967";
+    this.loc3.dir = "San Martín, 2734";
+
+    this.locations.push(this.loc1, this.loc2, this.loc3)
     this.user = new UserDTO();
   }
 
@@ -47,6 +67,8 @@ export class ProfilePage {
       localStorage.setItem("firstName", this.dataResponse.model.firstName);
       localStorage.setItem("lastName", this.dataResponse.model.lastName);
       
+      this.user.locations.push(this.loc1, this.loc2, this.loc3);
+
       console.log(this.dataResponse.model);
       this.didLoad = true;
       this.closeLoader();

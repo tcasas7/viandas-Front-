@@ -25,7 +25,15 @@
         <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="call-outline"></ion-icon>
         <b> Teléfono: </b> {{user.phone}}
       </ion-label>
+    </ion-item>
 
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="location-outline"></ion-icon>
+        <ion-select interface="popover" placeholder="Direcciones">
+          <ion-item-option *ngFor="let item of locations">{{item.dir}}</ion-item-option>
+        </ion-select>
+      </ion-label>  
     </ion-item>
   </div>
   <div style="text-align: center;">

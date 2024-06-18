@@ -143,6 +143,9 @@ export class HomePage {
         localStorage.setItem("lastName", this.dataResponse.model.lastName);
 
         console.log(this.dataResponse);
+      }, error => {
+        localStorage.clear();
+        this.logged = false;
       })
     }
     this.instanceItems();
