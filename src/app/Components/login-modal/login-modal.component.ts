@@ -22,6 +22,7 @@ export class LoginModalComponent {
   response!: ResponseObjectModel<string>;
   password: string = '';
   showPassword: boolean = false;
+  isValid: boolean = false;
 
   constructor(
     private router: Router,
@@ -39,10 +40,16 @@ export class LoginModalComponent {
   }
 
   loginUser() {
-    this.loginData.email = this.loginForm.get("email")?.value
-    this.loginData.password = this.loginForm.get("password")?.value
-    this.makeLoadingAnimation();
-    this.doRequest();
+    this.validateFields()
+
+    if(this.isValid) {
+      this.loginData.email = this.loginForm.get("email")?.value
+      this.loginData.password = this.loginForm.get("password")?.value
+      this.makeLoadingAnimation();
+      this.doRequest();
+    } else {
+      this.alertTool.presentToast("Campos vacíos");
+    }
   }
 
   doRequest() {
@@ -65,10 +72,7 @@ export class LoginModalComponent {
         this.alertTool.presentToast("Oops... Ocurrió un error!");  
       }
     })
-  }
-
-  navigateToHome() {
-    this.router.navigate(["/home"]);
+    this.isValid = false;
   }
 
   makeLoadingAnimation() {
@@ -111,5 +115,12 @@ export class LoginModalComponent {
 
   closeModal() {
     this.closeModalEvent.emit();
+  }
+
+  validateFields() {
+    if(((this.loginForm.get("email")?.value !== "") && (this.loginForm.get("email")?.value !== null)) &&
+        ((this.loginForm.get("password")?.value !== "") && (this.loginForm.get("password")?.value !== null))) {
+          this.isValid = true;
+    }
   }
 }
