@@ -42,18 +42,18 @@ export class ChangePasswordModalComponent {
 
   registerUser() {
     this.validateFields();
-    if(this.passwordMatch === true) {
-      if(this.isValid === true) {
+    if(this.isValid === true) {
+      if(this.passwordMatch === true) {
         this.changePasswordData.phone = this.registerForm.get("phone")?.value
       this.changePasswordData.email = this.registerForm.get("email")?.value
       this.changePasswordData.password = this.registerForm.get("password")?.value
       this.makeLoadingAnimation();
       this.doRequest();
       } else {
-        this.alertTool.presentToast("Campos vacíos");
+      this.alertTool.presentToast("Las contraseñas no coinciden");
       }
     } else {
-      this.alertTool.presentToast("Las contraseñas no coinciden");
+      this.alertTool.presentToast("Campos vacíos");
     }
   }
 
@@ -118,9 +118,12 @@ export class ChangePasswordModalComponent {
   }
 
   validateFields() {
-    if(this.registerForm.get("phone")?.value === "" ||
-      this.registerForm.get("email")?.value === "" ||
-      this.registerForm.get("password")?.value === "") {
+    if(((this.registerForm.get("phone")?.value !== "") && (this.registerForm.get("phone")?.value !== null)) &&
+      ((this.registerForm.get("email")?.value !== "") && (this.registerForm.get("email")?.value !== null)) &&
+      ((this.registerForm.get("password")?.value !== "") && (this.registerForm.get("password")?.value !== null))) {
+        console.log(this.registerForm.get("phone")?.value);
+        console.log(this.registerForm.get("email")?.value);
+        console.log(this.registerForm.get("password")?.value);
         this.isValid = true;
       }
     if(this.registerForm.get("password")?.value === this.registerForm.get("repeatPassword")?.value) {
