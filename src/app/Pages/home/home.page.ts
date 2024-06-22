@@ -145,6 +145,7 @@ export class HomePage {
 
         localStorage.setItem("firstName", this.dataResponse.model.firstName);
         localStorage.setItem("lastName", this.dataResponse.model.lastName);
+        this.saveRole(this.dataResponse.model.role);
 
         console.log(this.dataResponse);
       }, error => {
@@ -352,5 +353,15 @@ async checkAndCloseLoader() {
     if(loader !== undefined) { 
       await this.loadingCtrl.dismiss();
     }
+}
+
+saveRole(role: number) {
+  if(role === 0) {
+    localStorage.setItem("role", "CLIENT");
+  } else if( role === 1) {
+    localStorage.setItem("role", "DELIVERY");
+  } else if( role === 2) {
+    localStorage.setItem("role", "ADMIN");
+  }
 }
 }

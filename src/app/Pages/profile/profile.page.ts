@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { LocationDTO } from 'src/app/Models/LocationDTO';
+import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
@@ -15,9 +16,16 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
 export class ProfilePage {
 
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
+  removeLocationResponse: ResponseObject = new ResponseObject();
   logged: boolean = false;
   didLoad: boolean = false;
   user: UserDTO;
+
+  selectedLocationId: number | null = null;
+
+  isAdmin: boolean = false;
+  showAddLocationModal: boolean = false;
+
   locations: Array<LocationDTO>
   loc1: LocationDTO;
   loc2: LocationDTO;
@@ -45,6 +53,7 @@ export class ProfilePage {
     this.loc3.dir = "San Martín, 2734";
 
     this.locations.push(this.loc1, this.loc2, this.loc3)
+    console.log(this.locations)
     this.user = new UserDTO();
   }
 
@@ -58,7 +67,7 @@ export class ProfilePage {
     }
 
     if(!this.logged) {
-      this.router.navigate(["/login"]);
+      this.router.navigate(["/unauthorized"]);
     }
 
     this.userService.GetData().subscribe( response => {
@@ -67,6 +76,8 @@ export class ProfilePage {
       localStorage.setItem("firstName", this.dataResponse.model.firstName);
       localStorage.setItem("lastName", this.dataResponse.model.lastName);
       
+      this.saveRole(this.dataResponse.model.role);
+
       this.user.locations.push(this.loc1, this.loc2, this.loc3);
 
       console.log(this.dataResponse.model);
@@ -74,6 +85,7 @@ export class ProfilePage {
       this.closeLoader();
     }, error => {
       this.closeLoader();
+      this.router.navigate(["/unauthorized"]);
       this.alertTool.presentToast("Oops... Ocurrió un error!");
       console.log(error.message);
     })
@@ -81,6 +93,10 @@ export class ProfilePage {
 
   navigateToHome() {
     this.router.navigate(["/home"]);
+  }
+
+  navigateToAllOrders() {
+    this.router.navigate(["/allorders"]);
   }
 
   logOut() {
@@ -114,5 +130,50 @@ async checkAndCloseLoader() {
     if(loader !== undefined) { 
       await this.loadingCtrl.dismiss();
     }
+}
+
+saveRole(role: number) {
+  if(role === 0) {
+    localStorage.setItem("role", "CLIENT");
+  } else if( role === 1) {
+    localStorage.setItem("role", "DELIVERY");
+  } else if( role === 2) {
+    localStorage.setItem("role", "ADMIN");
+    this.isAdmin = true;
+  }
+}
+
+onAddNewAddress() {
+  this.showAddLocationModal = true;
+}
+
+handleSelection(event: any) {
+  if (event.detail.value === 'add_new') {
+    this.onAddNewAddress();
+  } else {
+    const selectedLocation = this.locations.find(loc => loc.Id === event.detail.value);
+    console.log('Dirección seleccionada:', selectedLocation);
+  }
+}
+
+removeLocation() {
+  this.makeLoadingAnimation();
+  if (this.selectedLocationId !== null) {
+    const selectedLocation = this.locations.find(location => location.Id === this.selectedLocationId);
+
+    this.userService.RemoveLocation(selectedLocation).subscribe( response => {
+      this.removeLocationResponse = response as ResponseObject;
+      if(this.removeLocationResponse.statusCode === 200) {
+        this.alertTool.presentToast("Dirección eliminada");
+        this.locations = this.locations.filter(location => location.Id !== this.selectedLocationId);
+        this.selectedLocationId = null;
+      } else {
+        this.alertTool.presentToast(this.removeLocationResponse.message);
+      }
+    }, error => {
+      this.alertTool.presentToast("Oops... Ocurrió un error");
+    })
+  }
+  this.closeLoader();
 }
 }

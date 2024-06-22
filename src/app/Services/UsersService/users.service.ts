@@ -42,7 +42,7 @@ export class UsersService extends MainService{
     return this.http.get(this.baseRoute + 'Users/data', {headers});
   }
 
-  AddLocation(model: LocationDTO) {
+  AddLocation(model: LocationDTO | undefined) {
     var token = localStorage.getItem('Token');
 
     var headers = this.createHeader(token);
@@ -50,7 +50,7 @@ export class UsersService extends MainService{
     return this.http.post(this.baseRoute + 'Users/addLocation', model, {headers});
   }
 
-  RemoveLocation(model: LocationDTO) {
+  RemoveLocation(model: LocationDTO | undefined) {
     var token = localStorage.getItem('Token');
 
     var headers = this.createHeader(token);

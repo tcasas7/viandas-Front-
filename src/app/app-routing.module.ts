@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: () => import('./Pages/profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'unauthorized',
+    loadChildren: () => import('./Pages/unauthorized/unauthorized.module').then( m => m.UnauthorizedPageModule)
   }
 ];
 
