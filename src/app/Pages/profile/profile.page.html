@@ -39,7 +39,7 @@
         <ion-select-option *ngFor="let item of user.locations" [value]="item.Id">{{item.dir}}</ion-select-option>
         <ion-select-option [value]="'add_new'">Agregar dirección</ion-select-option>
       </ion-select>
-      <ion-button fill="clear" slot="end" (click)="removeLocation()" [disabled]="!selectedLocationId">
+      <ion-button *ngIf="selectedLocationId"  fill="clear" slot="end" (click)="removeLocation()">
         <ion-icon name="close-circle"></ion-icon>
       </ion-button>
     </ion-item>

@@ -125,7 +125,6 @@ removeLocation() {
   if (this.selectedLocationId !== null) {
     const selectedLocation = this.user.locations.find(location => location.dir === "" + this.selectedLocationId);
 
-    console.log(this.selectedLocationId);
 
     this.userService.RemoveLocation(selectedLocation).subscribe( response => {
       this.removeLocationResponse = response as ResponseObject;
@@ -157,14 +156,12 @@ getData() {
     
     this.saveRole(this.dataResponse.model.role);
 
-    console.log(this.dataResponse.model);
     this.didLoad = true;
     this.closeLoader();
   }, error => {
     this.closeLoader();
     this.router.navigate(["/unauthorized"]);
     this.alertTool.presentToast("Oops... Ocurrió un error!");
-    console.log(error.message);
   })
 }
 }
