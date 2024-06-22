@@ -2,7 +2,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { ChangePasswordDTO } from 'src/app/Models/ChangePasswordDTO';
-import { RegisterDTO } from 'src/app/Models/RegisterDTO';
 import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
@@ -22,6 +21,9 @@ export class ChangePasswordModalComponent {
   password: string = '';
   showPassword: boolean = false;
 
+  isValid: boolean = false;
+  passwordMatch: boolean = false;
+
   constructor(
     private loadingCtrl: LoadingController,
     private userService: UsersService,
@@ -39,12 +41,17 @@ export class ChangePasswordModalComponent {
   }
 
   registerUser() {
-    if(this.registerForm.get("password")?.value === this.registerForm.get("repeatPassword")?.value) {
-      this.changePasswordData.phone = this.registerForm.get("phone")?.value
+    this.validateFields();
+    if(this.passwordMatch === true) {
+      if(this.isValid === true) {
+        this.changePasswordData.phone = this.registerForm.get("phone")?.value
       this.changePasswordData.email = this.registerForm.get("email")?.value
       this.changePasswordData.password = this.registerForm.get("password")?.value
       this.makeLoadingAnimation();
       this.doRequest();
+      } else {
+        this.alertTool.presentToast("Campos vacíos");
+      }
     } else {
       this.alertTool.presentToast("Las contraseñas no coinciden");
     }
@@ -68,6 +75,8 @@ export class ChangePasswordModalComponent {
         this.alertTool.presentToast("Oops... Ocurrió un error!");  
       }
     })
+    this.isValid = false;
+    this.passwordMatch = false;
   }
 
   makeLoadingAnimation() {
@@ -106,5 +115,16 @@ export class ChangePasswordModalComponent {
 
   closeModal() {
     this.closeModalEvent.emit();
+  }
+
+  validateFields() {
+    if(this.registerForm.get("phone")?.value === "" ||
+      this.registerForm.get("email")?.value === "" ||
+      this.registerForm.get("password")?.value === "") {
+        this.isValid = true;
+      }
+    if(this.registerForm.get("password")?.value === this.registerForm.get("repeatPassword")?.value) {
+      this.passwordMatch = true;
+    }
   }
 }
