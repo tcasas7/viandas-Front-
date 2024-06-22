@@ -21,15 +21,13 @@ export class ProfilePage {
   didLoad: boolean = false;
   user: UserDTO;
 
+  selectedLocation: LocationDTO = new LocationDTO();
+
   selectedLocationId: number | null = null;
 
   isAdmin: boolean = false;
   showAddLocationModal: boolean = false;
 
-  locations: Array<LocationDTO>
-  loc1: LocationDTO;
-  loc2: LocationDTO;
-  loc3: LocationDTO;
 
   constructor(
     private router: Router,
@@ -38,22 +36,6 @@ export class ProfilePage {
     private alertTool: AlertTool
   )
   {
-    this.loc1 = new LocationDTO();
-    this.loc2 = new LocationDTO();
-    this.loc3 = new LocationDTO();
-
-    this.locations = new Array<LocationDTO>();
-
-    this.loc1.Id = 1;
-    this.loc2.Id = 2;
-    this.loc3.Id = 3;
-
-    this.loc1.dir = "José Hernández, 720";
-    this.loc2.dir = "Mendez Funes de Millán, 967";
-    this.loc3.dir = "San Martín, 2734";
-
-    this.locations.push(this.loc1, this.loc2, this.loc3)
-    console.log(this.locations)
     this.user = new UserDTO();
   }
 
@@ -70,25 +52,8 @@ export class ProfilePage {
       this.router.navigate(["/unauthorized"]);
     }
 
-    this.userService.GetData().subscribe( response => {
-      this.dataResponse = response as ResponseObjectModel<UserDTO>;
-      this.user = this.dataResponse.model;
-      localStorage.setItem("firstName", this.dataResponse.model.firstName);
-      localStorage.setItem("lastName", this.dataResponse.model.lastName);
-      
-      this.saveRole(this.dataResponse.model.role);
-
-      this.user.locations.push(this.loc1, this.loc2, this.loc3);
-
-      console.log(this.dataResponse.model);
-      this.didLoad = true;
-      this.closeLoader();
-    }, error => {
-      this.closeLoader();
-      this.router.navigate(["/unauthorized"]);
-      this.alertTool.presentToast("Oops... Ocurrió un error!");
-      console.log(error.message);
-    })
+    this.getData();
+    
   }
 
   navigateToHome() {
@@ -151,21 +116,22 @@ handleSelection(event: any) {
   if (event.detail.value === 'add_new') {
     this.onAddNewAddress();
   } else {
-    const selectedLocation = this.locations.find(loc => loc.Id === event.detail.value);
-    console.log('Dirección seleccionada:', selectedLocation);
+    this.selectedLocationId = event.detail.value;
   }
 }
 
 removeLocation() {
   this.makeLoadingAnimation();
   if (this.selectedLocationId !== null) {
-    const selectedLocation = this.locations.find(location => location.Id === this.selectedLocationId);
+    const selectedLocation = this.user.locations.find(location => location.dir === "" + this.selectedLocationId);
+
+    console.log(this.selectedLocationId);
 
     this.userService.RemoveLocation(selectedLocation).subscribe( response => {
       this.removeLocationResponse = response as ResponseObject;
       if(this.removeLocationResponse.statusCode === 200) {
         this.alertTool.presentToast("Dirección eliminada");
-        this.locations = this.locations.filter(location => location.Id !== this.selectedLocationId);
+        this.user.locations = this.user.locations.filter(location => location.dir !== "" + this.selectedLocationId);
         this.selectedLocationId = null;
       } else {
         this.alertTool.presentToast(this.removeLocationResponse.message);
@@ -175,5 +141,30 @@ removeLocation() {
     })
   }
   this.closeLoader();
+}
+
+closeAddLocationModal() {
+  this.showAddLocationModal = false;
+  this.getData();
+}
+
+getData() {
+  this.userService.GetData().subscribe( response => {
+    this.dataResponse = response as ResponseObjectModel<UserDTO>;
+    this.user = this.dataResponse.model;
+    localStorage.setItem("firstName", this.dataResponse.model.firstName);
+    localStorage.setItem("lastName", this.dataResponse.model.lastName);
+    
+    this.saveRole(this.dataResponse.model.role);
+
+    console.log(this.dataResponse.model);
+    this.didLoad = true;
+    this.closeLoader();
+  }, error => {
+    this.closeLoader();
+    this.router.navigate(["/unauthorized"]);
+    this.alertTool.presentToast("Oops... Ocurrió un error!");
+    console.log(error.message);
+  })
 }
 }

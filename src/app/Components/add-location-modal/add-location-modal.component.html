@@ -1,0 +1,27 @@
+<ion-card color="light" style="width: 77vw; margin: 0 auto; position: relative;">
+  <ion-item lines="none" color="translucent" class="tittle-item">Añadir dirección<ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon>
+  </ion-item>
+  <form [formGroup]="locationForm">
+    <ion-item color="translucent">
+      <ion-input 
+      style="margin: 0 auto; border-radius: 20px; width: 40%;"
+      label="Calle"
+      labelPlacement="stacked" 
+      placeholder="Calle"
+      formControlName="street"
+      type="text"
+      fill="clear"></ion-input>
+      <ion-input 
+      style="margin: 0 auto; border-radius: 20px; width: 20%;"
+      label="Número"
+      labelPlacement="stacked"
+      placeholder="1234"
+      formControlName="number"
+      type="number"
+      fill="clear"></ion-input>
+    </ion-item>
+  </form>
+  <div class="button-container">
+    <ion-button class="login-button" (click)="registerUser()">Añadir dirección</ion-button>
+  </div>
+</ion-card>
