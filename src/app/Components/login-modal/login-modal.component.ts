@@ -15,6 +15,7 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
 export class LoginModalComponent {
   @Output() closeModalEvent = new EventEmitter<void>();
   @Output() openRegisterModalEvent = new EventEmitter<void>();
+  @Output() openChangePasswordModalEvent = new EventEmitter<void>();
 
   loginData: LoginDTO;
   loginForm: FormGroup;
@@ -102,6 +103,10 @@ export class LoginModalComponent {
 
   openRegisterModal(){
     this.openRegisterModalEvent.emit();
+  }
+
+  openChangePasswordModal(){
+    this.openChangePasswordModalEvent.emit();
   }
 
   closeModal() {

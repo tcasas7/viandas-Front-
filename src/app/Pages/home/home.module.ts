@@ -1,3 +1,4 @@
+import { ChangePasswordModalComponent } from './../../Components/change-password-modal/change-password-modal.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
@@ -17,6 +18,6 @@ import { RegisterModalComponent } from 'src/app/Components/register-modal/regist
     HomePageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [HomePage, LoginModalComponent, RegisterModalComponent]
+  declarations: [HomePage, LoginModalComponent, RegisterModalComponent, ChangePasswordModalComponent]
 })
 export class HomePageModule {}

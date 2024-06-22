@@ -1,21 +1,22 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
+import { ChangePasswordDTO } from 'src/app/Models/ChangePasswordDTO';
 import { RegisterDTO } from 'src/app/Models/RegisterDTO';
 import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 
 @Component({
-  selector: 'app-register-modal',
-  templateUrl: './register-modal.component.html',
-  styleUrls: ['./register-modal.component.scss'],
+  selector: 'app-change-password-modal',
+  templateUrl: './change-password-modal.component.html',
+  styleUrls: ['./change-password-modal.component.scss'],
 })
-export class RegisterModalComponent {
+export class ChangePasswordModalComponent {
   @Output() closeModalEvent = new EventEmitter<void>();
-  @Output() openChangePasswordEvent = new EventEmitter<void>();
+  @Output() openRegisterEvent = new EventEmitter<void>();
 
-  registerData: RegisterDTO;
+  changePasswordData: ChangePasswordDTO;
   registerForm: FormGroup;
   response!: ResponseObject;
   password: string = '';
@@ -27,25 +28,21 @@ export class RegisterModalComponent {
     private alertTool: AlertTool
   )
   {
-    this.registerData = new RegisterDTO();
+    this.changePasswordData = new ChangePasswordDTO();
 
     this.registerForm = new FormGroup({
-      "firstName": new FormControl(this.registerData.firstName),
-      "lastName": new FormControl(this.registerData.lastName),
-      "phone": new FormControl(this.registerData.phone),
-      "email": new FormControl(this.registerData.email),
-      "password": new FormControl(this.registerData.password),
-      "repeatPassword": new FormControl(this.registerData.password),
+      "phone": new FormControl(this.changePasswordData.phone),
+      "email": new FormControl(this.changePasswordData.email),
+      "password": new FormControl(this.changePasswordData.password),
+      "repeatPassword": new FormControl(this.changePasswordData.password),
     })
   }
 
   registerUser() {
     if(this.registerForm.get("password")?.value === this.registerForm.get("repeatPassword")?.value) {
-      this.registerData.firstName = this.registerForm.get("firstName")?.value
-      this.registerData.lastName = this.registerForm.get("lastName")?.value
-      this.registerData.phone = this.registerForm.get("phone")?.value
-      this.registerData.email = this.registerForm.get("email")?.value
-      this.registerData.password = this.registerForm.get("password")?.value
+      this.changePasswordData.phone = this.registerForm.get("phone")?.value
+      this.changePasswordData.email = this.registerForm.get("email")?.value
+      this.changePasswordData.password = this.registerForm.get("password")?.value
       this.makeLoadingAnimation();
       this.doRequest();
     } else {
@@ -54,12 +51,12 @@ export class RegisterModalComponent {
   }
 
   doRequest() {
-    this.userService.Register(this.registerData).subscribe( response => {
+    this.userService.ChangePassword(this.changePasswordData).subscribe( response => {
       this.response = response as ResponseObject
       console.log(this.response);
       if(this.response.statusCode === 200) {
         this.closeLoader();
-        this.alertTool.presentToast("Registrado correctamente");
+        this.alertTool.presentToast("Contraseña cambiada con éxito");
         this.closeModal();
       } else {
         this.closeLoader();
@@ -103,8 +100,8 @@ export class RegisterModalComponent {
     this.showPassword = !this.showPassword;
   }
 
-  openChangePasswordModal(){
-    this.openChangePasswordEvent.emit();
+  openRegisterModal(){
+    this.openRegisterEvent.emit();
   }
 
   closeModal() {

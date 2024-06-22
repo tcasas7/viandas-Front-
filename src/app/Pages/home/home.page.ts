@@ -24,6 +24,7 @@ export class HomePage {
 
   showLoginModal: boolean = false;
   showRegisterModal: boolean = false;
+  showChangePasswordModal: boolean = false;
 
   item1: CartItem = new CartItem();
   item2: CartItem = new CartItem();
@@ -220,8 +221,15 @@ export class HomePage {
   }
 
   navigateToRegister() {
-    this.closeLoginModal();
     this.showRegisterModal = true;
+    this.closeChangePasswordModal();
+    this.closeLoginModal();
+  }
+
+  navigateToChangePassword() {
+    this.showChangePasswordModal = true;
+    this.closeRegisterModal();
+    this.closeLoginModal();
   }
 
   closeLoginModal() {
@@ -233,6 +241,11 @@ export class HomePage {
 
   closeRegisterModal() {
     this.showRegisterModal = false;
+    this.navigateToLogin();
+  }
+
+  closeChangePasswordModal() {
+    this.showChangePasswordModal = false;
     this.navigateToLogin();
   }
 
