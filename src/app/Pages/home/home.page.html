@@ -7,6 +7,17 @@
 </ion-header>
 
 <ion-content>
+  <div *ngIf="showLoginModal" class="overlay">
+    <div class="modal-container">
+      <app-login-modal (closeModalEvent)="closeLoginModal()" (openRegisterModalEvent)="navigateToRegister()"></app-login-modal>
+    </div>
+  </div>
+
+  <div *ngIf="showRegisterModal" class="overlay">
+    <div class="modal-container">
+      <app-register-modal (closeModalEvent)="closeRegisterModal()"></app-register-modal>
+    </div>
+  </div>
   <ion-item *ngIf="!isDesktop"  lines="none">
     <ion-icon *ngIf="leftHiden"  name="chevron-back-outline" (click)="prev()" class="custom-button-left"></ion-icon>
     <ion-label style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;" class="ion-text-center"><b>{{actualDayName}}</b>, {{actualDayNumber}}</ion-label>

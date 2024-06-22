@@ -1,18 +1,21 @@
-import { AuthService } from './../../Services/AuthService/auth.service';
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { LoginDTO } from 'src/app/Models/LoginDTO';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
+import { AuthService } from 'src/app/Services/AuthService/auth.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  selector: 'app-login-modal',
+  templateUrl: './login-modal.component.html',
+  styleUrls: ['./login-modal.component.scss'],
 })
-export class LoginPage {
+export class LoginModalComponent {
+  @Output() closeModalEvent = new EventEmitter<void>();
+  @Output() openRegisterModalEvent = new EventEmitter<void>();
+
   loginData: LoginDTO;
   loginForm: FormGroup;
   response!: ResponseObjectModel<string>;
@@ -48,9 +51,9 @@ export class LoginPage {
       if(this.response.statusCode === 200) {
         localStorage.setItem("Logged", "true");
         localStorage.setItem("Token", this.response.model);
-          this.router.navigate(["/home"])
         this.closeLoader();
         this.alertTool.presentToast("Sesión iniciada");
+        this.closeModal();
       } else {
         this.closeLoader();
         this.alertTool.presentToast(this.response.message);
@@ -95,5 +98,13 @@ export class LoginPage {
   }
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+
+  openRegisterModal(){
+    this.openRegisterModalEvent.emit();
+  }
+
+  closeModal() {
+    this.closeModalEvent.emit();
   }
 }

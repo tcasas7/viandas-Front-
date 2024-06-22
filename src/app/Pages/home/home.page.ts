@@ -22,6 +22,9 @@ export class HomePage {
 
   logged: boolean = false;
 
+  showLoginModal: boolean = false;
+  showRegisterModal: boolean = false;
+
   item1: CartItem = new CartItem();
   item2: CartItem = new CartItem();
   item3: CartItem = new CartItem();
@@ -213,14 +216,35 @@ export class HomePage {
   }
 
   navigateToLogin() {
-    this.router.navigate(["/login"]);
+    this.showLoginModal = true;
+  }
+
+  navigateToRegister() {
+    this.closeLoginModal();
+    this.showRegisterModal = true;
+  }
+
+  closeLoginModal() {
+    this.showLoginModal = false;
+    if(localStorage.getItem("Logged") === 'true') {
+      this.logged = true;
+    }
+  }
+
+  closeRegisterModal() {
+    this.showRegisterModal = false;
+    this.navigateToLogin();
   }
 
   makeOrder() {
     if(this.totalUnits === 0) {
       this.alertTool.presentToast("No tenes ningún producto en tu carrito");
     } else {
-      this.alertTool.presentAlert("Debes iniciar sesión para poder realizar el pedido", "Iniciar sesión", "Viandas del Sur");
+      if(this.logged) {
+        this.alertTool.presentToast("Hacer orden");
+      } else {
+        this.showLoginModal = true;
+      }
     }
   }
 
