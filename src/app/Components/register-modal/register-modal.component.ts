@@ -20,6 +20,12 @@ export class RegisterModalComponent {
   response!: ResponseObject;
   password: string = '';
   showPassword: boolean = false;
+  isValid: boolean = false;
+  passwordMatch: boolean = false;
+
+  preFix: string = '';
+  areaCode: string = '';
+  phone: string = '';  
 
   constructor(
     private loadingCtrl: LoadingController,
@@ -32,7 +38,9 @@ export class RegisterModalComponent {
     this.registerForm = new FormGroup({
       "firstName": new FormControl(this.registerData.firstName),
       "lastName": new FormControl(this.registerData.lastName),
-      "phone": new FormControl(this.registerData.phone),
+      "preFix": new FormControl(this.preFix),
+      "areaCode": new FormControl(this.areaCode),
+      "phone": new FormControl(this.phone),
       "email": new FormControl(this.registerData.email),
       "password": new FormControl(this.registerData.password),
       "repeatPassword": new FormControl(this.registerData.password),
@@ -40,16 +48,21 @@ export class RegisterModalComponent {
   }
 
   registerUser() {
-    if(this.registerForm.get("password")?.value === this.registerForm.get("repeatPassword")?.value) {
-      this.registerData.firstName = this.registerForm.get("firstName")?.value
-      this.registerData.lastName = this.registerForm.get("lastName")?.value
-      this.registerData.phone = this.registerForm.get("phone")?.value
-      this.registerData.email = this.registerForm.get("email")?.value
-      this.registerData.password = this.registerForm.get("password")?.value
-      this.makeLoadingAnimation();
-      this.doRequest();
+    this.validateFields();
+    if(this.isValid) {
+      if(this.passwordMatch) {
+        this.registerData.firstName = this.registerForm.get("firstName")?.value
+        this.registerData.lastName = this.registerForm.get("lastName")?.value
+        this.registerData.phone = '+' + this.registerForm.get("preFix")?.value + ' ' + this.registerForm.get("areaCode")?.value + ' ' + this.registerForm.get("phone")?.value
+        this.registerData.email = this.registerForm.get("email")?.value
+        this.registerData.password = this.registerForm.get("password")?.value
+        this.makeLoadingAnimation();
+        this.doRequest();
+      } else {
+        this.alertTool.presentToast("Las contraseñas no coinciden");
+      }
     } else {
-      this.alertTool.presentToast("Las contraseñas no coinciden");
+      this.alertTool.presentToast("Campos vacíos");
     }
   }
 
@@ -71,6 +84,8 @@ export class RegisterModalComponent {
         this.alertTool.presentToast("Oops... Ocurrió un error!");  
       }
     })
+    this.isValid = false;
+    this.passwordMatch = false;
   }
 
   makeLoadingAnimation() {
@@ -109,5 +124,20 @@ export class RegisterModalComponent {
 
   closeModal() {
     this.closeModalEvent.emit();
+  }
+
+  validateFields() {
+    if(((this.registerForm.get("firstName")?.value !== "") && (this.registerForm.get("firstName")?.value !== null)) &&
+      ((this.registerForm.get("lastName")?.value !== "") && (this.registerForm.get("lastName")?.value !== null)) &&
+      ((this.registerForm.get("preFix")?.value !== "") && (this.registerForm.get("preFix")?.value !== null)) &&
+      ((this.registerForm.get("areaCode")?.value !== "") && (this.registerForm.get("areaCode")?.value !== null)) &&
+      ((this.registerForm.get("phone")?.value !== "") && (this.registerForm.get("phone")?.value !== null)) &&
+      ((this.registerForm.get("password")?.value !== "") && (this.registerForm.get("password")?.value !== null)) &&
+      ((this.registerForm.get("email")?.value !== "") && (this.registerForm.get("email")?.value !== null))) {
+        this.isValid = true;
+      }
+    if(this.registerForm.get("password")?.value === this.registerForm.get("repeatPassword")?.value) {
+      this.passwordMatch = true;
+    }
   }
 }

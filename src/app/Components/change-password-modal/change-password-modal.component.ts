@@ -21,6 +21,10 @@ export class ChangePasswordModalComponent {
   password: string = '';
   showPassword: boolean = false;
 
+  preFix: string = '';
+  areaCode: string = '';
+  phone: string = '';  
+
   isValid: boolean = false;
   passwordMatch: boolean = false;
 
@@ -33,7 +37,9 @@ export class ChangePasswordModalComponent {
     this.changePasswordData = new ChangePasswordDTO();
 
     this.registerForm = new FormGroup({
-      "phone": new FormControl(this.changePasswordData.phone),
+      "preFix": new FormControl(this.preFix),
+      "areaCode": new FormControl(this.areaCode),
+      "phone": new FormControl(this.phone),
       "email": new FormControl(this.changePasswordData.email),
       "password": new FormControl(this.changePasswordData.password),
       "repeatPassword": new FormControl(this.changePasswordData.password),
@@ -44,11 +50,11 @@ export class ChangePasswordModalComponent {
     this.validateFields();
     if(this.isValid === true) {
       if(this.passwordMatch === true) {
-        this.changePasswordData.phone = this.registerForm.get("phone")?.value
-      this.changePasswordData.email = this.registerForm.get("email")?.value
-      this.changePasswordData.password = this.registerForm.get("password")?.value
-      this.makeLoadingAnimation();
-      this.doRequest();
+        this.changePasswordData.phone = '+' + this.registerForm.get("preFix")?.value + ' ' + this.registerForm.get("areaCode")?.value + ' ' + this.registerForm.get("phone")?.value
+        this.changePasswordData.email = this.registerForm.get("email")?.value
+        this.changePasswordData.password = this.registerForm.get("password")?.value
+        this.makeLoadingAnimation();
+        this.doRequest();
       } else {
       this.alertTool.presentToast("Las contraseñas no coinciden");
       }
@@ -118,12 +124,11 @@ export class ChangePasswordModalComponent {
   }
 
   validateFields() {
-    if(((this.registerForm.get("phone")?.value !== "") && (this.registerForm.get("phone")?.value !== null)) &&
+    if(((this.registerForm.get("preFix")?.value !== "") && (this.registerForm.get("preFix")?.value !== null)) &&
+      ((this.registerForm.get("areaCode")?.value !== "") && (this.registerForm.get("areaCode")?.value !== null)) &&
+      ((this.registerForm.get("phone")?.value !== "") && (this.registerForm.get("phone")?.value !== null)) &&
       ((this.registerForm.get("email")?.value !== "") && (this.registerForm.get("email")?.value !== null)) &&
       ((this.registerForm.get("password")?.value !== "") && (this.registerForm.get("password")?.value !== null))) {
-        console.log(this.registerForm.get("phone")?.value);
-        console.log(this.registerForm.get("email")?.value);
-        console.log(this.registerForm.get("password")?.value);
         this.isValid = true;
       }
     if(this.registerForm.get("password")?.value === this.registerForm.get("repeatPassword")?.value) {
