@@ -46,10 +46,10 @@
     <ion-item>
       <div style="padding-right: 0px; font-size: 2vh;">
         <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="location-outline"></ion-icon>
-        <b> Dir: </b>
       </div>
+      &nbsp;&thinsp;<b> Dir: </b>
       <ion-select interface="popover" placeholder="Direcciones" [(ngModel)]="selectedLocationId" (ionChange)="handleSelection($event)" style="float:inline-start">
-        <ion-select-option *ngFor="let item of locations" [value]="item.id"><div *ngIf="item.isDefault">📍</div>{{item.dir}}</ion-select-option>
+        <ion-select-option *ngFor="let item of locations" [value]="item.id">&nbsp;{{item.dir}}</ion-select-option>
         <ion-select-option [value]="'add_new'">Agregar dirección</ion-select-option>    
       </ion-select>
       <ion-button *ngIf="selectedLocationId" fill="clear" slot="end" (click)="removeLocation()">
