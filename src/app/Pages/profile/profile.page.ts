@@ -27,7 +27,7 @@ export class ProfilePage {
 
   isAdmin: boolean = false;
   showAddLocationModal: boolean = false;
-
+  showChangePhoneModal: boolean = false;
 
   constructor(
     private router: Router,
@@ -112,6 +112,10 @@ onAddNewAddress() {
   this.showAddLocationModal = true;
 }
 
+navigateToChangePhone() {
+  this.showChangePhoneModal = true;
+}
+
 handleSelection(event: any) {
   if (event.detail.value === 'add_new') {
     this.onAddNewAddress();
@@ -144,6 +148,11 @@ removeLocation() {
 
 closeAddLocationModal() {
   this.showAddLocationModal = false;
+  this.getData();
+}
+
+closeChangePhoneModal() {
+  this.showChangePhoneModal = false;
   this.getData();
 }
 

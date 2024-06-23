@@ -34,6 +34,14 @@ export class UsersService extends MainService{
     return this.http.post(this.baseRoute + 'Users/changeRole', model, {headers});
   }
 
+  ChangePhone(model: string) {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.post(this.baseRoute + 'Users/changePhone/' + model, model, {headers});
+  }
+
   GetData() {
     var token = localStorage.getItem('Token');
 
