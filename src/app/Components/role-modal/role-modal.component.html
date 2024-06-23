@@ -1,0 +1,29 @@
+<ion-card color="light" style="width: 77vw; margin: 0 auto; position: relative;">
+  <ion-item lines="none" color="translucent" class="tittle-item">Asignar rol<ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon>
+  </ion-item>
+  <form [formGroup]="roleForm">
+    <ion-item color="translucent">
+      <ion-input 
+      style="margin: 0 auto; border-radius: 20px;"
+      label="Email"
+      labelPlacement="floating" 
+      placeholder="nombre@dominio.com"
+      formControlName="email"
+      type="email"
+      fill="clear"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item color="translucent">
+      <ion-select Placeholder="Rol" interface="popover" formControlName="role">
+        <ion-select-option value="0">Cliente</ion-select-option>
+        <ion-select-option value="1">Repartidor</ion-select-option>
+        <ion-select-option value="2">Administrador</ion-select-option>
+    </ion-select>
+    </ion-item>
+  </form>
+  <div class="button-container">
+    <ion-button class="login-button" (click)="changeRole()">Asignar</ion-button>
+  </div>
+</ion-card>
+

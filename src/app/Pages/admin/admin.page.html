@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div class="user-div">
+      <ion-icon (click)="navigateToProfile()" class="user-label" name="arrow-back-outline"></ion-icon>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="activeModal === 4" class="overlay">
+    <div class="modal-container">
+      <app-role-modal (closeModalEvent)="closeModal()"></app-role-modal>
+    </div>
+  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Ver ordenes</div>
+        <div style="background-color: var(--ion-color-secondary);" class="square-tile" (click)="activateOrdersModal()">
+          <ion-icon name="book-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Agregar menús</div>
+        <div style="background-color: var(--ion-color-primary);" class="square-tile" (click)="activateMenusModal()">
+          <ion-icon name="add-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Ver estadisticas</div>
+        <div style="background-color: var(--ion-color-warning);" class="square-tile" (click)="activateStatsModal()">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Dar rol</div>
+        <div style="background-color: var(--ion-color-success);" class="square-tile" (click)="activateRoleModal()">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

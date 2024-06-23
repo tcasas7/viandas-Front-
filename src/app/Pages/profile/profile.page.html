@@ -58,9 +58,9 @@
     </ion-item>
   </div>
   <div *ngIf="isAdmin" style="text-align: center;">
-    <ion-button color="secondary" (click)="navigateToAllOrders()">Ver ordenes</ion-button>
+    <ion-button color="danger" (click)="navigateToAdmin()" class="order-button">Panel de administrador</ion-button>
   </div>
   <div style="text-align: center;">
-    <ion-button color="primary" (click)="logOut()">Cerrar sesión</ion-button>
+    <ion-button  lines="none" color="primary" class="order-button" (click)="logOut()">Cerrar sesión</ion-button>
   </div>
 </ion-content>

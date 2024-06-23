@@ -61,8 +61,8 @@ export class ProfilePage {
     this.router.navigate(["/home"]);
   }
 
-  navigateToAllOrders() {
-    this.router.navigate(["/allorders"]);
+  navigateToAdmin() {
+    this.router.navigate(["/admin"]);
   }
 
   logOut() {

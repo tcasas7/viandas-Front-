@@ -18,6 +18,10 @@ const routes: Routes = [
   {
     path: 'unauthorized',
     loadChildren: () => import('./Pages/unauthorized/unauthorized.module').then( m => m.UnauthorizedPageModule)
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./Pages/admin/admin.module').then( m => m.AdminPageModule)
   }
 ];
 
