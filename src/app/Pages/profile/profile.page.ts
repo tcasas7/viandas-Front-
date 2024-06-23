@@ -95,12 +95,12 @@ async checkAndCloseLoader() {
    
     if(loader !== undefined) { 
       await this.loadingCtrl.dismiss();
-      this.locations.forEach( e => {
-        if(e.isDefault) {
-           this.selectedLocationId = e.id;
-        }
-      });
     }
+    this.locations.forEach( e => {
+      if(e.isDefault) {
+         this.selectedLocationId = e.id;
+      }
+    });
 }
 
 saveRole(role: number) {
@@ -136,11 +136,12 @@ removeLocation() {
   if (this.selectedLocationId !== null) {
     this.selectedLocation = this.user.locations.find(location => location.id === this.selectedLocationId);
 
-    this.userService.RemoveLocation(this.selectedLocation).subscribe( response => {
+    this.userService.RemoveLocation(this.selectedLocation).subscribe( async response => {
       this.removeLocationResponse = response as ResponseObject;
       if(this.removeLocationResponse.statusCode === 200) {
         this.alertTool.presentToast("Dirección eliminada");
         this.user.locations = this.user.locations.filter(location => location.id === this.selectedLocationId);
+        await this.getData()
       } else {
         this.alertTool.presentToast(this.removeLocationResponse.message);
       }
