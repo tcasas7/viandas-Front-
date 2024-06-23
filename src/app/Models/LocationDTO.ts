@@ -1,4 +1,5 @@
 export class LocationDTO {
-    Id!: number
+    id: number = 0;
     dir!: string
+    isDefault!: boolean
 }

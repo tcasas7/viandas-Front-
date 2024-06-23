@@ -58,6 +58,14 @@ export class UsersService extends MainService{
     return this.http.post(this.baseRoute + 'Users/addLocation', model, {headers});
   }
 
+  MakeDefault(model: LocationDTO | undefined) {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.post(this.baseRoute + 'Users/makeDefault', model, {headers});
+  }
+
   RemoveLocation(model: LocationDTO | undefined) {
     var token = localStorage.getItem('Token');
 

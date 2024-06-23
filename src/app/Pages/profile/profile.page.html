@@ -45,14 +45,13 @@
 
     <ion-item>
       <ion-select interface="popover" placeholder="Direcciones" [(ngModel)]="selectedLocationId" (ionChange)="handleSelection($event)">
-        <ion-select-option *ngFor="let item of user.locations" [value]="item.Id">{{item.dir}}</ion-select-option>
-        <ion-select-option [value]="'add_new'">Agregar dirección</ion-select-option>
+        <ion-select-option *ngFor="let item of locations" [value]="item.id"><div *ngIf="item.isDefault">🚩</div>{{item.dir}}</ion-select-option>
+        <ion-select-option [value]="'add_new'">Agregar dirección</ion-select-option>    
       </ion-select>
       <ion-button *ngIf="selectedLocationId" fill="clear" slot="end" (click)="removeLocation()">
         <ion-icon name="close-circle"></ion-icon>
       </ion-button>
     </ion-item>
-    
   </div>
   <div *ngIf="isAdmin" style="text-align: center;">
     <ion-button color="secondary" (click)="navigateToAllOrders()">Ver ordenes</ion-button>

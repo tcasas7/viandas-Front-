@@ -305,16 +305,16 @@ export class HomePage {
         item.category = menu.category;
 
         await this.setImageForItem(item);
+        item.price = menu.price;
+        
         if (item.category === 'Estandar') {
-          item.price = this.priceStandard;
           this.standardItems.push(item);
         } else if (item.category === 'Light') {
-          item.price = this.priceLight;
           this.lightItems.push(item);
         } else if (item.category === 'Proteico') {
-          item.price = this.priceProteic;
           this.proteicItems.push(item);
         }
+
       }
     }
   
