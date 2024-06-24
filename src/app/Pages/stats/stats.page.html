@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div class="menu">Estadisticas</div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Total de ventas</div>
+        <div style="background-color: var(--ion-color-secondary);" class="square-tile">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Por menú</div>
+        <div style="background-color: var(--ion-color-primary);" class="square-tile">
+          <ion-icon name="restaurant-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Por producto</div>
+        <div style="background-color: var(--ion-color-warning);" class="square-tile">
+          <ion-icon name="pizza-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Por dia</div>
+        <div style="background-color: var(--ion-color-success);" class="square-tile">
+          <ion-icon name="today-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Por método</div>
+        <div style="background-color: var(--ion-color-warning-shade);" class="square-tile">
+          <ion-icon name="card-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="mosaic">
+        <div class="title">Volver</div>
+        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile" (click)="navigateToAdmin()">
+          <ion-icon name="arrow-back-circle-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

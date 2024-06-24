@@ -60,6 +60,7 @@ export class AdminPage {
   }
 
   activateOrdersModal() {
+    this.router.navigate(["admin-orders"])
     this.activeModal = 1;
   }
 
@@ -68,11 +69,17 @@ export class AdminPage {
   }
 
   activateStatsModal() {
+    this.router.navigate(["stats"])
     this.activeModal = 3;
   }
 
   activateRoleModal() {
     this.activeModal = 4;
+  }
+
+  activateLocationModal() {
+    this.router.navigate(["location"])
+    this.activeModal = 5;
   }
 
   closeModal() {
@@ -85,6 +92,9 @@ export class AdminPage {
 
   navigateToAdmin() {
     this.router.navigate(["/admin"]);
+  }
+  navigateToLocation() {
+    this.router.navigate(["/location"]);
   }
 
   makeLoadingAnimation() {
