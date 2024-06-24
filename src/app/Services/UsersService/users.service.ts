@@ -4,6 +4,7 @@ import { RegisterDTO } from 'src/app/Models/RegisterDTO';
 import { ChangePasswordDTO } from 'src/app/Models/ChangePasswordDTO';
 import { ChangeRoleDTO } from 'src/app/Models/ChangeRoleDTO';
 import { LocationDTO } from 'src/app/Models/LocationDTO';
+import { ChangePhoneDTO } from 'src/app/Models/ChangePhoneDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -34,12 +35,14 @@ export class UsersService extends MainService{
     return this.http.post(this.baseRoute + 'Users/changeRole', model, {headers});
   }
 
-  ChangePhone(model: string) {
+  ChangePhone(model: ChangePhoneDTO) {
     var token = localStorage.getItem('Token');
 
     var headers = this.createHeader(token);
 
-    return this.http.post(this.baseRoute + 'Users/changePhone/' + model, model, {headers});
+    console.log(model);
+
+    return this.http.post(this.baseRoute + 'Users/changePhone', model,  {headers});
   }
 
   GetData() {

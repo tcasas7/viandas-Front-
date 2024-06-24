@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
+import { ChangePhoneDTO } from 'src/app/Models/ChangePhoneDTO';
 import { LocationDTO } from 'src/app/Models/LocationDTO';
 import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
@@ -24,6 +25,8 @@ export class ChangePhoneModalComponent {
   areaCode: string = '';
   phone: string = '';  
 
+  phoneModel: ChangePhoneDTO = new ChangePhoneDTO();
+
   isValid: boolean = false;
   passwordMatch: boolean = false;
 
@@ -45,7 +48,8 @@ export class ChangePhoneModalComponent {
   changePhone() {
     this.validateFields();
     if(this.isValid === true) {
-      this.finalPhone = '+' + this.phoneForm.get("preFix")?.value + ' ' + this.phoneForm.get("areaCode")?.value + ' ' + this.phoneForm.get("phone")?.value
+      this.finalPhone = '+' + this.phoneForm.get("preFix")?.value + ' ' + this.phoneForm.get("areaCode")?.value + ' ' + this.phoneForm.get("phone")?.value;
+      this.phoneModel.phone = this.finalPhone;
       this.makeLoadingAnimation();
       this.doRequest();
     } else {
@@ -54,7 +58,7 @@ export class ChangePhoneModalComponent {
   }
 
   doRequest() {
-    this.userService.ChangePhone(this.finalPhone).subscribe( response => {
+    this.userService.ChangePhone(this.phoneModel).subscribe( response => {
       this.response = response as ResponseObject
       console.log(this.response);
       if(this.response.statusCode === 200) {

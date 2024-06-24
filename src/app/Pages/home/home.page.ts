@@ -146,8 +146,6 @@ export class HomePage {
         localStorage.setItem("firstName", this.dataResponse.model.firstName);
         localStorage.setItem("lastName", this.dataResponse.model.lastName);
         this.saveRole(this.dataResponse.model.role);
-
-        console.log(this.dataResponse);
       }, error => {
         localStorage.clear();
         this.logged = false;

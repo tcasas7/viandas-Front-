@@ -5,10 +5,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MainService {
-  baseRoute: String;
+  //webAPI
+  baseRoute: String  = "https://7t0hcgph-8888.brs.devtunnels.ms/api/";
   constructor(protected http: HttpClient)
   {
-    this.baseRoute = "https://7t0hcgph-8888.brs.devtunnels.ms/api/";
+    //localhost
+    //this.baseRoute = "http://localhost:5009/api/";
   }
 
   protected createHeader(token: any) {
