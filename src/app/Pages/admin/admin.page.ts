@@ -43,7 +43,7 @@ export class AdminPage {
       this.logged = false;
     }
 
-    if(!this.logged) {
+    if(!this.logged || localStorage.getItem("role") !== "ADMIN"){
       this.router.navigate(["/unauthorized"]);
     }
 
@@ -147,6 +147,7 @@ async getData() {
     this.closeLoader();
   }, error => {
     this.closeLoader();
+    this.logged = false;
     this.router.navigate(["/unauthorized"]);
     this.alertTool.presentToast("Oops... Ocurrió un error!");
   })

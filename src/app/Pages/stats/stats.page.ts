@@ -35,14 +35,14 @@ export class StatsPage {
 
   ionViewWillEnter(){
     this.makeLoadingAnimation();
-    if(localStorage.getItem("Logged") === "true") {
+    if(localStorage.getItem("Logged") === "true"){
       this.logged = true;
     }
     else {
       this.logged = false;
     }
 
-    if(!this.logged) {
+    if(!this.logged || localStorage.getItem("role") !== "ADMIN") {
       this.router.navigate(["/unauthorized"]);
     }
 
@@ -61,6 +61,7 @@ export class StatsPage {
       this.closeLoader();
     }, () => {
       this.closeLoader();
+      this.logged = false;
       this.router.navigate(["/unauthorized"]);
       this.alertTool.presentToast("Oops... Ocurrió un error!");
     })

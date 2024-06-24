@@ -206,4 +206,9 @@ async getData() {
     this.alertTool.presentToast("Oops... Ocurrió un error!");
   })
 }
+
+  navigateToOrders() {
+    this.alertTool.presentToast("Funcionalidad no implementada");
+    this.router.navigate(["/orders"]);
+  }
 }
