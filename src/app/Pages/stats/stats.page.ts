@@ -59,7 +59,7 @@ export class StatsPage {
   
       this.didLoad = true;
       this.closeLoader();
-    }, error => {
+    }, () => {
       this.closeLoader();
       this.router.navigate(["/unauthorized"]);
       this.alertTool.presentToast("Oops... Ocurrió un error!");
