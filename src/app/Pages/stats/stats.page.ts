@@ -70,8 +70,10 @@ export class StatsPage {
   saveRole(role: number) {
     if(role === 0) {
       localStorage.setItem("role", "CLIENT");
+      this.isAdmin = false;
     } else if( role === 1) {
       localStorage.setItem("role", "DELIVERY");
+      this.isAdmin = false;
     } else if( role === 2) {
       localStorage.setItem("role", "ADMIN");
       this.isAdmin = true;
