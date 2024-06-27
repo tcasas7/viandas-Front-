@@ -26,7 +26,7 @@ export class PinpointMapComponent  implements OnInit {
     const mapOptions = {
       center: latLng,
       zoom: 12,
-      mapTypeId: google.maps.MapTypeId.HYBRID,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
       disableDefaultUI: true
     };
 
