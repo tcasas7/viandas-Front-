@@ -16,8 +16,8 @@ export class PinpointMapComponent  implements OnInit {
 
   ngOnInit() {
     this.loadMap();
-    this.geocodeAddress('Jose Hernandez, 720, Mar del Plata, Buenos Aires, Argentina', "1"),
-    setTimeout(() => this.geocodeAddress('Almirante Brown, 9153, Mar del Plata, Buenos Aires, Argentina', "3"), 650);
+    this.geocodeAddress('Jose Hernandez, 720, Mar del Plata, Buenos Aires, Argentina', "1");
+    this.geocodeAddress('Almirante Brown, 9153, Mar del Plata, Buenos Aires, Argentina', "3");
   }
 
   loadMap() {
@@ -26,7 +26,8 @@ export class PinpointMapComponent  implements OnInit {
     const mapOptions = {
       center: latLng,
       zoom: 12,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.HYBRID,
+      disableDefaultUI: true
     };
 
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
