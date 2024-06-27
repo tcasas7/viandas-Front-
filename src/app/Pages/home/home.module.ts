@@ -9,7 +9,6 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { LoginModalComponent } from 'src/app/Components/login-modal/login-modal.component';
 import { RegisterModalComponent } from 'src/app/Components/register-modal/register-modal.component';
 
-
 @NgModule({
   imports: [
     CommonModule,
