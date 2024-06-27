@@ -8,6 +8,7 @@ import { AdminPageRoutingModule } from './admin-routing.module';
 
 import { AdminPage } from './admin.page';
 import { RoleModalComponent } from 'src/app/Components/role-modal/role-modal.component';
+import { PinpointMapComponent } from 'src/app/Components/pinpoint-map/pinpoint-map.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { RoleModalComponent } from 'src/app/Components/role-modal/role-modal.com
     AdminPageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [AdminPage, RoleModalComponent]
+  declarations: [AdminPage, RoleModalComponent, PinpointMapComponent]
 })
 export class AdminPageModule {}

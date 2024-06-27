@@ -10,6 +10,12 @@
       <app-role-modal (closeModalEvent)="closeModal()"></app-role-modal>
     </div>
   </div>
+
+  <div *ngIf="activeModal === 5" class="overlay">
+    <div class="modal-container">
+      <app-pinpoint-map (closeModalEvent)="closeModal()"></app-pinpoint-map>
+    </div>
+  </div>
   <ion-grid>
     <ion-row>
       <ion-col size="6" class="mosaic">
