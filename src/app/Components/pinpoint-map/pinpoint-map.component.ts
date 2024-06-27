@@ -16,10 +16,12 @@ export class PinpointMapComponent  implements OnInit {
 
   ngOnInit() {
     this.loadMap();
+    this.geocodeAddress('Jose Hernandez, 720, Mar del Plata, Buenos Aires, Argentina', "1"),
+    setTimeout(() => this.geocodeAddress('Almirante Brown, 9153, Mar del Plata, Buenos Aires, Argentina', "3"), 650);
   }
 
   loadMap() {
-    const latLng = new google.maps.LatLng(-38.0087964438959, -57.55303618419129);
+    const latLng = new google.maps.LatLng(-38.00689925430091, -57.56997953603233);
 
     const mapOptions = {
       center: latLng,
@@ -32,6 +34,41 @@ export class PinpointMapComponent  implements OnInit {
 
   closeModal() {
     this.closeModalEvent.emit();
+  }
+
+  geocodeAddress(direccion: string, id: string) {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'address': direccion }, (results: { geometry: { location: any; }; }[], status: string) => {
+      if (status === 'OK') {
+        this.createMarker(results, id);
+      } else {
+        alert('Geocode no fue exitoso por la siguiente razón: ' + status);
+      }
+    });
+  }
+  
+  createMarker(results: any, id: string) {
+    new google.maps.Marker({
+      map: this.map,
+      position: results[0].geometry.location,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10,
+        fillColor: "#abc49a",
+        fillOpacity: 1.0,
+        strokeWeight: 2,
+        strokeOpacity: 1,
+        strokeColor: "#ffbdb4",
+        rotation: 30
+      },
+      animation: google.maps.Animation.DROP,
+      label: {
+        text: id,
+        color: "dark-gray",
+        fontWeight: 'bold',
+        fontSize: '11px',
+      }
+    });
   }
 
 }
