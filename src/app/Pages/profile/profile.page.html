@@ -1,9 +1,8 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header class="border-header">
+  <ion-toolbar class="gradient-toolbar">
     <div class="user-div"><ion-icon (click)="navigateToHome()" class="user-label" name="arrow-back-outline"></ion-icon></div>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
 
   <div *ngIf="showAddLocationModal" class="overlay">

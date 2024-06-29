@@ -25,6 +25,7 @@ export class HomePage {
   showLoginModal: boolean = false;
   showRegisterModal: boolean = false;
   showChangePasswordModal: boolean = false;
+  showOrderResumeModal: boolean = false;
 
   item1: CartItem = new CartItem();
   item2: CartItem = new CartItem();
@@ -56,8 +57,8 @@ export class HomePage {
     { "day": 'Miercoles', "class": 'wednesday'},
     { "day": 'Jueves', "class": 'thursday'},
     { "day": 'Viernes', "class": 'friday'}
-  ]
-  icon: string = "cart-outline"
+  ];
+  icon: string = "cart-outline";
 
   leftHiden: boolean = false;
   rightHiden: boolean = true;
@@ -94,16 +95,16 @@ export class HomePage {
     private cdr: ChangeDetectorRef,
     private userService: UsersService,
     private loadingCtrl: LoadingController
-    ) {
-      this.menus = new Array<MenuDTO>();
-      this.standardItems = new Array<CartItem>()
-      this.lightItems = new Array<CartItem>()
-      this.proteicItems = new Array<CartItem>()
-      this.carouselItems = new Array<CartItem>()
+  ) {
+    this.menus = new Array<MenuDTO>();
+    this.standardItems = new Array<CartItem>();
+    this.lightItems = new Array<CartItem>();
+    this.proteicItems = new Array<CartItem>();
+    this.carouselItems = new Array<CartItem>();
 
-      this.initializeApp();
-    
-      this.actualDayName = this.daysOfWeek[this.currentIndex].day;
+    this.initializeApp();
+
+    this.actualDayName = this.daysOfWeek[this.currentIndex].day;
   }
 
   initializeApp() {
@@ -117,7 +118,7 @@ export class HomePage {
       const response = await this.menuService.GetAll().toPromise();
       this.message = response as ResponseObjectList<MenuDTO>;
       this.menus = this.message.model;
-  
+
       await this.formatToCartItems();
       this.initializeCarouselSets();
       this.closeLoader();
@@ -128,12 +129,10 @@ export class HomePage {
     }
   }
 
-  ionViewWillEnter(){
-
+  ionViewWillEnter() {
     if(localStorage.getItem("Logged") === "true") {
       this.logged = true;
-    }
-    else {
+    } else {
       this.logged = false;
     }
 
@@ -149,7 +148,7 @@ export class HomePage {
       }, error => {
         localStorage.clear();
         this.logged = false;
-      })
+      });
     }
     this.instanceItems();
   }
@@ -194,13 +193,14 @@ export class HomePage {
   }
 
   addToCart(item: CartItem) {
-    item.total ++;
+    item.total++;
     this.totalUnits++;
   }
 
   removeFromCart(item: CartItem) {
-    if(item.total <= 1)
+    if(item.total <= 1) {
       item.cartPressed = false;
+    }
 
     item.total--;
     this.totalUnits--;
@@ -231,6 +231,10 @@ export class HomePage {
     this.closeLoginModal();
   }
 
+  navigateToOrderResume() {
+    this.showOrderResumeModal = true;
+  }
+
   closeLoginModal() {
     this.showLoginModal = false;
     if(localStorage.getItem("Logged") === 'true') {
@@ -248,12 +252,16 @@ export class HomePage {
     this.navigateToLogin();
   }
 
+  closeOrderResumeModal() {
+    this.showOrderResumeModal = false;
+  }
+
   makeOrder() {
     if(this.totalUnits === 0) {
       this.alertTool.presentToast("No tenes ningún producto en tu carrito");
     } else {
       if(this.logged) {
-        this.alertTool.presentToast("Hacer orden");
+        this.navigateToOrderResume();
       } else {
         this.showLoginModal = true;
       }
@@ -273,7 +281,6 @@ export class HomePage {
       );
     });
   }
-  
 
   async setImageForItem(item: any) {
     try {
@@ -285,7 +292,6 @@ export class HomePage {
       item.image = '';
     }
   }
-  
 
   async formatToCartItems() {
     for (const menu of this.menus) {
@@ -296,15 +302,16 @@ export class HomePage {
         item.name = prod.name;
 
         var hasImage = true;
-        if(prod.imageName === "Default")
+        if(prod.imageName === "Default") {
           hasImage = false;
+        }
 
         item.hasImage = hasImage;
         item.category = menu.category;
 
         await this.setImageForItem(item);
         item.price = menu.price;
-        
+
         if (item.category === 'Estandar') {
           this.standardItems.push(item);
         } else if (item.category === 'Light') {
@@ -312,10 +319,9 @@ export class HomePage {
         } else if (item.category === 'Proteico') {
           this.proteicItems.push(item);
         }
-
       }
     }
-  
+
     for (let i = 0; i < 5; i++) {
       this.carouselItems.push(this.standardItems[i], this.lightItems[i], this.proteicItems[i]);  
     }
@@ -329,37 +335,33 @@ export class HomePage {
   makeLoadingAnimation() {
     this.loadingCtrl.getTop().then(hasLoading => {
       if (!hasLoading) {
-          this.loadingCtrl.create({
-              spinner: 'circular',
-              cssClass: "custom-loading"
-          }).then(loading => loading.present());
+        this.loadingCtrl.create({
+          spinner: 'circular',
+          cssClass: "custom-loading"
+        }).then(loading => loading.present());
       }
-  })
-}
+    });
+  }
 
-async closeLoader() {
-  
+  async closeLoader() {
     this.checkAndCloseLoader();
-  
     setTimeout(() => this.checkAndCloseLoader(), 500);
-}
+  }
 
-async checkAndCloseLoader() {
-   
-   const loader = await this.loadingCtrl.getTop();
-   
+  async checkAndCloseLoader() {
+    const loader = await this.loadingCtrl.getTop();
     if(loader !== undefined) { 
       await this.loadingCtrl.dismiss();
     }
-}
-
-saveRole(role: number) {
-  if(role === 0) {
-    localStorage.setItem("role", "CLIENT");
-  } else if( role === 1) {
-    localStorage.setItem("role", "DELIVERY");
-  } else if( role === 2) {
-    localStorage.setItem("role", "ADMIN");
   }
-}
+
+  saveRole(role: number) {
+    if(role === 0) {
+      localStorage.setItem("role", "CLIENT");
+    } else if( role === 1) {
+      localStorage.setItem("role", "DELIVERY");
+    } else if( role === 2) {
+      localStorage.setItem("role", "ADMIN");
+    }
+  }
 }
