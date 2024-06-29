@@ -1,15 +1,19 @@
+import { OrderDTO } from 'src/app/Models/OrderDTO';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LoadingController, Platform } from '@ionic/angular';
 import { CartItem } from 'src/app/Models/CartItem';
 import { MenuDTO } from 'src/app/Models/MenuDTO';
+import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
 import { ResponseObjectList } from 'src/app/Models/Response/ResponseObjList';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { MenusService } from 'src/app/Services/MenusService/menus.service';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
+import { DeliveryDTO } from 'src/app/Models/DeliveryDTO';
+import { ProductDTO } from 'src/app/Models/ProductDTO';
 
 @Component({
   selector: 'app-home',
@@ -26,26 +30,6 @@ export class HomePage {
   showRegisterModal: boolean = false;
   showChangePasswordModal: boolean = false;
   showOrderResumeModal: boolean = false;
-
-  item1: CartItem = new CartItem();
-  item2: CartItem = new CartItem();
-  item3: CartItem = new CartItem();
-
-  item4: CartItem = new CartItem();
-  item5: CartItem = new CartItem();
-  item6: CartItem = new CartItem();
-
-  item7: CartItem = new CartItem();
-  item8: CartItem = new CartItem();
-  item9: CartItem = new CartItem();
-
-  item10: CartItem = new CartItem();
-  item11: CartItem = new CartItem();
-  item12: CartItem = new CartItem();
-
-  item13: CartItem = new CartItem();
-  item14: CartItem = new CartItem();
-  item15: CartItem = new CartItem();
 
   carouselItems: CartItem[];
   carouselSets: any[][] = [];
@@ -70,10 +54,6 @@ export class HomePage {
 
   modalOpened: boolean = false;
 
-  priceStandard: number = 4900;
-  priceLight: number = 4500;
-  priceProteic: number = 5200;
-
   isDesktop!: boolean;
 
   profileImageUrl: any;
@@ -85,6 +65,14 @@ export class HomePage {
   standardItems: CartItem[];
   lightItems: CartItem[];
   proteicItems: CartItem[];
+
+  orders: PlaceOrderDTO = new PlaceOrderDTO();
+
+  orderMonday: OrderDTO = new OrderDTO();
+  orderTuesday: OrderDTO = new OrderDTO();
+  orderWednesday: OrderDTO = new OrderDTO();
+  orderThursday: OrderDTO = new OrderDTO();
+  orderFriday: OrderDTO = new OrderDTO();
 
   constructor(
     private alertTool: AlertTool,
@@ -103,6 +91,20 @@ export class HomePage {
     this.carouselItems = new Array<CartItem>();
 
     this.initializeApp();
+
+    this.orders.orders = new Array<OrderDTO>();
+
+    this.orderMonday.deliveries = new Array<DeliveryDTO>();
+    this.orderTuesday.deliveries = new Array<DeliveryDTO>();
+    this.orderWednesday.deliveries = new Array<DeliveryDTO>();
+    this.orderThursday.deliveries = new Array<DeliveryDTO>();
+    this.orderFriday.deliveries = new Array<DeliveryDTO>();
+
+    this.orders.orders.push(this.orderMonday);
+    this.orders.orders.push(this.orderTuesday);
+    this.orders.orders.push(this.orderWednesday);
+    this.orders.orders.push(this.orderThursday);
+    this.orders.orders.push(this.orderFriday);
 
     this.actualDayName = this.daysOfWeek[this.currentIndex].day;
   }
@@ -195,15 +197,26 @@ export class HomePage {
   addToCart(item: CartItem) {
     item.total++;
     this.totalUnits++;
+    this.modifyItemInOrders(item);
+  }
+
+  modifyItemInOrders(item: CartItem) {
+    for (const order of this.orders.orders) {
+      for (const deliv of order.deliveries) {
+        if(deliv.productId === item.id) {
+          deliv.quantity = item.total;
+        }
+      }
+    }
   }
 
   removeFromCart(item: CartItem) {
-    if(item.total <= 1) {
+    if(item.total <= 1)
       item.cartPressed = false;
-    }
 
     item.total--;
     this.totalUnits--;
+    this.modifyItemInOrders(item);
   }
 
   pressCart(item: CartItem) {
@@ -312,6 +325,8 @@ export class HomePage {
         await this.setImageForItem(item);
         item.price = menu.price;
 
+        this.makeDeliveryDTO(prod);
+
         if (item.category === 'Estandar') {
           this.standardItems.push(item);
         } else if (item.category === 'Light') {
@@ -363,5 +378,25 @@ export class HomePage {
     } else if( role === 2) {
       localStorage.setItem("role", "ADMIN");
     }
+  }
+
+  makeDeliveryDTO(prod: ProductDTO) {
+    var delivDTO = new DeliveryDTO();
+        delivDTO.productId = prod.id;
+        delivDTO.quantity = 0;
+        delivDTO.delivered = false;
+        delivDTO.deliveryDate = prod.day;
+
+        if(prod.day === 0) {
+          this.orderMonday.deliveries.push(delivDTO);
+        } else if(prod.day === 1) {
+          this.orderTuesday.deliveries.push(delivDTO);
+        } else if(prod.day === 2) {
+          this.orderWednesday.deliveries.push(delivDTO);
+        } else if(prod.day === 3) {
+          this.orderThursday.deliveries.push(delivDTO);
+        } else if(prod.day === 4) {
+          this.orderFriday.deliveries.push(delivDTO);
+        }
   }
 }
