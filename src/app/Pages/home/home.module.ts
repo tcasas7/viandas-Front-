@@ -8,7 +8,7 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { LoginModalComponent } from 'src/app/Components/login-modal/login-modal.component';
 import { RegisterModalComponent } from 'src/app/Components/register-modal/register-modal.component';
-import { OrderResumeComponent } from './../../order-resume/order-resume.component';
+import { OrderResumeComponent } from '../../Components/order-resume/order-resume.component';
 
 @NgModule({
   imports: [

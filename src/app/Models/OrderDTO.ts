@@ -6,6 +6,7 @@ export class OrderDTO {
     paymentMethod!: number
     hasSalt!: Boolean
     description!: string
-    orderDate!: Date
+    orderDate!: Date;
     deliveries!: Array<DeliveryDTO>
+    location!: string;
 }

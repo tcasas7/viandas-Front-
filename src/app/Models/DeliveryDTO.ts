@@ -3,4 +3,5 @@ export class DeliveryDTO {
     productId!: number
     delivered!: boolean
     deliveryDate!: number
+    quantity!: number
 }
