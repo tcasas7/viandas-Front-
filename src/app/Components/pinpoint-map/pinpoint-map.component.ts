@@ -47,7 +47,7 @@ export class PinpointMapComponent  implements OnInit {
       }
     });
   }
-  
+
   createMarker(results: any, id: string) {
     new google.maps.Marker({
       map: this.map,

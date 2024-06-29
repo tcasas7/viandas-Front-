@@ -1,5 +1,5 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header class="curved-border-header gradient-toolbar">
+  <ion-toolbar class="gradient-toolbar">
     <div class="menu">Menú</div>
     <div *ngIf="logged === true" class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="person-outline"></ion-icon></div>
     <div *ngIf="logged === false" class="user-div"><ion-icon (click)="navigateToLogin()" class="user-label" name="log-in-outline"></ion-icon></div>
@@ -7,6 +7,12 @@
 </ion-header>
 
 <ion-content>
+  <div *ngIf="showOrderResumeModal" class="overlay">
+    <div class="modal-container">
+      <app-order-resume (closeModalEvent)="closeOrderResumeModal()"></app-order-resume>
+    </div>
+  </div>
+
   <div *ngIf="showLoginModal" class="overlay">
     <div class="modal-container">
       <app-login-modal (closeModalEvent)="closeLoginModal()" (openRegisterModalEvent)="navigateToRegister()" (openChangePasswordModalEvent)="navigateToChangePassword()"></app-login-modal>

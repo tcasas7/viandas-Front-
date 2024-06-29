@@ -107,7 +107,7 @@
     margin-left: 2vw;
     font-size: 2.5vh;
     text-align: left;
-    width: 50%;
+    width: 100%;
   }
   
   .user-label {
@@ -171,4 +171,17 @@
       font-weight: bold;
       font-size: large;
       margin-bottom: 5px;
+    }
+    
+    .gradient-toolbar {
+      --background: none;
+      background: linear-gradient(to top right, #c59fbe, #ffbdb4);
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: -15px;
+      --border-color: transparent;
+    }
+    
+    .border-header {
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: -16px;
     }
