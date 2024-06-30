@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ComponentRef } from '@angular/core';
 
 @Component({
   selector: 'app-order-resume',
@@ -8,9 +8,10 @@ import { Component, EventEmitter, Input, Output, output } from '@angular/core';
 export class OrderResumeComponent {
   @Output() closeModalEvent = new EventEmitter<void>();
   @Output() makeOrderEvent = new EventEmitter<void>();
-  @Input() orders : any;
+  @Input() orders!: any;
+  @Input() total!: number;
 
-  constructor() { }
+  constructor() {}
   
   closeModal() {
     this.closeModalEvent.emit();
@@ -21,3 +22,4 @@ export class OrderResumeComponent {
     console.log(this.orders);
   }
 }
+
