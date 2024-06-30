@@ -9,7 +9,7 @@
 <ion-content>
   <div *ngIf="showOrderResumeModal" class="overlay">
     <div class="modal-container">
-      <app-order-resume [orders]="orders" (closeModalEvent)="closeOrderResumeModal()"></app-order-resume>
+      <app-order-resume *ngIf="showOrderResumeModal" [total]="total" [orders]="orders" (closeModalEvent)="closeOrderResumeModal()"></app-order-resume>
     </div>
   </div>
 

@@ -1,19 +1,17 @@
-import { OrderDTO } from 'src/app/Models/OrderDTO';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LoadingController, Platform } from '@ionic/angular';
 import { CartItem } from 'src/app/Models/CartItem';
 import { MenuDTO } from 'src/app/Models/MenuDTO';
-import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
 import { ResponseObjectList } from 'src/app/Models/Response/ResponseObjList';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { MenusService } from 'src/app/Services/MenusService/menus.service';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
-import { DeliveryDTO } from 'src/app/Models/DeliveryDTO';
-import { ProductDTO } from 'src/app/Models/ProductDTO';
+import { ToDisplayOrderDTO } from 'src/app/Models/ToDisplayOrderDTO';
+import { ToDisplayDeliveryDTO } from 'src/app/Models/ToDisplayDeliveryDTO';
 
 @Component({
   selector: 'app-home',
@@ -66,13 +64,15 @@ export class HomePage {
   lightItems: CartItem[];
   proteicItems: CartItem[];
 
-  orders: PlaceOrderDTO = new PlaceOrderDTO();
+  orders: Array<ToDisplayOrderDTO> = new Array<ToDisplayOrderDTO>();
 
-  orderMonday: OrderDTO = new OrderDTO();
-  orderTuesday: OrderDTO = new OrderDTO();
-  orderWednesday: OrderDTO = new OrderDTO();
-  orderThursday: OrderDTO = new OrderDTO();
-  orderFriday: OrderDTO = new OrderDTO();
+  orderMonday: ToDisplayOrderDTO = new ToDisplayOrderDTO();
+  orderTuesday: ToDisplayOrderDTO = new ToDisplayOrderDTO();
+  orderWednesday: ToDisplayOrderDTO = new ToDisplayOrderDTO();
+  orderThursday: ToDisplayOrderDTO = new ToDisplayOrderDTO();
+  orderFriday: ToDisplayOrderDTO = new ToDisplayOrderDTO();
+
+  total: number = 0;
 
   constructor(
     private alertTool: AlertTool,
@@ -92,19 +92,24 @@ export class HomePage {
 
     this.initializeApp();
 
-    this.orders.orders = new Array<OrderDTO>();
+    this.orders = new Array<ToDisplayOrderDTO>();
 
-    this.orderMonday.deliveries = new Array<DeliveryDTO>();
-    this.orderTuesday.deliveries = new Array<DeliveryDTO>();
-    this.orderWednesday.deliveries = new Array<DeliveryDTO>();
-    this.orderThursday.deliveries = new Array<DeliveryDTO>();
-    this.orderFriday.deliveries = new Array<DeliveryDTO>();
+    this.orderMonday.deliveries = new Array<ToDisplayDeliveryDTO>();
+    this.orderMonday.dayOfWeek = "Lunes";
+    this.orderTuesday.deliveries = new Array<ToDisplayDeliveryDTO>();
+    this.orderTuesday.dayOfWeek = "Martes";
+    this.orderWednesday.deliveries = new Array<ToDisplayDeliveryDTO>();
+    this.orderWednesday.dayOfWeek = "Miercoles";
+    this.orderThursday.deliveries = new Array<ToDisplayDeliveryDTO>();
+    this.orderThursday.dayOfWeek = "Jueves";
+    this.orderFriday.deliveries = new Array<ToDisplayDeliveryDTO>();
+    this.orderFriday.dayOfWeek = "Viernes";
 
-    this.orders.orders.push(this.orderMonday);
-    this.orders.orders.push(this.orderTuesday);
-    this.orders.orders.push(this.orderWednesday);
-    this.orders.orders.push(this.orderThursday);
-    this.orders.orders.push(this.orderFriday);
+    this.orders.push(this.orderMonday);
+    this.orders.push(this.orderTuesday);
+    this.orders.push(this.orderWednesday);
+    this.orders.push(this.orderThursday);
+    this.orders.push(this.orderFriday);
 
     this.actualDayName = this.daysOfWeek[this.currentIndex].day;
   }
@@ -201,7 +206,7 @@ export class HomePage {
   }
 
   modifyItemInOrders(item: CartItem) {
-    for (const order of this.orders.orders) {
+    for (const order of this.orders) {
       for (const deliv of order.deliveries) {
         if(deliv.productId === item.id) {
           deliv.quantity = item.total;
@@ -245,6 +250,20 @@ export class HomePage {
   }
 
   navigateToOrderResume() {
+    this.total = 0;
+    this.orders.forEach(o => {
+      var totalOrders = 0;
+      o.deliveries.forEach(d => {
+        totalOrders += d.quantity;
+        this.total += d.quantity * d.productPrice;
+      });
+      if(totalOrders > 0) {
+        o.hasOrder = true;
+      } else {
+        o.hasOrder = false;
+      }
+    });
+    console.log(this.total);
     this.showOrderResumeModal = true;
   }
 
@@ -325,7 +344,7 @@ export class HomePage {
         await this.setImageForItem(item);
         item.price = menu.price;
 
-        this.makeDeliveryDTO(prod);
+        this.makeDeliveryDTO(item);
 
         if (item.category === 'Estandar') {
           this.standardItems.push(item);
@@ -380,12 +399,14 @@ export class HomePage {
     }
   }
 
-  makeDeliveryDTO(prod: ProductDTO) {
-    var delivDTO = new DeliveryDTO();
+  makeDeliveryDTO(prod: CartItem) {
+    var delivDTO = new ToDisplayDeliveryDTO();
         delivDTO.productId = prod.id;
         delivDTO.quantity = 0;
         delivDTO.delivered = false;
         delivDTO.deliveryDate = prod.day;
+        delivDTO.productName = prod.name;
+        delivDTO.productPrice = prod.price;
 
         if(prod.day === 0) {
           this.orderMonday.deliveries.push(delivDTO);
