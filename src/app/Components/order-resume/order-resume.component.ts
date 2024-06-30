@@ -19,7 +19,6 @@ export class OrderResumeComponent {
 
   makeOrder() {
     this.makeOrderEvent.emit();
-    console.log(this.orders);
   }
 }
 
