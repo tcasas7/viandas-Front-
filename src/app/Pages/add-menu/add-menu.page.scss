@@ -1,0 +1,179 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .overlay.show {
+    animation: fadeIn 0.3s;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .menu {
+    float: left;
+    width: 50%;
+    text-align: left;
+    vertical-align: bottom;
+    font-size: 1.5rem;
+    width: 50%;
+    height: 24px;
+    padding-left: 2vw;
+    font-weight: bold;
+  }
+
+  .login-button { 
+    margin-top: 4%;
+    font-size: 16px;
+    font-weight: bold;
+    height: 6%;
+    width: 80%;
+    color: #595755;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    max-width: 600px;
+    margin:auto;
+    margin-bottom: 1.2vh;
+  }
+
+  .register-button {
+    text-align: right;
+    float: right;
+    transition: all 0.18s ease;
+    margin-top: 1.2vh;
+    margin-bottom: 1.5vh;
+    padding-right: 3vw;
+    color: blue;
+    cursor: pointer;
+    font-size: 1.7vh;
+    width: 50%;
+  }
+
+  .register-button:hover {
+    transition: all 0.18s ease;
+    color: rgb(116, 116, 241);
+    text-decoration: underline;
+  }
+
+  .retrieve-password-button {
+    text-align: left;
+    float: left;
+    transition: all 0.18s ease;
+    margin-top: 1.2vh;
+    margin-bottom: 1.5vh;
+    padding-left: 3vw;
+    cursor: pointer;
+    font-size: 1.7vh;
+    width: 50%;
+  }
+
+  .retrieve-password-button:hover {
+    transition: all 0.18s ease;
+    color: gray;
+  }
+
+  .tittle-item {
+    padding-top: 2vh;
+    font-weight: bold;
+    font-size: 2vh;
+  }
+
+  .user-div {
+    vertical-align: bottom;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    font-size: 2.5vh;
+    text-align: left;
+}
+
+.user-label {
+    vertical-align: bottom;
+    cursor: pointer;
+    font-weight: bold;
+    background: linear-gradient(
+        90deg,
+        #282c34,
+        #282c34 40%,
+        gray 50%,
+        #282c34 60%,
+        #282c34
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: light-pass 7s infinite;
+    transition: all 0.18s ease;
+}
+
+.user-label:hover {
+    color: rgb(78, 78, 78);
+    background: linear-gradient(
+        90deg,
+         gray,
+         gray 40%,
+         #282c34 50%,
+         gray 60%,
+         gray
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: light-pass 7s infinite;
+    transition: all 0.18s ease;
+}
+@keyframes light-pass {
+  0% {
+      background-position: 200% 0;
+  }
+  100% {
+      background-position: -200% 0;
+  }
+}
+
+.back-label {
+    vertical-align: bottom;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.18s ease;
+}
+
+.gradient-toolbar {
+  --background: none;
+  background: linear-gradient(to top right, #c59fbe, #ffbdb4);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: -15px;
+  --border-color: transparent;
+}
+
+.border-header {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: -16px;
+}
