@@ -1,0 +1,56 @@
+<ion-header class="border-header">
+  <ion-toolbar class="gradient-toolbar">
+    <div class="user-div">
+      <ion-icon (click)="navigateToAdmin()" class="back-label" name="arrow-back-outline"></ion-icon>
+      <ion-label (click)="navigateToAddImages()" style="float: right;" class="user-label">Modificar imagenes</ion-label>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card color="light" style="width: 77vw; max-width: 600px; margin: auto; margin-top: 2vh;">
+    <ion-card-header style="font-weight: bold; font-size: larger;">
+      <ion-label *ngIf="standardIsCollapsed">Estandar<ion-icon style="float: right; cursor: pointer;" name="chevron-down-outline" (click)="uncollapseStandard()"></ion-icon></ion-label>
+      <ion-label *ngIf="!standardIsCollapsed">Estandar<ion-icon style="float: right; cursor: pointer;" name="chevron-up-outline" (click)="collapseStandard()"></ion-icon></ion-label>
+    </ion-card-header>
+    <ion-card-content *ngIf="!standardIsCollapsed">
+      <ion-input labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Jueves" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Viernes" placeholder="Nombre producto"></ion-input>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card color="light" style="width: 77vw; max-width: 600px; margin: auto; margin-top: 2vh;">
+    <ion-card-header style="font-weight: bold; font-size: larger;">
+      <ion-label *ngIf="lightIsCollapsed">Light<ion-icon style="float: right; cursor: pointer;" name="chevron-down-outline" (click)="uncollapseLight()"></ion-icon></ion-label>
+      <ion-label *ngIf="!lightIsCollapsed">Light<ion-icon style="float: right; cursor: pointer;" name="chevron-up-outline" (click)="collapseLight()"></ion-icon></ion-label>
+    
+    </ion-card-header>
+    <ion-card-content *ngIf="!lightIsCollapsed">
+      <ion-input labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Jueves" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Viernes" placeholder="Nombre producto"></ion-input>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card color="light" style="width: 77vw; max-width: 600px; margin: auto; margin-top: 2vh;">
+    <ion-card-header style="font-weight: bold; font-size: larger;">
+      <ion-label *ngIf="proteicIsCollapsed">Proteico<ion-icon style="float: right; cursor: pointer;" name="chevron-down-outline" (click)="uncollapseProteic()"></ion-icon></ion-label>
+      <ion-label *ngIf="!proteicIsCollapsed">Proteico<ion-icon style="float: right; cursor: pointer;" name="chevron-up-outline" (click)="collapseProteic()"></ion-icon></ion-label>
+    </ion-card-header>
+    <ion-card-content *ngIf="!proteicIsCollapsed">
+      <ion-input labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Jueves" placeholder="Nombre producto"></ion-input>
+      <ion-input labelPlacement="floating" label="Viernes" placeholder="Nombre producto"></ion-input>
+    </ion-card-content>
+  </ion-card>
+  <div class="button-container">
+    <ion-button class="login-button">Enviar</ion-button>
+  </div>
+</ion-content>

@@ -1,33 +1,34 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.page.html',
-  styleUrls: ['./admin.page.scss'],
+  selector: 'app-add-menu',
+  templateUrl: './add-menu.page.html',
+  styleUrls: ['./add-menu.page.scss'],
 })
-export class AdminPage {
+export class AddMenuPage {
 
   isAdmin: boolean = false;
   user: UserDTO;
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
 
-  removeLocationResponse: ResponseObject = new ResponseObject();
   logged: boolean = false;
   didLoad: boolean = false;
 
-  activeModal: number = 0;
+  standardIsCollapsed: boolean = true;
+  lightIsCollapsed: boolean = true;
+  proteicIsCollapsed: boolean = true;
 
-  constructor(
+  constructor
+  (
+    private loadingCtrl: LoadingController,
     private router: Router,
     private userService: UsersService,
-    private loadingCtrl: LoadingController,
     private alertTool: AlertTool
   )
   {
@@ -48,54 +49,6 @@ export class AdminPage {
     }
 
     this.getData();
-    
-  }
-
-  navigateToProfile() {
-    this.router.navigate(["profile"]);
-  }
-
-  navigateToUnauthorized() {
-    this.router.navigate(["unauthorized"]);
-  }
-
-  activateOrdersModal() {
-    this.router.navigate(["admin-orders"]);
-    this.activeModal = 1;
-  }
-
-  activateMenusModal() {
-    this.router.navigate(["add-menu"]);
-    this.activeModal = 2;
-  }
-
-  activateStatsModal() {
-    this.router.navigate(["stats"])
-    this.activeModal = 3;
-  }
-
-  activateRoleModal() {
-    this.activeModal = 4;
-  }
-
-  activateLocationModal() {
-    this.router.navigate(["location"])
-    this.activeModal = 5;
-  }
-
-  closeModal() {
-    this.activeModal = 0;
-  }
-
-  navigateToHome() {
-    this.router.navigate(["/home"]);
-  }
-
-  navigateToAdmin() {
-    this.router.navigate(["/admin"]);
-  }
-  navigateToLocation() {
-    this.router.navigate(["/location"]);
   }
 
   makeLoadingAnimation() {
@@ -125,19 +78,6 @@ async checkAndCloseLoader() {
     }
 }
 
-saveRole(role: number) {
-  if(role === 0) {
-    localStorage.setItem("role", "CLIENT");
-    this.isAdmin = false;
-  } else if( role === 1) {
-    localStorage.setItem("role", "DELIVERY");
-    this.isAdmin = false;
-  } else if( role === 2) {
-    localStorage.setItem("role", "ADMIN");
-    this.isAdmin = true;
-  }
-}
-
 async getData() {
   this.userService.GetData().subscribe( response => {
     this.dataResponse = response as ResponseObjectModel<UserDTO>;
@@ -155,4 +95,46 @@ async getData() {
     this.alertTool.presentToast("Oops... Ocurrió un error!");
   })
 }
+
+saveRole(role: number) {
+  if(role === 0) {
+    localStorage.setItem("role", "CLIENT");
+    this.isAdmin = false;
+  } else if( role === 1) {
+    localStorage.setItem("role", "DELIVERY");
+    this.isAdmin = false;
+  } else if( role === 2) {
+    localStorage.setItem("role", "ADMIN");
+    this.isAdmin = true;
+  }
+}
+
+  navigateToAdmin() {
+    this.router.navigate(["/admin"]);
+  }
+
+  navigateToAddImages() {
+    this.router.navigate(["/add-images"]);
+  }
+
+  collapseStandard() {
+    this.standardIsCollapsed = true;
+  }
+  collapseLight() {
+    this.lightIsCollapsed = true;
+  }
+  collapseProteic() {
+    this.proteicIsCollapsed = true;
+  }
+
+  uncollapseStandard() {
+    this.standardIsCollapsed = false;
+  }
+  uncollapseLight() {
+    this.lightIsCollapsed = false;
+  }
+  uncollapseProteic() {
+    this.proteicIsCollapsed = false;
+  }
+
 }

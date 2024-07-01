@@ -30,6 +30,10 @@ const routes: Routes = [
   {
     path: 'stats',
     loadChildren: () => import('./Pages/stats/stats.module').then( m => m.StatsPageModule)
+  },
+  {
+    path: 'add-menu',
+    loadChildren: () => import('./Pages/add-menu/add-menu.module').then( m => m.AddMenuPageModule)
   }
 ];
 
