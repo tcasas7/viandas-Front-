@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LoadingController, Platform } from '@ionic/angular';
@@ -19,7 +19,7 @@ import { ToDisplayDeliveryDTO } from 'src/app/Models/ToDisplayDeliveryDTO';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
+  @ViewChild('carouselContentWrapper', { static: false }) carouselContentWrapper!: ElementRef;
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
 
   logged: boolean = false;
@@ -42,8 +42,8 @@ export class HomePage {
   ];
   icon: string = "cart-outline";
 
-  leftHiden: boolean = false;
-  rightHiden: boolean = true;
+  leftHidden: boolean = false;
+  rightHidden: boolean = true;
 
   actualDayNumber = 1;
   actualDayName: any;
@@ -114,6 +114,15 @@ export class HomePage {
     this.actualDayName = this.daysOfWeek[this.currentIndex].day;
   }
 
+  onScroll(event: any) {
+    const scrollLeft = event.detail.scrollLeft;
+    const sectionWidth = this.carouselContentWrapper.nativeElement.scrollWidth / 5;
+    const dayIndex = Math.min(4, Math.floor(scrollLeft / sectionWidth));
+    this.actualDayName = this.daysOfWeek[dayIndex].day;
+    this.cdr.detectChanges();
+  }
+  
+
   initializeApp() {
     this.platform.ready().then(() => {
       this.isDesktop = this.platform.is('desktop');
@@ -136,7 +145,7 @@ export class HomePage {
     }
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     if(localStorage.getItem("Logged") === "true") {
       this.logged = true;
     } else {
@@ -158,6 +167,9 @@ export class HomePage {
       });
     }
     this.instanceItems();
+
+    this.actualDayName = this.daysOfWeek[this.currentIndex].day;
+    this.cdr.detectChanges();
   }
 
   initializeCarouselSets() {
@@ -166,37 +178,39 @@ export class HomePage {
     }
   }
 
+  prev() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.updateCarousel();
+      this.actualDayName = this.daysOfWeek[this.currentIndex].day;
+      this.cdr.detectChanges(); // Detectar cambios después de actualizar el día
+    }
+  }
+  
+  next() {
+    if (this.currentIndex < this.carouselSets.length - 1) {
+      this.currentIndex++;
+      this.updateCarousel();
+      this.actualDayName = this.daysOfWeek[this.currentIndex].day;
+      this.cdr.detectChanges(); // Detectar cambios después de actualizar el día
+    }
+  }
+  
   updateCarousel() {
     const carouselContent = document.querySelector('.carousel-content') as HTMLElement;
     const setWidth = 77; // Ancho del set + margen derecho
     const translateX = -this.currentIndex * setWidth;
     carouselContent.style.transform = `translateX(${translateX}vw)`;
+  
     this.actualDayName = this.daysOfWeek[this.currentIndex].day;
-
-    if(this.currentIndex == 0) {
-      this.leftHiden = false;
-    } else if(this.currentIndex == 4) {
-      this.rightHiden = false;
-    } else {
-      this.leftHiden = true;
-      this.rightHiden = true;
-    }
+    this.leftHidden = this.currentIndex === 0;
+    this.rightHidden = this.currentIndex === this.carouselSets.length - 1;
   }
-
-  next() {
-    if (this.currentIndex < this.carouselSets.length - 1) {
-      this.currentIndex++;
-      this.actualDayNumber++;
-      this.updateCarousel();
-    }
-  }
-
-  prev() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-      this.actualDayNumber--;
-      this.updateCarousel();
-    }
+  
+  updateNavigationButtons() {
+    this.leftHidden = this.currentIndex > 0;
+    this.rightHidden = this.currentIndex < this.carouselSets.length - 1;
+    this.actualDayName = this.daysOfWeek[this.currentIndex].day;
   }
 
   addToCart(item: CartItem) {

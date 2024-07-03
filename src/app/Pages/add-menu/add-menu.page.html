@@ -9,11 +9,12 @@
 
 <ion-content [fullscreen]="true">
   <ion-card color="light" style="width: 77vw; max-width: 600px; margin: auto; margin-top: 2vh;">
-    <ion-card-header style="font-weight: bold; font-size: larger;">
+    <ion-card-header style="font-weight: bold; font-size: larger; border-bottom: 1px black solid;">
       <ion-label *ngIf="standardIsCollapsed">Estandar<ion-icon style="float: right; cursor: pointer;" name="chevron-down-outline" (click)="uncollapseStandard()"></ion-icon></ion-label>
       <ion-label *ngIf="!standardIsCollapsed">Estandar<ion-icon style="float: right; cursor: pointer;" name="chevron-up-outline" (click)="collapseStandard()"></ion-icon></ion-label>
     </ion-card-header>
-    <ion-card-content *ngIf="!standardIsCollapsed">
+    <ion-card-content *ngIf="!standardIsCollapsed">  
+      <ion-input type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio" placeholder="Precio del menú"></ion-input>
       <ion-input labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
       <ion-input labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
       <ion-input labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>
@@ -29,6 +30,7 @@
     
     </ion-card-header>
     <ion-card-content *ngIf="!lightIsCollapsed">
+      <ion-input type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio" placeholder="Precio del menú"></ion-input>
       <ion-input labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
       <ion-input labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
       <ion-input labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>
@@ -43,6 +45,7 @@
       <ion-label *ngIf="!proteicIsCollapsed">Proteico<ion-icon style="float: right; cursor: pointer;" name="chevron-up-outline" (click)="collapseProteic()"></ion-icon></ion-label>
     </ion-card-header>
     <ion-card-content *ngIf="!proteicIsCollapsed">
+      <ion-input type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio" placeholder="Precio del menú"></ion-input>
       <ion-input labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
       <ion-input labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
       <ion-input labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>
