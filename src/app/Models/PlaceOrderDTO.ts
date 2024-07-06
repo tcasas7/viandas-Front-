@@ -1,5 +1,5 @@
 import { OrderDTO } from "./OrderDTO";
 
 export class PlaceOrderDTO {
-    orders!: Array<OrderDTO>;
+    Orders: Array<OrderDTO> = new Array<OrderDTO>();
 }

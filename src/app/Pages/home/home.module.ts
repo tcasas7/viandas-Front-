@@ -9,6 +9,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { LoginModalComponent } from 'src/app/Components/login-modal/login-modal.component';
 import { RegisterModalComponent } from 'src/app/Components/register-modal/register-modal.component';
 import { OrderResumeComponent } from '../../Components/order-resume/order-resume.component';
+import { AddDetailsModalComponent } from 'src/app/Components/add-details-modal/add-details-modal.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,12 @@ import { OrderResumeComponent } from '../../Components/order-resume/order-resume
     HomePageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [HomePage, LoginModalComponent, RegisterModalComponent, ChangePasswordModalComponent, OrderResumeComponent]
+  declarations: [
+    HomePage,
+    LoginModalComponent,
+    RegisterModalComponent,
+    ChangePasswordModalComponent,
+    OrderResumeComponent,
+    AddDetailsModalComponent]
 })
 export class HomePageModule {}
