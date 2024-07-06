@@ -57,9 +57,9 @@
     </ion-item>
   </div>
   <div *ngIf="isAdmin" style="text-align: center;">
-    <ion-button color="danger" (click)="navigateToAdmin()" class="order-button">Panel de administrador</ion-button>
+    <ion-button color="warning" (click)="navigateToAdmin()" class="order-button">Panel de administrador</ion-button>
   </div>
-  <div *ngIf="!isAdmin" style="text-align: center;">
+  <div style="text-align: center;">
     <ion-button color="danger" (click)="navigateToOrders()" class="order-button">Ver mis ordenes</ion-button>
   </div>
   <div style="text-align: center;">

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MainService } from '../MainService/main.service';
 import { OrderDTO } from 'src/app/Models/OrderDTO';
+import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +24,23 @@ export class OrdersService extends MainService {
     return this.http.post(this.baseRoute + 'Orders/own', {headers});
   }
 
-  PlaceOrder(model: OrderDTO) {
-    var token = localStorage.getItem('Token');
+  PlaceOrder(model: PlaceOrderDTO) {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
 
-    var headers = this.createHeader(token);
+    // Convertir a camelCase en el frontend
+    const camelCaseModel = {
+        orders: model.Orders.map(order => ({
+            id: order.id,
+            price: order.price,
+            paymentMethod: order.paymentMethod,
+            hasSalt: order.hasSalt,
+            description: order.description
+        }))
+    };
 
-    return this.http.post(this.baseRoute + 'Orders/place', model, {headers})
-  }
+    return this.http.post(this.baseRoute + 'Orders/place', camelCaseModel, { headers });
+}
 
   RemoveOrder(orderId: number) {
     var token = localStorage.getItem('Token');

@@ -1,0 +1,28 @@
+<ion-card color="light" style="width: 77vw; max-width: 600px; max-height: 70vh; margin: 0 auto; overflow: auto;">
+  <ion-item lines="none" color="translucent" class="tittle-item" style="position: sticky; top: 0; z-index: 1;">Confirmar pedido<ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon>
+  </ion-item>
+  <ion-card color="light" style="height: 33vh; margin-left: 5%; margin-right: 5%; padding-left: 1%; padding-bottom: 1%; padding-right: 1%; margin-bottom: 1vh;">
+    <ion-textarea [(ngModel)]="description" class="auto-resize-textarea" style="padding-top: 1vh; height: 100%; white-space: pre-wrap;" label="Detalles" labelPlacement="floating" fill="outline" placeholder="Ej: Albondigas sin sal"></ion-textarea>
+  </ion-card>
+  <div style="margin-left: 5%; margin-right: 5%; margin-bottom: 1%;">
+    <ion-select interface="popover" placeholder="Dirección de envio" [(ngModel)]="selectedLocation" (ionChange)="handleSelection($event)" style="float:inline-start">
+      <ion-select-option *ngFor="let item of locations" [value]="item.dir">&nbsp;{{item.dir}}</ion-select-option>
+      <ion-select-option *ngIf="locations.length === 0"  [value]="'empty'">No hay direcciones</ion-select-option>  
+    </ion-select>
+  </div>
+  <div style="margin-left: 7%; margin-right: 7%;">
+    <ion-segment [(ngModel)]="paymentMethod" (ionChange)="handleSelection($event)">
+      <ion-segment-button value = 0>
+        <ion-label style="color: #595755;">Efectivo</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value = 1>
+        <ion-label style="color: #595755;">Transferencia</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+
+  <div class="button-container">
+    <ion-button class="login-button" (click)="makeOrder()">Enviar orden</ion-button>
+  </div>
+</ion-card>

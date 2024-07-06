@@ -7,9 +7,15 @@
 </ion-header>
 
 <ion-content>
+  <div *ngIf="showOrderDetailsModal" class="overlay">
+    <div class="modal-container">
+      <app-add-details-modal *ngIf="showOrderDetailsModal" [orders]="placeOrder" [locations]="dataResponse.model.locations" (closeModalEvent)="closeOrderDetailsModal()"></app-add-details-modal>
+    </div>
+  </div>
+
   <div *ngIf="showOrderResumeModal" class="overlay">
     <div class="modal-container">
-      <app-order-resume *ngIf="showOrderResumeModal" [total]="total" [orders]="orders" (closeModalEvent)="closeOrderResumeModal()"></app-order-resume>
+      <app-order-resume *ngIf="showOrderResumeModal" [total]="total" [orders]="orders" (makeOrderEvent)="navigateToOrderDetails()" (closeModalEvent)="closeOrderResumeModal()"></app-order-resume>
     </div>
   </div>
 
@@ -48,7 +54,7 @@
       <ion-card color="success" class="card" data-text="Proteico"></ion-card>
     </div>
   
-    <div class="carousel-content-wrapper" #carouselContentWrapper (scroll)="onScroll($event)">
+    <div class="carousel-content-wrapper" #carouselContentWrapper>
       <div class="carousel-content">
         <div class="carousel-set" *ngFor="let set of carouselSets">
           <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 0 && !isDesktop" >Lunes</div>

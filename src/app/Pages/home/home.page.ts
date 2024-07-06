@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LoadingController, Platform } from '@ionic/angular';
@@ -12,13 +12,16 @@ import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 import { ToDisplayOrderDTO } from 'src/app/Models/ToDisplayOrderDTO';
 import { ToDisplayDeliveryDTO } from 'src/app/Models/ToDisplayDeliveryDTO';
+import { LocationDTO } from 'src/app/Models/LocationDTO';
+import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
+import { OrderDTO } from 'src/app/Models/OrderDTO';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   @ViewChild('carouselContentWrapper', { static: false }) carouselContentWrapper!: ElementRef;
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
 
@@ -28,6 +31,7 @@ export class HomePage {
   showRegisterModal: boolean = false;
   showChangePasswordModal: boolean = false;
   showOrderResumeModal: boolean = false;
+  showOrderDetailsModal: boolean = false;
 
   carouselItems: CartItem[];
   carouselSets: any[][] = [];
@@ -74,6 +78,8 @@ export class HomePage {
 
   total: number = 0;
 
+  placeOrder!: PlaceOrderDTO;
+
   constructor(
     private alertTool: AlertTool,
     private router: Router,
@@ -112,16 +118,16 @@ export class HomePage {
     this.orders.push(this.orderFriday);
 
     this.actualDayName = this.daysOfWeek[this.currentIndex].day;
-  }
 
-  onScroll(event: any) {
-    const scrollLeft = event.detail.scrollLeft;
-    const sectionWidth = this.carouselContentWrapper.nativeElement.scrollWidth / 5;
-    const dayIndex = Math.min(4, Math.floor(scrollLeft / sectionWidth));
-    this.actualDayName = this.daysOfWeek[dayIndex].day;
+    this.placeOrder = new PlaceOrderDTO();
+  }
+  ngOnInit() {
+    this.makeLoadingAnimation();
+    this.instanceItems();
+
+    this.actualDayName = this.daysOfWeek[this.currentIndex].day;
     this.cdr.detectChanges();
   }
-  
 
   initializeApp() {
     this.platform.ready().then(() => {
@@ -152,8 +158,6 @@ export class HomePage {
       this.logged = false;
     }
 
-    this.makeLoadingAnimation();
-
     if(this.logged) {
       this.userService.GetData().subscribe( response => {
         this.dataResponse = response as ResponseObjectModel<UserDTO>;
@@ -166,10 +170,7 @@ export class HomePage {
         this.logged = false;
       });
     }
-    this.instanceItems();
 
-    this.actualDayName = this.daysOfWeek[this.currentIndex].day;
-    this.cdr.detectChanges();
   }
 
   initializeCarouselSets() {
@@ -281,6 +282,11 @@ export class HomePage {
     this.showOrderResumeModal = true;
   }
 
+  navigateToOrderDetails() {
+    this.showOrderResumeModal = false;
+    this.showOrderDetailsModal = true;
+  }
+
   closeLoginModal() {
     this.showLoginModal = false;
     if(localStorage.getItem("Logged") === 'true') {
@@ -299,7 +305,13 @@ export class HomePage {
   }
 
   closeOrderResumeModal() {
+    this.placeOrder = new PlaceOrderDTO();
     this.showOrderResumeModal = false;
+  }
+
+  closeOrderDetailsModal() {
+    this.placeOrder = new PlaceOrderDTO();
+    this.showOrderDetailsModal = false;
   }
 
   makeOrder() {
@@ -307,6 +319,17 @@ export class HomePage {
       this.alertTool.presentToast("No tenes ningún producto en tu carrito");
     } else {
       if(this.logged) {
+
+        this.orders.forEach(o => {
+          var order = new OrderDTO(o);
+          order.price = 0;
+          this.placeOrder.Orders.push(order);
+          o.deliveries.forEach(d => {
+            if(d.quantity > 0) {
+              order.price += d.quantity * d.productPrice;
+            }
+        });
+      });
         this.navigateToOrderResume();
       } else {
         this.showLoginModal = true;

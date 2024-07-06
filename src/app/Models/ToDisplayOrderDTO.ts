@@ -6,7 +6,7 @@ export class ToDisplayOrderDTO {
     dayOfWeek!: string
     paymentMethod!: number
     hasOrder!: Boolean
-    hasSalt!: Boolean
+    hasSalt!: boolean
     description!: string
     orderDate!: Date;
     deliveries!: Array<ToDisplayDeliveryDTO>
