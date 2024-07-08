@@ -34,6 +34,10 @@ const routes: Routes = [
   {
     path: 'add-menu',
     loadChildren: () => import('./Pages/add-menu/add-menu.module').then( m => m.AddMenuPageModule)
+  },
+  {
+    path: 'orders',
+    loadChildren: () => import('./Pages/orders/orders.module').then( m => m.OrdersPageModule)
   }
 ];
 

@@ -1,0 +1,59 @@
+<ion-header style="align-items: end">
+  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
+    <div class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="arrow-back-outline"></ion-icon></div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="custom-content">
+  <ion-card *ngFor="let order of orders">
+    <ion-card-header style="color: black; font-weight: bold; font-size: large;">
+      <div>
+        Numero de orden: {{order.id}} <ion-icon style="float: inline-end;" name="chevron-down-outline"></ion-icon>
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngIf="order.description !== ''" >
+        <div style="color: black; font-weight: bold;">Descripción: </div>{{order.description}}
+      </div>
+      <div>
+        <div *ngIf="order.paymentMethod === 0" >
+          <div style="color: black; font-weight: bold;">Metodo de pago: </div> Efectivo
+        </div>
+        <div *ngIf="order.paymentMethod === 1">
+          <div style="color: black; font-weight: bold;">Metodo de pago: </div> Transferencia
+        </div>
+      </div>
+      <div>
+        <div *ngIf="order.deliveries[0].deliveryDate === 1" >
+          <div style="color: black; font-weight: bold;">Fecha de entrega: </div> Lunes
+        </div>
+        <div *ngIf="order.deliveries[0].deliveryDate === 2" >
+          <div style="color: black; font-weight: bold;">Fecha de entrega: </div> Martes
+        </div>
+        <div *ngIf="order.deliveries[0].deliveryDate === 3" >
+          <div style="color: black; font-weight: bold;">Fecha de entrega: </div> Miercoles
+        </div>
+        <div *ngIf="order.deliveries[0].deliveryDate === 4" >
+          <div style="color: black; font-weight: bold;">Fecha de entrega: </div> Jueves
+        </div>
+        <div *ngIf="order.deliveries[0].deliveryDate === 5" >
+          <div style="color: black; font-weight: bold;">Fecha de entrega: </div> Viernes
+        </div>
+      </div>
+      <div>
+        <div style="color: black; font-weight: bold;">Total: </div> ${{order.price}}
+      </div>
+      <div>
+        <ion-button style="width: 100%;">Ver productos</ion-button>
+      </div>
+      <div *ngIf="order.paymentMethod === 1">
+        <ion-button style="float: inline-start;">Cancelar</ion-button>
+        <ion-button style="float: inline-end;">Realizar pago</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
