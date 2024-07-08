@@ -10,7 +10,7 @@ export class MainService {
   constructor(protected http: HttpClient)
   {
     //localhost
-    this.baseRoute = "http://localhost:5009/api/";
+    //this.baseRoute = "http://localhost:5009/api/";
   }
 
   protected createHeader(token: any) {
