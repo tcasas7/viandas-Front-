@@ -16,7 +16,7 @@
       <app-pinpoint-map (closeModalEvent)="closeModal()"></app-pinpoint-map>
     </div>
   </div>
-  <ion-grid>
+  <ion-grid *ngIf="!isWeb" >
     <ion-row>
       <ion-col size="6" class="mosaic">
         <div class="title">Ver ordenes</div>
@@ -53,8 +53,69 @@
         </div>
       </ion-col>
       <ion-col size="6" class="mosaic">
+        <div class="title">Info pago</div>
+        <div style="background-color: var(--ion-color-danger-shade);" class="square-tile" (click)="activatePaymentInfoModal()">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row> 
+      <ion-col size="12" class="mosaic">
         <div class="title">Volver</div>
-        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile" (click)="navigateToProfile()">
+        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile-top" (click)="navigateToProfile()">
+          <ion-icon name="arrow-back-circle-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngIf="isWeb" >
+    <ion-row>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Ver ordenes</div>
+        <div style="background-color: var(--ion-color-secondary);" class="square-tile-web" (click)="activateOrdersModal()">
+          <ion-icon name="book-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Agregar menús</div>
+        <div style="background-color: var(--ion-color-primary);" class="square-tile-web" (click)="activateMenusModal()">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Ver estadisticas</div>
+        <div style="background-color: var(--ion-color-warning);" class="square-tile-web" (click)="activateStatsModal()">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Dar rol</div>
+        <div style="background-color: var(--ion-color-success);" class="square-tile-web" (click)="activateRoleModal()">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Ver direcciónes</div>
+        <div style="background-color: var(--ion-color-warning-shade);" class="square-tile-web" (click)="activateLocationModal()">
+          <ion-icon name="location-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Info pago</div>
+        <div style="background-color: var(--ion-color-danger-shade);" class="square-tile-web" (click)="activatePaymentInfoModal()">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="web-mosaic">
+        <div class="title">Volver</div>
+        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile-web-top" (click)="navigateToProfile()">
           <ion-icon name="arrow-back-circle-outline"></ion-icon>
         </div>
       </ion-col>

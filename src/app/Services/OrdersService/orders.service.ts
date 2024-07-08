@@ -33,9 +33,10 @@ export class OrdersService extends MainService {
         orders: model.Orders.map(order => ({
             id: order.id,
             price: order.price,
-            paymentMethod: order.paymentMethod,
+            paymentMethod: order.paymentMethod.valueOf(),
             hasSalt: order.hasSalt,
-            description: order.description
+            description: order.description,
+            orderDate: order.orderDate
         }))
     };
 

@@ -42,6 +42,7 @@ export class AddDetailsModalComponent {
         o.hasSalt = false;
         o.orderDate = new Date().toISOString();
       });
+      console.log(this.orders.Orders)
       this.placeOrder();
     }
   }
