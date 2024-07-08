@@ -8,7 +8,7 @@ export class ToDisplayOrderDTO {
     hasOrder!: Boolean
     hasSalt!: boolean
     description!: string
-    orderDate!: Date;
+    orderDate!: string;
     deliveries!: Array<ToDisplayDeliveryDTO>
     location!: string;
 }

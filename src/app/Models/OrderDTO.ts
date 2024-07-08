@@ -7,7 +7,7 @@ export class OrderDTO {
     paymentMethod!: number;
     hasSalt!: boolean;
     description!: string;
-    orderDate!: any;
+    orderDate!: string;
     deliveries!: Array<DeliveryDTO>;
     location!: string;
 
