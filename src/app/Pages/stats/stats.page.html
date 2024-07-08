@@ -9,7 +9,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid>
+  <ion-grid *ngIf="!isWeb" >
     <ion-row>
       <ion-col size="6" class="mosaic">
         <div class="title">Total de ventas</div>
@@ -36,16 +36,67 @@
         <div style="background-color: var(--ion-color-success);" class="square-tile">
           <ion-icon name="today-outline"></ion-icon>
         </div>
-      </ion-col>
+      </ion-col>  
+    </ion-row>
+    <ion-row>
       <ion-col size="6" class="mosaic">
         <div class="title">Por método</div>
         <div style="background-color: var(--ion-color-warning-shade);" class="square-tile">
           <ion-icon name="card-outline"></ion-icon>
         </div>
       </ion-col>
-      <ion-col size="6" class="mosaic">
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="mosaic">
         <div class="title">Volver</div>
-        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile" (click)="navigateToAdmin()">
+        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile-top" (click)="navigateToAdmin()">
+          <ion-icon name="arrow-back-circle-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngIf="isWeb" >
+    <ion-row>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Total de ventas</div>
+        <div style="background-color: var(--ion-color-secondary);" class="square-tile-web">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Por menú</div>
+        <div style="background-color: var(--ion-color-primary);" class="square-tile-web">
+          <ion-icon name="restaurant-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Por producto</div>
+        <div style="background-color: var(--ion-color-warning);" class="square-tile-web">
+          <ion-icon name="pizza-outline"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Por dia</div>
+        <div style="background-color: var(--ion-color-success);" class="square-tile-web">
+          <ion-icon name="today-outline"></ion-icon>
+        </div>
+      </ion-col> 
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" class="web-mosaic">
+        <div class="title">Por método</div>
+        <div style="background-color: var(--ion-color-warning-shade);" class="square-tile-web">
+          <ion-icon name="card-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="web-mosaic">
+        <div class="title">Volver</div>
+        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile-web-top" (click)="navigateToAdmin()">
           <ion-icon name="arrow-back-circle-outline"></ion-icon>
         </div>
       </ion-col>
