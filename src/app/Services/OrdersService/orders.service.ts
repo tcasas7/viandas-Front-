@@ -30,16 +30,23 @@ export class OrdersService extends MainService {
 
     // Convertir a camelCase en el frontend
     const camelCaseModel = {
-        orders: model.Orders.map(order => ({
-            id: order.id,
-            price: order.price,
-            paymentMethod: order.paymentMethod.valueOf(),
-            hasSalt: order.hasSalt,
-            description: order.description,
-            orderDate: order.orderDate
+      orders: model.Orders.map(order => ({
+        id: order.id,
+        price: order.price,
+        paymentMethod: order.paymentMethod.valueOf(),
+        hasSalt: order.hasSalt,
+        description: order.description,
+        orderDate: order.orderDate,
+        location: order.location,
+        deliveries: order.deliveries.map(delivery => ({
+          id: delivery.Id,
+          productId: delivery.productId,
+          delivered: delivery.delivered,
+          deliveryDate: delivery.deliveryDate,
+          quantity: delivery.quantity
         }))
-    };
-
+      }))
+    }
     return this.http.post(this.baseRoute + 'Orders/place', camelCaseModel, { headers });
 }
 

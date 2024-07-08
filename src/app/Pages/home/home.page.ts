@@ -441,7 +441,7 @@ export class HomePage implements OnInit {
         delivDTO.productId = prod.id;
         delivDTO.quantity = 0;
         delivDTO.delivered = false;
-        delivDTO.deliveryDate = prod.day;
+        delivDTO.deliveryDate = (prod.day + 1);
         delivDTO.productName = prod.name;
         delivDTO.productPrice = prod.price;
 
