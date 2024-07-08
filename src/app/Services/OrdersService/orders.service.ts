@@ -21,7 +21,7 @@ export class OrdersService extends MainService {
 
     var headers = this.createHeader(token);
 
-    return this.http.post(this.baseRoute + 'Orders/own', {headers});
+    return this.http.get(this.baseRoute + 'Orders/own', {headers});
   }
 
   PlaceOrder(model: PlaceOrderDTO) {
