@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, Platform } from '@ionic/angular';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
@@ -19,11 +19,14 @@ export class StatsPage {
   didLoad: boolean = false;
   logged: boolean = false;
 
+  isWeb: boolean = false;
+
   constructor(
     private router: Router,
     private userService: UsersService,
     private loadingCtrl: LoadingController,
-    private alertTool: AlertTool
+    private alertTool: AlertTool,
+    private platform: Platform
   ) 
   {
     this.user = new UserDTO();
@@ -45,6 +48,8 @@ export class StatsPage {
     if(!this.logged || localStorage.getItem("role") !== "ADMIN") {
       this.router.navigate(["/unauthorized"]);
     }
+
+    this.checkPlatform();
 
     this.getData();
   }
@@ -106,4 +111,10 @@ async checkAndCloseLoader() {
      await this.loadingCtrl.dismiss();
    }
 }
+
+  checkPlatform() {
+    if(this.platform.is("desktop")) {
+      this.isWeb = true;
+    }
+  }
 }
