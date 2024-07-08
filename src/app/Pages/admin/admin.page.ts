@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, Platform } from '@ionic/angular';
 import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
@@ -24,11 +24,14 @@ export class AdminPage {
 
   activeModal: number = 0;
 
+  isWeb: boolean = false;
+
   constructor(
     private router: Router,
     private userService: UsersService,
     private loadingCtrl: LoadingController,
-    private alertTool: AlertTool
+    private alertTool: AlertTool,
+    private platform: Platform
   )
   {
     this.user = new UserDTO();
@@ -46,9 +49,9 @@ export class AdminPage {
     if(!this.logged || localStorage.getItem("role") !== "ADMIN"){
       this.router.navigate(["/unauthorized"]);
     }
+    this.checkPlatform();
 
     this.getData();
-    
   }
 
   navigateToProfile() {
@@ -81,6 +84,10 @@ export class AdminPage {
   activateLocationModal() {
     this.router.navigate(["location"])
     this.activeModal = 5;
+  }
+
+  activatePaymentInfoModal() {
+    this.activeModal = 6;
   }
 
   closeModal() {
@@ -154,5 +161,13 @@ async getData() {
     this.router.navigate(["/unauthorized"]);
     this.alertTool.presentToast("Oops... Ocurrió un error!");
   })
+}
+
+checkPlatform() {
+  if(this.platform.is("desktop")) {
+    this.isWeb = true;
+  } else {
+    this.isWeb = false;
+  }
 }
 }
