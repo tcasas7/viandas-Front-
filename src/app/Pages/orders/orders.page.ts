@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { ClientOrder } from 'src/app/Models/ClientOrder';
 import { OrderDTO } from 'src/app/Models/OrderDTO';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
@@ -20,10 +21,12 @@ export class OrdersPage {
 
   user!: UserDTO;
   orders!: Array<OrderDTO>;
+  toDisplayOrders: Array<ClientOrder> = new Array<ClientOrder>() ;
 
   isAdmin: boolean = false;
   didLoad: boolean = false;
   logged: boolean = false;
+  paymentInfoModalIsActive: boolean = false;
 
   constructor(
     private router: Router,
@@ -76,10 +79,8 @@ export class OrdersPage {
       this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
       this.orders = this.ordersResponse.model;
       this.didLoad = true;
-      console.log(this.orders);
-      this.closeLoader();
+      this.formatOrders();
     }, error => {
-      this.closeLoader();
       this.router.navigate(["/unauthorized"]);
       this.alertTool.presentToast("Oops... Ocurrió un error!");
     });
@@ -121,5 +122,28 @@ async checkAndCloseLoader() {
     if(loader !== undefined) { 
       await this.loadingCtrl.dismiss();
     }
+}
+
+formatOrders() {
+  this.orders.forEach(o => {
+    var order = new ClientOrder(o);
+    this.toDisplayOrders.push(order);
+  });
+}
+
+collapseOrder(order: ClientOrder) {
+  order.isCollapsed = true;
+}
+
+uncollapseOrder(order: ClientOrder) {
+  order.isCollapsed = false;
+}
+
+openPaymentInfoModal() {
+  this.paymentInfoModalIsActive = true;
+}
+
+closePaymentInfoModal() {
+  this.paymentInfoModalIsActive = false;
 }
 }

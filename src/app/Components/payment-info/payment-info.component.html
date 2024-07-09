@@ -1,0 +1,13 @@
+<ion-card color="light" class="custom-modal">
+  <ion-card-header style="color: black;" class="modal-header">
+    <div>
+      Información de pago <ion-icon class="close-icon" name="close-outline" (click)="closeModal()"></ion-icon>
+    </div>
+  </ion-card-header>
+  <ion-card-content class="modal-content">
+    <div><b style="color: black;">CBU:</b> {{CBU}} <ion-icon class="close-icon" style="color: black;" name="clipboard-outline" (click)="copyCBUToClipboard()"></ion-icon></div>
+    <div><b style="color: black;">Alias:</b> {{alias}}</div>
+    <div><b style="color: black;">Nombre:</b> {{name}}</div>
+    <div><b style="color: black;">Total a pagar:</b> ${{total}}</div>
+  </ion-card-content>
+</ion-card>
