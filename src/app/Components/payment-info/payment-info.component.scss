@@ -1,0 +1,34 @@
+.close-icon {
+    font-size: x-large;
+    float: inline-end;
+}
+
+.close-icon:hover {
+    cursor: pointer;
+}
+
+.custom-modal {
+    width: 90vw;
+    max-width: 900px;
+    position: fixed;
+    top: 7vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999; /* Asegura que el modal esté por encima del resto del contenido */
+    margin: auto;
+  }
+  
+  .modal-header {
+    font-weight: bold;
+    font-size: large;
+  }
+  
+  .modal-content {
+    font-size: large;
+  }
+
+ion-card {
+    --background: none;
+    background: linear-gradient(to right, #c59fbe, #ffbdb4, #abc49a);
+}
+
