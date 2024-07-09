@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class SupportButtonComponent {
 
-  contactNumber: string = "+542235629773";
+  contactNumber: string = "+542235834483";
   constructor() { }
 
   contactSupport() {
