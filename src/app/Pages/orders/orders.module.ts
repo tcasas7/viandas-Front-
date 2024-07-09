@@ -1,3 +1,4 @@
+import { SupportButtonComponent } from './../../Components/support-button/support-button.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +17,6 @@ import { PaymentInfoComponent } from 'src/app/Components/payment-info/payment-in
     IonicModule,
     OrdersPageRoutingModule
   ],
-  declarations: [OrdersPage, PaymentInfoComponent]
+  declarations: [OrdersPage, PaymentInfoComponent, SupportButtonComponent]
 })
 export class OrdersPageModule {}

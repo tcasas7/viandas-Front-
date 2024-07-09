@@ -12,7 +12,6 @@ import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 import { ToDisplayOrderDTO } from 'src/app/Models/ToDisplayOrderDTO';
 import { ToDisplayDeliveryDTO } from 'src/app/Models/ToDisplayDeliveryDTO';
-import { LocationDTO } from 'src/app/Models/LocationDTO';
 import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
 import { OrderDTO } from 'src/app/Models/OrderDTO';
 
@@ -159,16 +158,7 @@ export class HomePage implements OnInit {
     }
 
     if(this.logged) {
-      this.userService.GetData().subscribe( response => {
-        this.dataResponse = response as ResponseObjectModel<UserDTO>;
-
-        localStorage.setItem("firstName", this.dataResponse.model.firstName);
-        localStorage.setItem("lastName", this.dataResponse.model.lastName);
-        this.saveRole(this.dataResponse.model.role);
-      }, error => {
-        localStorage.clear();
-        this.logged = false;
-      });
+      this.getData();
     }
 
   }
@@ -291,6 +281,7 @@ export class HomePage implements OnInit {
     this.showLoginModal = false;
     if(localStorage.getItem("Logged") === 'true') {
       this.logged = true;
+      this.getData();
     }
   }
 
@@ -456,5 +447,18 @@ export class HomePage implements OnInit {
         } else if(prod.day === 4) {
           this.orderFriday.deliveries.push(delivDTO);
         }
+  }
+
+  getData() {
+    this.userService.GetData().subscribe( response => {
+      this.dataResponse = response as ResponseObjectModel<UserDTO>;
+
+      localStorage.setItem("firstName", this.dataResponse.model.firstName);
+      localStorage.setItem("lastName", this.dataResponse.model.lastName);
+      this.saveRole(this.dataResponse.model.role);
+    }, error => {
+      localStorage.clear();
+      this.logged = false;
+    });
   }
 }

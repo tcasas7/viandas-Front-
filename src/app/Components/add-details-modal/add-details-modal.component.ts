@@ -74,8 +74,11 @@ export class AddDetailsModalComponent {
 
 
 
-  handleSelection(event: any) {
+  handleSelectionDir(event: any) {
     this.selectedLocation = event.detail.value;
+  }
+  handleSelectionPay(event: any) {
+    this.paymentMethod = event.detail.value;
   }
 
   makeLoadingAnimation() {

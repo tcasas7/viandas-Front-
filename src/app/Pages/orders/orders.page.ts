@@ -125,6 +125,7 @@ async checkAndCloseLoader() {
 }
 
 formatOrders() {
+  this.toDisplayOrders = new Array<ClientOrder>();
   this.orders.forEach(o => {
     var order = new ClientOrder(o);
     this.toDisplayOrders.push(order);
