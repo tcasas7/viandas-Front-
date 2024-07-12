@@ -94,7 +94,7 @@ export class UsersService extends MainService{
     return this.http.get(this.baseRoute + 'Users/getActiveContact', {headers});
   }
 
-  UpdateContact(model: ContactDTO) {
+  UpdateContact(model: ContactDTO | undefined) {
     var token = localStorage.getItem('Token');
 
     var headers = this.createHeader(token);
@@ -102,7 +102,7 @@ export class UsersService extends MainService{
     return this.http.post(this.baseRoute + 'Users/updateContact', model, {headers});
   }
 
-  RemoveContact(model: ContactDTO) {
+  RemoveContact(model: ContactDTO | undefined) {
     var token = localStorage.getItem('Token');
 
     var headers = this.createHeader(token);
@@ -110,7 +110,7 @@ export class UsersService extends MainService{
     return this.http.post(this.baseRoute + 'Users/removeContact', model, {headers});
   }
 
-  MakeActive(model: ContactDTO) {
+  MakeActive(model: ContactDTO | undefined) {
     var token = localStorage.getItem('Token');
 
     var headers = this.createHeader(token);

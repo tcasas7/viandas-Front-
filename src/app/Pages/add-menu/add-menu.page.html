@@ -1,5 +1,9 @@
-<ion-header class="border-header">
-  <ion-toolbar class="gradient-toolbar">
+<ion-header style="align-items: end">
+  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
     <div class="user-div">
       <ion-icon (click)="navigateToAdmin()" class="back-label" name="arrow-back-outline"></ion-icon>
       <ion-label (click)="navigateToAddImages()" style="float: right;" class="user-label">Modificar imagenes</ion-label>
@@ -7,7 +11,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content class="custom-content">
   <ion-card color="light" style="width: 77vw; max-width: 600px; margin: auto; margin-top: 2vh;">
     <ion-card-header style="font-weight: bold; font-size: larger; border-bottom: 1px black solid;">
       <ion-label *ngIf="standardIsCollapsed">Estandar<ion-icon style="float: right; cursor: pointer;" name="chevron-down-outline" (click)="uncollapseStandard()"></ion-icon></ion-label>

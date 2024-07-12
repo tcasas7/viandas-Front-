@@ -1,9 +1,14 @@
-<ion-header class="border-header">
-  <ion-toolbar class="gradient-toolbar">
+<ion-header style="align-items: end">
+  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
     <div class="user-div"><ion-icon (click)="navigateToHome()" class="user-label" name="arrow-back-outline"></ion-icon></div>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true">
+
+<ion-content class="custom-content">
 
   <div *ngIf="showAddLocationModal" class="overlay">
     <div class="modal-container">
@@ -57,12 +62,12 @@
     </ion-item>
   </div>
   <div *ngIf="isAdmin" style="text-align: center;">
-    <ion-button color="warning" (click)="navigateToAdmin()" class="order-button">Panel de administrador</ion-button>
+    <ion-button color="warning" (click)="navigateToAdmin()">Panel de administrador</ion-button>
   </div>
   <div style="text-align: center;">
-    <ion-button color="danger" (click)="navigateToOrders()" class="order-button">Ver mis ordenes</ion-button>
+    <ion-button color="danger" (click)="navigateToOrders()">Ver mis ordenes</ion-button>
   </div>
   <div style="text-align: center;">
-    <ion-button  lines="none" color="primary" class="order-button" (click)="logOut()">Cerrar sesión</ion-button>
+    <ion-button lines="none" color="primary"(click)="logOut()">Cerrar sesión</ion-button>
   </div>
 </ion-content>
