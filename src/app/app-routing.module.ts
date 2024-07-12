@@ -38,6 +38,10 @@ const routes: Routes = [
   {
     path: 'orders',
     loadChildren: () => import('./Pages/orders/orders.module').then( m => m.OrdersPageModule)
+  },
+  {
+    path: 'admin-payment-info',
+    loadChildren: () => import('./Pages/admin-payment-info/admin-payment-info.module').then( m => m.AdminPaymentInfoPageModule)
   }
 ];
 

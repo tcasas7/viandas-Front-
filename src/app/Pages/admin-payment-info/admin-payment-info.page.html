@@ -1,0 +1,44 @@
+<ion-header style="align-items: end">
+  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
+    <div class="user-div"><ion-icon (click)="navigateToAdmin()" class="user-label" name="arrow-back-outline"></ion-icon></div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="custom-content">
+  <div style="text-align: center;">
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="call-outline"></ion-icon>
+        <b> Teléfono: </b> {{selectedContact?.phone}}
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="chatbubble-outline"></ion-icon>
+        <b> Mensaje: </b> {{selectedContact?.wppMessage}}
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <div style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="cash-outline"></ion-icon>
+      </div>
+      &nbsp;&thinsp;<b> Info de pago:&nbsp;</b>
+      <ion-select interface="popover" placeholder="Info de pago" [(ngModel)]="selectedContactId" (ionChange)="handleSelection($event)" style="float:inline-start">
+        <ion-select-option *ngFor="let item of contacts" [value]="item.Id">{{item.accountName}}</ion-select-option>
+        <ion-select-option [value]="'add_new'">Agregar info</ion-select-option>
+      </ion-select>
+      <ion-button *ngIf="selectedContactId" fill="clear" slot="end" (click)="removeContact()">
+        <ion-icon name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </div>
+  <div style="text-align: center;">
+    <ion-button lines="none" color="primary" (click)="openModifyModal()">Modificar info</ion-button>
+  </div>
+</ion-content>
