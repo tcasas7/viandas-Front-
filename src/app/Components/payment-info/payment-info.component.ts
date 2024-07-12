@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 
 @Component({
@@ -10,10 +10,11 @@ export class PaymentInfoComponent {
 
   @Output() closeModalEvent = new EventEmitter<void>();
 
+  @Input() total: number = 0;
+
   CBU: string = "1234567890123456789012";
   alias: string = "Test Alias";
   name: string = "Test Nombre";
-  total: number = 1000;
 
   constructor(private alertTool: AlertTool) { }
 
