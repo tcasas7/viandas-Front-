@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { ClientOrder } from 'src/app/Models/ClientOrder';
+import { ContactDTO } from 'src/app/Models/ContactDTO';
 import { OrderDTO } from 'src/app/Models/OrderDTO';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
@@ -18,13 +19,14 @@ export class OrdersPage {
 
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
   ordersResponse: ResponseObjectModel<Array<OrderDTO>> = new ResponseObjectModel();
+  contactResponse: ResponseObjectModel<ContactDTO> = new ResponseObjectModel();
 
   user!: UserDTO;
   orders!: Array<OrderDTO>;
+  contact: ContactDTO;
   toDisplayOrders: Array<ClientOrder> = new Array<ClientOrder>() ;
 
   isAdmin: boolean = false;
-  didLoad: boolean = false;
   logged: boolean = false;
   paymentInfoModalIsActive: boolean = false;
 
@@ -36,7 +38,10 @@ export class OrdersPage {
     private ordersService: OrdersService,
     private alertTool: AlertTool,
     private loadingCtrl: LoadingController
-  ) { }
+  )
+  {
+    this.contact = new ContactDTO();
+  }
 
   navigateToProfile() {
     this.router.navigate(['/profile']);
@@ -66,8 +71,8 @@ export class OrdersPage {
       localStorage.setItem("lastName", this.dataResponse.model.lastName);
       this.saveRole(this.dataResponse.model.role);
   
-      this.didLoad = true;
       this.getOrders();
+      this.getActiveContact();
       this.closeLoader();
     }, error => {
       this.closeLoader();
@@ -80,8 +85,17 @@ export class OrdersPage {
     this.ordersService.GetOwn().subscribe( response => {
       this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
       this.orders = this.ordersResponse.model;
-      this.didLoad = true;
       this.formatOrders();
+    }, error => {
+      this.router.navigate(["/unauthorized"]);
+      this.alertTool.presentToast("Oops... Ocurrió un error!");
+    });
+  }
+
+  async getActiveContact() {
+    this.userService.GetActiveContact().subscribe( response => {
+      this.contactResponse = response as ResponseObjectModel<ContactDTO>;
+      this.contact = this.contactResponse.model;
     }, error => {
       this.router.navigate(["/unauthorized"]);
       this.alertTool.presentToast("Oops... Ocurrió un error!");

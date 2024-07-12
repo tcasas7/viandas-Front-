@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ContactDTO } from './../../Models/ContactDTO';
+import { Component, input, Input } from '@angular/core';
 
 @Component({
   selector: 'app-support-button',
@@ -6,11 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./support-button.component.scss'],
 })
 export class SupportButtonComponent {
-
-  contactNumber: string = "+542235834483";
-  constructor() { }
+  @Input() phone!: string;
+  @Input() wppMessage!: string;
+  constructor()
+  {
+  }
 
   contactSupport() {
-    window.open("whatsapp://send?phone=" + this.contactNumber + "&text=" + "Hola, necesito ayuda con mi pedido.")
+    window.open("whatsapp://send?phone=" + this.phone + "&text=" + this.wppMessage)
   }
 }
