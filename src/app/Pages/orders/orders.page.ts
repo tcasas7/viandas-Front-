@@ -28,6 +28,8 @@ export class OrdersPage {
   logged: boolean = false;
   paymentInfoModalIsActive: boolean = false;
 
+  toPayTotal: number = 0;
+
   constructor(
     private router: Router,
     private userService: UsersService,
@@ -140,7 +142,8 @@ uncollapseOrder(order: ClientOrder) {
   order.isCollapsed = false;
 }
 
-openPaymentInfoModal() {
+openPaymentInfoModal(order: ClientOrder) {
+  this.toPayTotal = order.price;
   this.paymentInfoModalIsActive = true;
 }
 

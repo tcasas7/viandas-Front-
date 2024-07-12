@@ -5,6 +5,7 @@ import { ChangePasswordDTO } from 'src/app/Models/ChangePasswordDTO';
 import { ChangeRoleDTO } from 'src/app/Models/ChangeRoleDTO';
 import { LocationDTO } from 'src/app/Models/LocationDTO';
 import { ChangePhoneDTO } from 'src/app/Models/ChangePhoneDTO';
+import { ContactDTO } from 'src/app/Models/ContactDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -76,4 +77,45 @@ export class UsersService extends MainService{
 
     return this.http.post(this.baseRoute + 'Users/removeLocation', model, {headers});
   }
+
+  GetContacts() {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.get(this.baseRoute + 'Users/getContacts', {headers});
+  } 
+
+  GetActiveContact() {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.get(this.baseRoute + 'Users/getActiveContact', {headers});
+  }
+
+  UpdateContact(model: ContactDTO) {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.post(this.baseRoute + 'Users/updateContact', model, {headers});
+  }
+
+  RemoveContact(model: ContactDTO) {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.post(this.baseRoute + 'Users/removeContact', model, {headers});
+  }
+
+  MakeActive(model: ContactDTO) {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.post(this.baseRoute + 'Users/makeActive', model, {headers});
+  }
+
 }

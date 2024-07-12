@@ -9,7 +9,7 @@
 </ion-header>
 
 <ion-content class="custom-content">
-  <app-payment-info *ngIf="paymentInfoModalIsActive" (closeModalEvent)="closePaymentInfoModal()"></app-payment-info>
+  <app-payment-info *ngIf="paymentInfoModalIsActive" (closeModalEvent)="closePaymentInfoModal()" [total]="toPayTotal"></app-payment-info>
   <ion-card color="light" *ngFor="let order of toDisplayOrders" style="width: 77vw; max-width: 900px; margin: auto; margin-top: 2vh;">
     <ion-card-header style="color: black; font-weight: bold; font-size: large;">
       <div>
@@ -24,10 +24,10 @@
       </div>
       <div>
         <div *ngIf="order.paymentMethod === 0" >
-          <b style="color: black;">Metodo de pago: </b> Efectivo
+          <b style="color: black;">Método de pago: </b> Efectivo
         </div>
         <div *ngIf="order.paymentMethod === 1">
-          <b style="color: black;">Metodo de pago: </b> Transferencia
+          <b style="color: black;">Método de pago: </b> Transferencia
         </div>
       </div>
       <div>
@@ -55,9 +55,9 @@
       </div>
       <div *ngIf="order.paymentMethod === 1">
         <ion-button style="float: inline-start; margin-bottom: 1vh;">Cancelar</ion-button>
-        <ion-button style="float: inline-end; margin-bottom: 1vh;" (click)="openPaymentInfoModal()">Realizar pago</ion-button>
+        <ion-button style="float: inline-end; margin-bottom: 1vh;" (click)="openPaymentInfoModal(order)">Realizar pago</ion-button>
       </div>
     </ion-card-content>
   </ion-card>
-  <app-support-button></app-support-button>
 </ion-content>
+<app-support-button></app-support-button>
