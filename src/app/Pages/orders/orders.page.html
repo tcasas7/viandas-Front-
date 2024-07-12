@@ -9,7 +9,7 @@
 </ion-header>
 
 <ion-content class="custom-content">
-  <app-payment-info *ngIf="paymentInfoModalIsActive" (closeModalEvent)="closePaymentInfoModal()" [total]="toPayTotal"></app-payment-info>
+  <app-payment-info *ngIf="paymentInfoModalIsActive" (closeModalEvent)="closePaymentInfoModal()" [CBU]="contact.cbu" [alias]="contact.alias" [name]="contact.name" [total]="toPayTotal"></app-payment-info>
   <ion-card color="light" *ngFor="let order of toDisplayOrders" style="width: 77vw; max-width: 900px; margin: auto; margin-top: 2vh;">
     <ion-card-header style="color: black; font-weight: bold; font-size: large;">
       <div>
@@ -60,4 +60,4 @@
     </ion-card-content>
   </ion-card>
 </ion-content>
-<app-support-button></app-support-button>
+<app-support-button [phone]="contact.phone" [wppMessage]="contact.wppMessage"></app-support-button>

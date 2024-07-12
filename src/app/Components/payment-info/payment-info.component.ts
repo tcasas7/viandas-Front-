@@ -10,11 +10,10 @@ export class PaymentInfoComponent {
 
   @Output() closeModalEvent = new EventEmitter<void>();
 
+  @Input() CBU: string = "";
+  @Input() alias: string = "";
+  @Input() name: string = "";
   @Input() total: number = 0;
-
-  CBU: string = "1234567890123456789012";
-  alias: string = "Test Alias";
-  name: string = "Test Nombre";
 
   constructor(private alertTool: AlertTool) { }
 
