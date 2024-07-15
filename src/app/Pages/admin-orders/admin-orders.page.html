@@ -1,11 +1,15 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <div class="user-div">
-      <ion-icon (click)="navigateToAdmin()" class="user-label" name="arrow-back-outline"></ion-icon>
-    </div>
+<ion-header style="align-items: end">
+  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
+    <div class="user-div"><ion-icon (click)="navigateToAdmin()" class="user-label" name="arrow-back-outline"></ion-icon></div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+
+
+<ion-content class="custom-content">
   ordenes
 </ion-content>

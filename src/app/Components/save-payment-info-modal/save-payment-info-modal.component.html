@@ -1,0 +1,90 @@
+<ion-card color="light" style="width: 77vw; max-width: 600px; margin: 0 auto; position: relative;">
+  <ion-item *ngIf="modalType === 1"  lines="none" color="translucent" class="tittle-item">Agregar datos<ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon></ion-item>
+  <ion-item *ngIf="modalType === 2" lines="none" color="translucent" class="tittle-item">Modificar datos<ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon></ion-item>
+  <form [formGroup]="paymentInfoForm">
+    <ion-item color="translucent">
+      <ion-input
+      label="Nombre de referencia"
+      labelPlacement="floating"
+      placeHolder="Cuenta Galicia"
+      formControlName="accountName"
+      type="text"
+      fill="clear"
+      maxlength="22"></ion-input>
+    </ion-item>
+    <ion-item color="translucent">
+      <ion-input
+      label="CBU"
+      labelPlacement="floating"
+      placeHolder="0123456789012345678901"
+      formControlName="cbu"
+      type="tel"
+      fill="clear"
+      maxlength="22"></ion-input>
+    </ion-item>
+    <ion-item color="translucent">
+      <ion-input
+      label="Alias"
+      labelPlacement="floating"
+      placeHolder="VIANDAS.DEL.SUR"
+      formControlName="alias"
+      type="text"
+      fill="clear"></ion-input>
+    </ion-item>
+    <ion-item color="translucent">
+      <ion-input
+      label="Nombre del titular"
+      labelPlacement="floating"
+      placeHolder="Juan Cruz Ramirez"
+      formControlName="name"
+      type="text"
+      fill="clear"></ion-input>
+    </ion-item>
+    <ion-item color="translucent">
+      <ion-input 
+      style="margin: 0 auto; border-radius: 20px; width: 20%;"
+      label="Prefijo"
+      labelPlacement="stacked" 
+      placeholder="54"
+      formControlName="preFix"
+      type="tel"
+      fill="clear"
+      maxlength="2"
+      ></ion-input>
+      <ion-input 
+      style="margin: 0 auto; border-radius: 20px; width: 30%;"
+      label="Codigo de área"
+      labelPlacement="stacked" 
+      placeholder="223"
+      formControlName="areaCode"
+      type="tel"
+      fill="clear"
+      maxlength="3"></ion-input>
+      <ion-input 
+      style="margin: 0 auto; border-radius: 20px;"
+      label="Número"
+      labelPlacement="stacked" 
+      placeholder="1234567"
+      formControlName="phone"
+      type="tel"
+      fill="clear"
+      maxlength="7"></ion-input>
+    </ion-item>
+    <ion-card color="light" style="height: 20vh; margin-left: 5%; margin-right: 5%; padding-left: 1%; padding-bottom: 1%; padding-right: 1%; margin-bottom: 1vh;">
+      <ion-textarea
+      formControlName="wppMessage"
+      class="auto-resize-textarea"
+      style="padding-top: 1vh; height: 100%; white-space: pre-wrap;"
+      label="Mensaje predeterminado"
+      labelPlacement="floating"
+      fill="outline"
+      placeholder="Hola, necesito ayuda con mi pedido"></ion-textarea>
+    </ion-card>
+  </form>
+  <div *ngIf="modalType === 1"  class="button-container">
+    <ion-button class="login-button" (click)="addPaymentInfo()">Agregar</ion-button>
+  </div>
+  <div *ngIf="modalType === 2" class="button-container">
+    <ion-button class="login-button" (click)="modifyPaymentInfo()">Enviar</ion-button>
+  </div>
+</ion-card>

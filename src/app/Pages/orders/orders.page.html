@@ -13,7 +13,7 @@
   <ion-card color="light" *ngFor="let order of toDisplayOrders" style="width: 77vw; max-width: 900px; margin: auto; margin-top: 2vh;">
     <ion-card-header style="color: black; font-weight: bold; font-size: large;">
       <div>
-        Numero de orden: {{order.id}} 
+        Nro. orden: {{order.id}} 
         <ion-icon class="collapse-icon" *ngIf="order.isCollapsed" name="chevron-down-outline" (click)="uncollapseOrder(order)"></ion-icon>
         <ion-icon class="collapse-icon" *ngIf="!order.isCollapsed" name="chevron-up-outline" (click)="collapseOrder(order)"></ion-icon>
       </div>

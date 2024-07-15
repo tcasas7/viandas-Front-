@@ -78,6 +78,14 @@ export class UsersService extends MainService{
     return this.http.post(this.baseRoute + 'Users/removeLocation', model, {headers});
   }
 
+  AddContact(model: ContactDTO | undefined) {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.post(this.baseRoute + 'Users/addContact', model, {headers});
+  }
+
   GetContacts() {
     var token = localStorage.getItem('Token');
 
