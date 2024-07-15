@@ -23,11 +23,11 @@ export class AdminPaymentInfoPage {
 
   selectedContactId!: any;
 
-  selectedContact: ContactDTO | undefined;
+  selectedContact: ContactDTO;
 
   contacts!: Array<ContactDTO>;
 
-  activeModal!: number;
+  activeModal: number = 0;
 
   constructor(
     private loadingCtrl: LoadingController,
@@ -38,6 +38,7 @@ export class AdminPaymentInfoPage {
   {
     this.user = new UserDTO();
     this.selectedContact = new ContactDTO();
+    this.activeModal = 0;
   }
 
 
@@ -53,7 +54,7 @@ export class AdminPaymentInfoPage {
     if(!this.logged || localStorage.getItem("role") !== "ADMIN"){
       this.router.navigate(["/unauthorized"]);
     }
-
+    this.activeModal = 0;
     this.getData();
   }
 
@@ -140,6 +141,11 @@ openAddModal() {
 
 openModifyModal() {
   this.activeModal = 2;
+}
+
+closeModal() {
+  this.activeModal = 0;
+  this.getData();
 }
 
 handleSelection(event: any) {

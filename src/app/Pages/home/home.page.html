@@ -1,12 +1,16 @@
-<ion-header class="curved-border-header gradient-toolbar">
-  <ion-toolbar class="gradient-toolbar">
+<ion-header style="align-items: end">
+  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
     <div class="menu">Menú</div>
     <div *ngIf="logged === true" class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="person-outline"></ion-icon></div>
     <div *ngIf="logged === false" class="user-div"><ion-icon (click)="navigateToLogin()" class="user-label" name="log-in-outline"></ion-icon></div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="custom-content">
   <div *ngIf="showOrderDetailsModal" class="overlay">
     <div class="modal-container">
       <app-add-details-modal *ngIf="showOrderDetailsModal" [orders]="placeOrder" [locations]="dataResponse.model.locations" (closeModalEvent)="closeOrderDetailsModal()"></app-add-details-modal>

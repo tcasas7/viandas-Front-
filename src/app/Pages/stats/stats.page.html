@@ -1,14 +1,14 @@
-<ion-header class="border-header gradient-toolbar">
-  <ion-toolbar class="gradient-toolbar">
-    <div class="menu">
-      <div class="user-div">
-        Estadisticas
-      </div>
-    </div>
+<ion-header style="align-items: end">
+  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
+    <div class="menu">Panel de estadísticas</div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content class="custom-content">
   <ion-grid *ngIf="!isWeb" >
     <ion-row>
       <ion-col size="6" class="mosaic">
