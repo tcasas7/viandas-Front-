@@ -14,6 +14,7 @@ export class SupportButtonComponent {
   }
 
   contactSupport() {
-    window.open("whatsapp://send?phone=" + this.phone + "&text=" + this.wppMessage)
+    const formattedPhone = this.phone.replace(/\s+/g, '');
+    window.open(`whatsapp://send?phone=${formattedPhone}&text=${encodeURIComponent(this.wppMessage)}`);
   }
 }

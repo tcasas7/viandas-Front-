@@ -144,6 +144,7 @@ openModifyModal() {
 }
 
 closeModal() {
+  this.makeLoadingAnimation();
   this.activeModal = 0;
   this.getData();
 }
@@ -154,6 +155,7 @@ handleSelection(event: any) {
   } else {
     this.selectedContactId = event.detail.value;
     this.selectedContact = this.findContact(this.selectedContactId);
+    this.makeActive();
   }
 }
 
@@ -185,6 +187,16 @@ removeContact() {
   this.makeLoadingAnimation();
   this.userService.RemoveContact(this.selectedContact).subscribe( response => {
     this.alertTool.presentToast("Eliminado con exito!");
+    this.getContacts();
+  }, error => {
+    this.alertTool.presentToast("Oops... Ocurrió un error!");
+  })
+  this.closeLoader();
+}
+
+makeActive() {
+  this.makeLoadingAnimation();
+  this.userService.MakeActive(this.selectedContact).subscribe( response => {
     this.getContacts();
   }, error => {
     this.alertTool.presentToast("Oops... Ocurrió un error!");

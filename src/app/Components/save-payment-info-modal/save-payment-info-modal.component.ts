@@ -1,9 +1,9 @@
-import { ResponseObject } from './../../Models/Response/ResponseObj';
-import { UsersService } from './../../Services/UsersService/users.service';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { ContactDTO } from 'src/app/Models/ContactDTO';
+import { ResponseObject } from './../../Models/Response/ResponseObj';
+import { UsersService } from './../../Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 
 @Component({
@@ -11,40 +11,54 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
   templateUrl: './save-payment-info-modal.component.html',
   styleUrls: ['./save-payment-info-modal.component.scss'],
 })
-export class SavePaymentInfoModalComponent {
+export class SavePaymentInfoModalComponent implements OnChanges {
   @Output() closeModalEvent = new EventEmitter<void>();
   @Input() modalType: number = 0;
   @Input() paymentInfo: ContactDTO = new ContactDTO();
 
-  paymentInfoForm: FormGroup;
+  paymentInfoForm!: FormGroup;
+
+  isValid: boolean = false;
 
   finalPhone: string = '';
 
-  preFix: string = '';
-  areaCode: string = '';
-  phone: string = '';
-  wppMessage: string = '';
-
   response: ResponseObject = new ResponseObject();
 
-  constructor
-  (
+  constructor(
     private usersService: UsersService,
     private loadingCtrl: LoadingController,
     private alertTool: AlertTool
-  )
-  {
+  ) {
+    this.initializeForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['paymentInfo'] && changes['paymentInfo'].currentValue) {
+      this.updateForm(changes['paymentInfo'].currentValue);
+    }
+  }
+
+  initializeForm() {
     this.paymentInfoForm = new FormGroup({
-      "preFix": new FormControl(this.preFix),
-      "areaCode": new FormControl(this.areaCode),
-      "phone": new FormControl(this.phone),
-      "cbu": new FormControl(this.paymentInfo.cbu),
-      "alias": new FormControl(this.paymentInfo.alias),
-      "name": new FormControl(this.paymentInfo.name),
-      "wppMessage": new FormControl(this.wppMessage),
-      "accountName": new FormControl(this.paymentInfo.accountName)
-    })
-    this.paymentInfo = new ContactDTO();
+      preFix: new FormControl(''),
+      areaCode: new FormControl(''),
+      phone: new FormControl(''),
+      cbu: new FormControl(''),
+      alias: new FormControl(''),
+      name: new FormControl(''),
+      wppMessage: new FormControl(''),
+      accountName: new FormControl('')
+    });
+  }
+
+  updateForm(paymentInfo: ContactDTO) {
+    this.paymentInfoForm.patchValue({
+      cbu: paymentInfo.cbu || '',
+      alias: paymentInfo.alias || '',
+      name: paymentInfo.name || '',
+      wppMessage: paymentInfo.wppMessage || '',
+      accountName: paymentInfo.accountName || ''
+    });
   }
 
   closeModal() {
@@ -52,6 +66,12 @@ export class SavePaymentInfoModalComponent {
   }
 
   addPaymentInfo() {
+
+    if(this.isValid === false) {
+      this.alertTool.presentToast("Campos vacíos");
+      return;
+    }
+
     this.makeLoadingAnimation();
     this.finalPhone = '+' + this.paymentInfoForm.get("preFix")?.value + ' ' + this.paymentInfoForm.get("areaCode")?.value + ' ' + this.paymentInfoForm.get("phone")?.value;
     this.paymentInfo.Id = 0;
@@ -63,9 +83,9 @@ export class SavePaymentInfoModalComponent {
     this.paymentInfo.wppMessage = this.paymentInfoForm.get("wppMessage")?.value;
     this.paymentInfo.accountName = this.paymentInfoForm.get("accountName")?.value;
 
-    this.usersService.AddContact(this.paymentInfo).subscribe( response => {
+    this.usersService.AddContact(this.paymentInfo).subscribe(response => {
       this.response = response as ResponseObject;
-      if(this.response.statusCode === 200) {
+      if (this.response.statusCode === 200) {
         this.alertTool.presentToast("Información de pago agregada");
         this.closeModal();
         this.closeLoader();
@@ -78,39 +98,70 @@ export class SavePaymentInfoModalComponent {
       this.alertTool.presentToast(this.response.message);
       this.closeLoader();
     });
-
   }
 
   modifyPaymentInfo() {
+    this.validateFields();
 
+    if(this.isValid === false) {
+      this.alertTool.presentToast("Campos vacíos");
+      return;
+    }
+
+    this.makeLoadingAnimation();
+    this.finalPhone = '+' + this.paymentInfoForm.get("preFix")?.value + ' ' + this.paymentInfoForm.get("areaCode")?.value + ' ' + this.paymentInfoForm.get("phone")?.value;
+    this.paymentInfo.phone = this.finalPhone;
+    this.paymentInfo.cbu = this.paymentInfoForm.get("cbu")?.value;
+    this.paymentInfo.alias = this.paymentInfoForm.get("alias")?.value;
+    this.paymentInfo.name = this.paymentInfoForm.get("name")?.value;
+    this.paymentInfo.wppMessage = this.paymentInfoForm.get("wppMessage")?.value;
+    this.paymentInfo.accountName = this.paymentInfoForm.get("accountName")?.value;
+
+    this.usersService.UpdateContact(this.paymentInfo).subscribe(response => {
+      this.response = response as ResponseObject;
+      if (this.response.statusCode === 200) {
+        this.alertTool.presentToast("Información de pago modificada");
+        this.closeModal();
+        this.closeLoader();
+      } else {
+        this.alertTool.presentToast(this.response.message);
+        this.closeLoader();
+      }
+      this.closeLoader();
+    }, error => {
+      this.alertTool.presentToast(this.response.message);
+      this.closeLoader();
+    });
   }
 
   makeLoadingAnimation() {
     this.loadingCtrl.getTop().then(hasLoading => {
       if (!hasLoading) {
-          this.loadingCtrl.create({
-              spinner: 'circular',
-              cssClass: "custom-loading"
-          }).then(loading => loading.present());
+        this.loadingCtrl.create({
+          spinner: 'circular',
+          cssClass: "custom-loading"
+        }).then(loading => loading.present());
       }
-  })
+    });
   }
 
   async closeLoader() {
-  
     this.checkAndCloseLoader();
-  
     setTimeout(() => this.checkAndCloseLoader(), 500);
   }
 
   async checkAndCloseLoader() {
-   
-   const loader = await this.loadingCtrl.getTop();
-   
-    if(loader !== undefined) { 
+    const loader = await this.loadingCtrl.getTop();
+    if (loader !== undefined) {
       await this.loadingCtrl.dismiss();
     }
   }
 
-  
+  validateFields() {
+    if(((this.paymentInfoForm.get("preFix")?.value !== "") && (this.paymentInfoForm.get("preFix")?.value !== null)) &&
+      ((this.paymentInfoForm.get("areaCode")?.value !== "") && (this.paymentInfoForm.get("areaCode")?.value !== null)) &&
+      ((this.paymentInfoForm.get("phone")?.value !== "") && (this.paymentInfoForm.get("phone")?.value !== null))){
+        this.isValid = true;
+    }
+  }
 }
