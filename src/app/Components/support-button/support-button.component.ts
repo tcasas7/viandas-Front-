@@ -1,4 +1,3 @@
-import { ContactDTO } from './../../Models/ContactDTO';
 import { Component, input, Input } from '@angular/core';
 
 @Component({
