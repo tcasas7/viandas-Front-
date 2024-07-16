@@ -151,6 +151,8 @@ closeModal() {
 
 handleSelection(event: any) {
   if (event.detail.value === 'add_new') {
+    this.selectedContactId = event.detail.value;
+    this.selectedContact = new ContactDTO()
     this.openAddModal();
   } else {
     this.selectedContactId = event.detail.value;
