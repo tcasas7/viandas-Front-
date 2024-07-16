@@ -8,15 +8,52 @@
   </ion-toolbar>
 </ion-header>
 
+<div *ngIf="activeModal !== 0" class="overlay">
+  <div class="modal-container">
+    <app-save-payment-info-modal [modalType]="activeModal" [paymentInfo]="selectedContact" (closeModalEvent)="closeModal()"></app-save-payment-info-modal>
+  </div>
+</div>
+
 <ion-content class="custom-content">
 
-  <div *ngIf="activeModal !== 0" class="overlay">
-    <div class="modal-container">
-      <app-save-payment-info-modal [modalType]="activeModal" [paymentInfo]="selectedContact" (closeModalEvent)="closeModal()"></app-save-payment-info-modal>
+  <ion-item>
+    <div style="padding-right: 0px; font-size: 2vh;">
+      <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="cash-outline"></ion-icon>
     </div>
-  </div>
+    &nbsp;&thinsp;<b> Info de pago:&nbsp;</b>
+    <ion-select interface="popover" placeholder="Info de pago" [(ngModel)]="selectedContactId" (ionChange)="handleSelection($event)" style="float:inline-start">
+      <ion-select-option *ngFor="let item of contacts" [value]="item.Id">{{item.accountName}}</ion-select-option>
+      <ion-select-option [value]="'add_new'">Agregar info</ion-select-option>
+    </ion-select>
+    <ion-button *ngIf="selectedContactId" fill="clear" slot="end" (click)="removeContact()">
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  
 
   <div style="text-align: center;">
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="wallet-outline"></ion-icon>
+        <b> CBU: </b> {{selectedContact.cbu}}
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="id-card-outline"></ion-icon>
+        <b> Alias: </b> {{selectedContact.alias}}
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label style="padding-right: 0px; font-size: 2vh;">
+        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="person-outline"></ion-icon>
+        <b> Nombre de la cuenta: </b> {{selectedContact.name}}
+      </ion-label>
+    </ion-item>
+
     <ion-item>
       <ion-label style="padding-right: 0px; font-size: 2vh;">
         <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="call-outline"></ion-icon>
@@ -30,22 +67,9 @@
         <b> Mensaje: </b> {{selectedContact.wppMessage}}
       </ion-label>
     </ion-item>
-
-    <ion-item>
-      <div style="padding-right: 0px; font-size: 2vh;">
-        <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="cash-outline"></ion-icon>
-      </div>
-      &nbsp;&thinsp;<b> Info de pago:&nbsp;</b>
-      <ion-select interface="popover" placeholder="Info de pago" [(ngModel)]="selectedContactId" (ionChange)="handleSelection($event)" style="float:inline-start">
-        <ion-select-option *ngFor="let item of contacts" [value]="item.Id">{{item.accountName}}</ion-select-option>
-        <ion-select-option [value]="'add_new'">Agregar info</ion-select-option>
-      </ion-select>
-      <ion-button *ngIf="selectedContactId" fill="clear" slot="end" (click)="removeContact()">
-        <ion-icon name="close-circle"></ion-icon>
-      </ion-button>
-    </ion-item>
   </div>
   <div style="text-align: center;">
     <ion-button lines="none" color="primary" (click)="openModifyModal()">Modificar info</ion-button>
   </div>
 </ion-content>
+
