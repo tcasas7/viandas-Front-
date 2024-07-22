@@ -8,6 +8,14 @@ import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
 })
 export class OrdersService extends MainService {
 
+  getDates() {
+    var token = localStorage.getItem('Token');
+
+    var headers = this.createHeader(token);
+
+    return this.http.get(this.baseRoute + 'Orders/getDates', {headers});
+  }
+
   GetFromUser(email: string) {
     var token = localStorage.getItem('Token');
 
