@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AdminOrdersPageRoutingModule } from './admin-orders-routing.module';
 
 import { AdminOrdersPage } from './admin-orders.page';
+import { CalendarComponent } from 'src/app/Components/calendar/calendar.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { AdminOrdersPage } from './admin-orders.page';
     IonicModule,
     AdminOrdersPageRoutingModule
   ],
-  declarations: [AdminOrdersPage]
+  declarations: [AdminOrdersPage, CalendarComponent]
 })
 export class AdminOrdersPageModule {}

@@ -1,0 +1,19 @@
+
+<ion-datetime-button datetime="datetime"></ion-datetime-button>
+
+<ion-modal style="border-radius: 20px;" class="transparent-modal" translucent="true" [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime
+    id="datetime"
+    [(ngModel)]="selectedDate"
+    dayValues="{{weekDays[0]}},{{weekDays[1]}}, {{weekDays[2]}}, {{weekDays[3]}}, {{weekDays[4]}}"
+    style="margin: 1vw"
+    presentation="date"
+    color="rose"
+    (onChange)="onChange($event)">
+  <ion-buttons slot="buttons">
+    <ion-button color="primary" (click)="confirmModal()">Confirmar</ion-button>
+  </ion-buttons>
+</ion-datetime>
+  </ng-template>
+</ion-modal>
