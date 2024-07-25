@@ -336,7 +336,7 @@ export class HomePage implements OnInit {
           resolve(objectURL);
         },
         (error) => {
-          reject(null);
+          reject('');
         }
       );
     });
@@ -351,6 +351,8 @@ export class HomePage implements OnInit {
       console.log('Error fetching image', error);
       item.image = '';
     }
+
+    console.log()
   }
 
   async formatToCartItems() {
