@@ -61,15 +61,15 @@
     <div class="carousel-content-wrapper" #carouselContentWrapper>
       <div class="carousel-content">
         <div class="carousel-set" *ngFor="let set of carouselSets">
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 0 && !isDesktop" >Lunes</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 1 && !isDesktop" >Martes</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 2 && !isDesktop" >Miercoles</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 3 && !isDesktop" >Jueves</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 4 && !isDesktop" >Viernes</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 1 && !isDesktop" >Lunes</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 2 && !isDesktop" >Martes</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 3 && !isDesktop" >Miercoles</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 4 && !isDesktop" >Jueves</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 5 && !isDesktop" >Viernes</div>
           <div class="carousel-item" *ngFor="let item of set">
             <div class="image-container">
-              <img class="image-default" *ngIf="!item.image || !item.hasImage" src="./assets/media/Default.png">
-              <img class="image-good" *ngIf="item.image && item.hasImage" [src]="item.image">
+              <img class="image-default" *ngIf="!item.image || !item.hasImage || item.image === ''" src="./assets/media/Default.png">
+              <img class="image-good" *ngIf="item.image && item.hasImage && item.image !== ''" [src]="item.image">
             </div>
             <div style="margin-top: 0.5vh; margin-bottom: 0px; padding-top: 0px; font-size: 2vh;">
               {{item.name}}
