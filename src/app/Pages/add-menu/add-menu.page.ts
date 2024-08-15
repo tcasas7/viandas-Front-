@@ -42,9 +42,9 @@ export class AddMenuPage {
   lightProducts: Array<ProductDTO> = Array<ProductDTO>();
   proteicProducts: Array<ProductDTO> = Array<ProductDTO>();
 
-  standardPrice: number = 4900;
-  lightPrice: number = 4500;
-  proteicPrice: number = 5200;
+  standardPrice: number = 0;
+  lightPrice: number = 0;
+  proteicPrice: number = 0;
 
   constructor
   (
