@@ -29,7 +29,7 @@ export class AlertTool {
           duration: 2000,
           position: 'bottom',
           cssClass: "centeredToast",
-          color: 'dark'
+          color: 'light'
         }).then(res => res.present());
       }
 }

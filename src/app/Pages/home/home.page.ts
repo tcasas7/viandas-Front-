@@ -310,8 +310,9 @@ export class HomePage implements OnInit {
       this.alertTool.presentToast("No tenes ningún producto en tu carrito");
     } else {
       if(this.logged) {
-
-        this.orders.forEach(o => {
+        this.alertTool.presentToast("Funcionalidad en desarrollo");
+      //Implementacion real
+       /* this.orders.forEach(o => {
           var order = new OrderDTO(o);
           order.price = 0;
           this.placeOrder.Orders.push(order);
@@ -321,7 +322,7 @@ export class HomePage implements OnInit {
             }
         });
       });
-        this.navigateToOrderResume();
+        this.navigateToOrderResume();*/
       } else {
         this.showLoginModal = true;
       }
