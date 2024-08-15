@@ -243,6 +243,7 @@ saveRole(role: number) {
       if(element.name === '' || element.name === null) {
         validated = false;
         this.alertTool.presentToast("Campos vacios en menú " + menu.category);
+        this.closeLoader();
         return;
       }
     });
