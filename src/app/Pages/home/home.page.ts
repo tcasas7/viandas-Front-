@@ -78,6 +78,7 @@ export class HomePage implements OnInit {
   total: number = 0;
 
   placeOrder!: PlaceOrderDTO;
+item: CartItem;
 
   constructor(
     private alertTool: AlertTool,
@@ -89,6 +90,7 @@ export class HomePage implements OnInit {
     private userService: UsersService,
     private loadingCtrl: LoadingController
   ) {
+    this.item = new CartItem();
     this.menus = new Array<MenuDTO>();
     this.standardItems = new Array<CartItem>();
     this.lightItems = new Array<CartItem>();
@@ -348,13 +350,13 @@ export class HomePage implements OnInit {
       const url = await this.makeImageGuid(item.id);
       const sanitizedUrl = this.sanitizer.bypassSecurityTrustUrl(url);
       item.image = sanitizedUrl;
+      console.log(item.image); // Verificar la URL de la imagen
     } catch (error) {
       console.log('Error fetching image', error);
       item.image = '';
     }
-
-    console.log()
   }
+  
 
   async formatToCartItems() {
     for (const menu of this.menus) {
@@ -363,20 +365,20 @@ export class HomePage implements OnInit {
         item.id = prod.id;
         item.day = prod.day;
         item.name = prod.name;
-
+  
         var hasImage = true;
         if(prod.imageName === "Default") {
           hasImage = false;
         }
-
+  
         item.hasImage = hasImage;
         item.category = menu.category;
-
+  
         await this.setImageForItem(item);
         item.price = menu.price;
-
+  
         this.makeDeliveryDTO(item);
-
+  
         if (item.category === 'Estandar') {
           this.standardItems.push(item);
         } else if (item.category === 'Light') {
@@ -386,7 +388,8 @@ export class HomePage implements OnInit {
         }
       }
     }
-
+  
+    // Añadir productos al carrusel para cada día
     for (let i = 0; i < 5; i++) {
       this.carouselItems.push(this.standardItems[i], this.lightItems[i], this.proteicItems[i]);  
     }
@@ -464,4 +467,10 @@ export class HomePage implements OnInit {
       this.logged = false;
     });
   }
+
+  getProductsForDay(dayNumber: number): CartItem[] {
+    // Filtra los productos para el día específico
+    return this.carouselItems.filter(item => item.day === dayNumber);
+  }
+
 }
