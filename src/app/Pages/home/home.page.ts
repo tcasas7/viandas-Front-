@@ -312,9 +312,10 @@ item: CartItem;
       this.alertTool.presentToast("No tenes ningún producto en tu carrito");
     } else {
       if(this.logged) {
-        this.alertTool.presentToast("Funcionalidad en desarrollo");
+        //this.alertTool.presentToast("Funcionalidad en desarrollo");
       //Implementacion real
-       /* this.orders.forEach(o => {
+        this.orders.forEach(o => {
+         // console.log(`Enviando pedido: Día de la semana: ${order.dayOfWeek}`);
           var order = new OrderDTO(o);
           order.price = 0;
           this.placeOrder.Orders.push(order);
@@ -324,7 +325,7 @@ item: CartItem;
             }
         });
       });
-        this.navigateToOrderResume();*/
+        this.navigateToOrderResume();
       } else {
         this.showLoginModal = true;
       }
@@ -365,7 +366,7 @@ item: CartItem;
         item.id = prod.id;
         item.day = prod.day;
         item.name = prod.name;
-  
+        //console.log(`Producto: ${prod.name}, Día: ${prod.day}`);
         var hasImage = true;
         if(prod.imageName === "Default") {
           hasImage = false;
@@ -388,6 +389,9 @@ item: CartItem;
         }
       }
     }
+
+    /*this.cdr.detectChanges();
+  }*/
   
     // Añadir productos al carrusel para cada día
     for (let i = 0; i < 5; i++) {
@@ -442,15 +446,15 @@ item: CartItem;
         delivDTO.productName = prod.name;
         delivDTO.productPrice = prod.price;
 
-        if(prod.day === 0) {
+        if(prod.day === 1) {
           this.orderMonday.deliveries.push(delivDTO);
-        } else if(prod.day === 1) {
-          this.orderTuesday.deliveries.push(delivDTO);
         } else if(prod.day === 2) {
-          this.orderWednesday.deliveries.push(delivDTO);
+          this.orderTuesday.deliveries.push(delivDTO);
         } else if(prod.day === 3) {
-          this.orderThursday.deliveries.push(delivDTO);
+          this.orderWednesday.deliveries.push(delivDTO);
         } else if(prod.day === 4) {
+          this.orderThursday.deliveries.push(delivDTO);
+        } else if(prod.day === 5) {
           this.orderFriday.deliveries.push(delivDTO);
         }
   }
