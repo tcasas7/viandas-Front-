@@ -63,10 +63,10 @@ export class AdminPage {
   }
 
   activateOrdersModal() {
-    this.alertTool.presentToast("Funcionalidad en desarrollo");
+    //this.alertTool.presentToast("Funcionalidad en desarrollo");
     //Implementacion
-    /*this.router.navigate(["admin-orders"]);
-    this.activeModal = 1;*/
+    this.router.navigate(["admin-orders"]);
+    this.activeModal = 1;
   }
 
   activateMenusModal() {
@@ -75,10 +75,10 @@ export class AdminPage {
   }
 
   activateStatsModal() {
-    this.alertTool.presentToast("Funcionalidad en desarrollo");
+    //this.alertTool.presentToast("Funcionalidad en desarrollo");
     //Implementacion
-    /*this.router.navigate(["stats"])
-    this.activeModal = 3;*/
+    this.router.navigate(["stats"])
+    this.activeModal = 3;
   }
 
   activateRoleModal() {
@@ -86,17 +86,17 @@ export class AdminPage {
   }
 
   activateLocationModal() {
-    this.alertTool.presentToast("Funcionalidad en desarrollo");
+    //his.alertTool.presentToast("Funcionalidad en desarrollo");
     //Implementacion
-    /*this.router.navigate(["location"])
-    this.activeModal = 5;*/
+    this.router.navigate(["location"])
+    this.activeModal = 5;
   }
 
   activatePaymentInfoModal() {
-    this.alertTool.presentToast("Funcionalidad en desarrollo");
+    //this.alertTool.presentToast("Funcionalidad en desarrollo");
     //Implementacion
-    /*this.router.navigate(["admin-payment-info"])
-    this.activeModal = 6;*/
+    this.router.navigate(["admin-payment-info"])
+    this.activeModal = 6;
   }
 
   closeModal() {

@@ -208,8 +208,8 @@ async getData() {
 }
 
   navigateToOrders() {
-    this.alertTool.presentToast("Funcionalidad en desarrollo");
+    //this.alertTool.presentToast("Funcionalidad en desarrollo");
     //Implementacion
-    //this.router.navigate(["/orders"]);
+    this.router.navigate(["/orders"]);
   }
 }

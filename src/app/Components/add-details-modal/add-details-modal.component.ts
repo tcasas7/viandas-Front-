@@ -1,5 +1,5 @@
 import { OrdersService } from './../../Services/OrdersService/orders.service';
-import { Component, EventEmitter, Input, input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, input, Output, OnInit } from '@angular/core';
 import { LoadingController, Platform } from '@ionic/angular';
 import { LocationDTO } from 'src/app/Models/LocationDTO';
 import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
@@ -11,7 +11,7 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
   templateUrl: './add-details-modal.component.html',
   styleUrls: ['./add-details-modal.component.scss'],
 })
-export class AddDetailsModalComponent {
+export class AddDetailsModalComponent implements OnInit {
   @Output() closeModalEvent = new EventEmitter<void>();
   @Output() makeOrderEvent = new EventEmitter<void>();
 
@@ -30,7 +30,7 @@ export class AddDetailsModalComponent {
     this.closeModalEvent.emit();
   }
 
-  makeOrder() {
+  /*makeOrder() {
     if(this.paymentMethod === -1 || this.selectedLocation === 'empty') {
       this.alertTool.presentToast("Campos vacios, por favor llene todos los campos.");
     } else {
@@ -45,7 +45,39 @@ export class AddDetailsModalComponent {
       console.log(this.orders.Orders)
       this.placeOrder();
     }
-  }
+  }*/
+
+    makeOrder() {
+      // Verifica si falta algún campo requerido
+      if (this.paymentMethod === -1 || this.selectedLocation === 'empty') {
+        this.alertTool.presentToast("Campos vacíos, por favor llene todos los campos.");
+      } else {
+        this.orders.Orders.forEach(o => {
+          o.id = 0;
+          o.location = this.selectedLocation;
+          o.description = this.description;
+          o.paymentMethod = this.paymentMethod;
+          o.hasSalt = false;
+          o.orderDate = new Date().toISOString();
+
+          o.deliveries.forEach(delivery => {
+            console.log('Día de la semana (antes de enviar):', delivery.deliveryDate);  // Esto debe ser un número entre 1-5
+        });
+        });
+        
+        console.log(this.orders.Orders);
+        this.placeOrder();
+      }
+    }
+    ngOnInit() {
+      if (this.locations.length === 0) {
+        this.locations = [{
+          dir: 'Dirección de prueba', isDefault: true,
+          id: 0
+        }];
+      }
+    }
+        
 
   placeOrder() {
       this.makeLoadingAnimation();

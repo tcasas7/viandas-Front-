@@ -10,6 +10,7 @@ export class OrderDTO {
     orderDate!: string;
     deliveries!: Array<DeliveryDTO>;
     location!: string;
+    dayOfWeek: any;
 
     constructor(orderDTO: ToDisplayOrderDTO) {
         this.id = orderDTO.Id;
@@ -20,5 +21,13 @@ export class OrderDTO {
         this.orderDate = orderDTO.orderDate;
         this.deliveries = orderDTO.deliveries;
         this.location = orderDTO.location;
+   
+        this.deliveries.forEach(delivery =>{
+            delivery.deliveryDate = this.getDayAsNumber(delivery.deliveryDate);
+        });
+    }
+
+    getDayAsNumber(day: number) :number{
+        return day >= 1 && day <= 5 ? day : 0 
     }
 }
