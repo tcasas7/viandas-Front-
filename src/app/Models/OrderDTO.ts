@@ -1,5 +1,6 @@
 import { ToDisplayOrderDTO } from './ToDisplayOrderDTO';
 import { DeliveryDTO } from "./DeliveryDTO"
+import { DayOfWeek } from './Enums/DayOfWeekEnums';
 
 export class OrderDTO {
     id!: number;
@@ -10,7 +11,7 @@ export class OrderDTO {
     orderDate!: string;
     deliveries!: Array<DeliveryDTO>;
     location!: string;
-    dayOfWeek: any;
+    dayOfWeek: DayOfWeek = DayOfWeek.Monday;
 
     constructor(orderDTO: ToDisplayOrderDTO) {
         this.id = orderDTO.Id;
@@ -27,7 +28,15 @@ export class OrderDTO {
         });
     }
 
-    getDayAsNumber(day: number) :number{
-        return day >= 1 && day <= 5 ? day : 0 
+    getDayAsNumber(day: DayOfWeek): number {
+        // Mapea el enum DayOfWeek a números (Lunes a Viernes = 1-5)
+        switch (day) {
+            case DayOfWeek.Monday: return 1;
+            case DayOfWeek.Tuesday: return 2;
+            case DayOfWeek.Wednesday: return 3;
+            case DayOfWeek.Thursday: return 4;
+            case DayOfWeek.Friday: return 5;
+            default: return 0;  // Si el día es inválido
+        }
     }
 }

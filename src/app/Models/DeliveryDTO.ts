@@ -1,7 +1,9 @@
+import { DayOfWeek } from './Enums/DayOfWeekEnums';
+
 export class DeliveryDTO {
     Id!: number;
     productId!: number;
     delivered!: boolean;
-    deliveryDate!: number;
+    deliveryDate!: DayOfWeek;
     quantity!: number;
 }

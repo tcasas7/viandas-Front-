@@ -442,7 +442,7 @@ item: CartItem;
         delivDTO.productId = prod.id;
         delivDTO.quantity = 0;
         delivDTO.delivered = false;
-        delivDTO.deliveryDate = (prod.day + 1);
+        delivDTO.deliveryDate = prod.day;
         delivDTO.productName = prod.name;
         delivDTO.productPrice = prod.price;
 
