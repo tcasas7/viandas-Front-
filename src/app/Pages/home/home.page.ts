@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LoadingController, Platform } from '@ionic/angular';
 import { CartItem } from 'src/app/Models/CartItem';
@@ -141,7 +141,20 @@ item: CartItem;
       const response = await this.menuService.GetAll().toPromise();
       this.message = response as ResponseObjectList<MenuDTO>;
       this.menus = this.message.model;
-
+  
+      // Iterar sobre los menús y productos para obtener las imágenes
+      this.menus.forEach(menu => {
+        menu.products.forEach(product => {
+          this.menuService.Image(product.id).subscribe(blob => {
+            const objectURL = URL.createObjectURL(blob);
+            product.imagePath = objectURL;  // Asignar directamente la URL del blob como imagePath
+            console.log(`Image URL for product ${product.id}:`, objectURL); // Verificar la URL generada
+          }, error => {
+            console.error('Error fetching image', error);
+          });
+        });
+      });
+  
       await this.formatToCartItems();
       this.initializeCarouselSets();
       this.closeLoader();
@@ -151,6 +164,11 @@ item: CartItem;
       console.error('Error fetching data:', error);
     }
   }
+  
+  
+  public sanitizeImageUrl(imageBlob: Blob): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(imageBlob));
+}
 
   ionViewDidEnter() {
     if(localStorage.getItem("Logged") === "true") {
@@ -348,16 +366,29 @@ item: CartItem;
 
   async setImageForItem(item: any) {
     try {
-      const url = await this.makeImageGuid(item.id);
-      const sanitizedUrl = this.sanitizer.bypassSecurityTrustUrl(url);
-      item.image = sanitizedUrl;
-      console.log(item.image); // Verificar la URL de la imagen
+      const blob = await this.fetchImageBlob(item.id);
+      item.sanitizedImagePath = this.getSanitizedUrl(blob);
+      console.log(item.sanitizedImagePath); // Para verificar si la URL de la imagen es correcta
     } catch (error) {
-      console.log('Error fetching image', error);
-      item.image = '';
+      console.error('Error fetching image:', error);
+      item.sanitizedImagePath = ''; // Manejar el error asignando un valor vacío
     }
   }
   
+  fetchImageBlob(id: number): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      this.menuService.Image(id).subscribe(
+        (response: Blob) => {
+          resolve(response);
+        },
+        (error) => {
+          console.error('Error fetching image from API:', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
 
   async formatToCartItems() {
     for (const menu of this.menus) {
@@ -400,10 +431,10 @@ item: CartItem;
     this.cdr.detectChanges();
   }
 
-  getSanitizedUrl(imageUrl: any) {
-    return this.sanitizer.bypassSecurityTrustUrl(imageUrl);
+  getSanitizedUrl(imageBlob: Blob): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(imageBlob));
   }
-
+  
   makeLoadingAnimation() {
     this.loadingCtrl.getTop().then(hasLoading => {
       if (!hasLoading) {
