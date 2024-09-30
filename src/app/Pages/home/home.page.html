@@ -69,9 +69,16 @@
           <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 5 && !isDesktop" >Viernes</div>
           <div class="carousel-item" *ngFor="let item of set">
             <div class="image-container">
-              <img class="image-default" *ngIf="!item.image || !item.hasImage || item.image === ''" src="./assets/media/Default.png">
-              <img class="image-good" *ngIf="item.image && item.hasImage && item.image !== ''" [src]="item.image">
+              <div class="image-container">
+                <!-- Mostrar la imagen del producto si está disponible y ya ha sido sanitizada -->
+                <img class="image-good" *ngIf="item.hasImage && item.sanitizedImagePath" [src]="item.sanitizedImagePath">
+                
+                <!-- Mostrar la imagen predeterminada si no hay imagen del producto -->
+                <img class="image-default" *ngIf="!item.hasImage || !item.sanitizedImagePath" src="./assets/media/Default.png">
+              </div>
+              
             </div>
+            
             <div style="margin-top: 0.5vh; margin-bottom: 0px; padding-top: 0px; font-size: 2vh;">
               {{item.name}}
             </div>
