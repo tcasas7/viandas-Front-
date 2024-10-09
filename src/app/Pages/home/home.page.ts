@@ -79,6 +79,7 @@ export class HomePage implements OnInit {
 
   placeOrder!: PlaceOrderDTO;
 item: CartItem;
+  baseRoute: any;
 
   constructor(
     private alertTool: AlertTool,
@@ -144,6 +145,40 @@ item: CartItem;
   
       // Iterar sobre los menús y productos para obtener las imágenes
       this.menus.forEach(menu => {
+        console.log(`Menú: ${menu.category}, Productos:`, menu.products);
+        menu.products.forEach(product => {
+          console.log(`Producto ${product.name} tiene ID: ${product.id}`);
+          this.menuService.Image(product.id).subscribe(blob => {
+            const objectURL = URL.createObjectURL(blob);
+            // Asegúrate de agregar el prefijo 'media/' a la URL de la imagen
+            product.imagePath = `${this.baseRoute}media/${product.imagePath}`;
+            console.log(`Image URL for product ${product.id}:`, objectURL);
+          }, error => {
+            console.error('Error fetching image', error);
+          });
+        });
+      });
+  
+      await this.formatToCartItems();
+      this.initializeCarouselSets();
+      this.closeLoader();
+    } catch (error) {
+      this.closeLoader();
+      this.alertTool.presentToast("Oops... Ocurrió un error");
+      console.error('Error fetching data:', error);
+    }
+  }
+  
+  
+
+  /*async instanceItems() {
+    try {
+      const response = await this.menuService.GetAll().toPromise();
+      this.message = response as ResponseObjectList<MenuDTO>;
+      this.menus = this.message.model;
+  
+      // Iterar sobre los menús y productos para obtener las imágenes
+      this.menus.forEach(menu => {
         menu.products.forEach(product => {
           this.menuService.Image(product.id).subscribe(blob => {
             const objectURL = URL.createObjectURL(blob);
@@ -163,7 +198,7 @@ item: CartItem;
       this.alertTool.presentToast("Oops... Ocurrió un error");
       console.error('Error fetching data:', error);
     }
-  }
+  }*/
   
   
   public sanitizeImageUrl(imageBlob: Blob): SafeUrl {

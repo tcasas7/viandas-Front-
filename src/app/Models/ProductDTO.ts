@@ -1,15 +1,15 @@
-import { DayOfWeek } from './Enums/DayOfWeekEnums';
+
 
 export class ProductDTO {
-    id!: number
-    day!: DayOfWeek;
-    name!: string
+    id!: number;
+    day!: number;
+    name!: string;
+    price!: number;
     imageName!: string;
     imagePath!: string;
-
-    sanitizedImagePath?: string;
+    imageFile?: File;
 
     constructor(init?: Partial<ProductDTO>) {
         Object.assign(this, init);
     }
-}
+  }
