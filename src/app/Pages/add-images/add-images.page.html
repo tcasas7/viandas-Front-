@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
+    <ion-label class="user-label">Modificar Imágenes</ion-label>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="custom-content">
+  <!-- Estandar Menu -->
+  <ion-card color="light" style="width: 77vw; max-width: 600px; margin: auto; margin-top: 2vh;">
+    <ion-card-header style="font-weight: bold; font-size: larger;">
+      <ion-label>Estandar</ion-label>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row *ngFor="let product of menus[0]?.products">
+          <ion-col>
+            <ion-label>{{ product.name }}</ion-label>
+          </ion-col>
+          <ion-col>
+            <input type="file" (change)="onFileSelected($event, product)">
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Light Menu -->
+  <ion-card color="light" style="width: 77vw; max-width: 600px; margin: auto; margin-top: 2vh;">
+    <ion-card-header style="font-weight: bold; font-size: larger;">
+      <ion-label>Light</ion-label>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row *ngFor="let product of menus[1]?.products">
+          <ion-col>
+            <ion-label>{{ product.name }}</ion-label>
+          </ion-col>
+          <ion-col>
+            <input type="file" (change)="onFileSelected($event, product)">
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Proteico Menu -->
+  <ion-card color="light" style="width: 77vw; max-width: 600px; margin: auto; margin-top: 2vh;">
+    <ion-card-header style="font-weight: bold; font-size: larger;">
+      <ion-label>Proteico</ion-label>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row *ngFor="let product of menus[2]?.products">
+          <ion-col>
+            <ion-label>{{ product.name }}</ion-label>
+          </ion-col>
+          <ion-col>
+            <input type="file" (change)="onFileSelected($event, product)">
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="button-container">
+    <ion-button class="login-button" (click)="uploadImages()">Subir imágenes</ion-button>
+  </div>
+</ion-content>

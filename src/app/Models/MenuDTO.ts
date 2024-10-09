@@ -1,9 +1,8 @@
 import { ProductDTO } from "./ProductDTO"
 
 export class MenuDTO {
-    Id!: number;
+    id!: number;
     category!: string;
-    validDate!: Date;
+    products: ProductDTO[] = [];
     price!: number;
-    products!: Array<ProductDTO>;
-}
+  }

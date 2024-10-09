@@ -1,3 +1,149 @@
+import { Component } from '@angular/core';
+import { AddMenusDTO } from 'src/app/Models/AddMenusDTO';
+import { MenuDTO } from 'src/app/Models/MenuDTO';
+import { ProductDTO } from 'src/app/Models/ProductDTO';
+import { MenusService } from 'src/app/Services/MenusService/menus.service';
+import { AlertTool } from 'src/app/Tools/AlertTool';
+import { LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-add-menu',
+  templateUrl: './add-menu.page.html',
+  styleUrls: ['./add-menu.page.scss'],
+})
+
+
+export class AddMenuPage {
+
+  constructor(
+    private menusService: MenusService,
+    private alertTool: AlertTool,
+    private loadingCtrl: LoadingController,
+    private router: Router
+    
+  ) {
+    // Cargar menús al iniciar
+    this.loadMenusFromBackend();
+  }
+
+navigateToAddImages() {
+this.router.navigate(['/add-images']);
+}
+navigateToAdmin() {
+this.router.navigate(['/admin']);
+}
+
+  // Menús y productos
+  standardMenu: MenuDTO = new MenuDTO();
+  lightMenu: MenuDTO = new MenuDTO();
+  proteicMenu: MenuDTO = new MenuDTO();
+
+  standardProducts: ProductDTO[] = [];
+  lightProducts: ProductDTO[] = [];
+  proteicProducts: ProductDTO[] = [];
+
+  // Precios
+  standardPrice: number = 0;
+  lightPrice: number = 0;
+  proteicPrice: number = 0;
+
+  // Control de visualización (collapse)
+  standardIsCollapsed: boolean = true;
+  lightIsCollapsed: boolean = true;
+  proteicIsCollapsed: boolean = true;
+
+  // Payload a enviar
+  toSendPayload: AddMenusDTO = new AddMenusDTO();
+
+  
+  // Cargar menús y productos desde el backend
+  loadMenusFromBackend() {
+    this.menusService.GetAll().subscribe(response => {
+      const loadedMenus: MenuDTO[] = response.model;  // Tipar explícitamente como 'MenuDTO[]'
+  
+      // Asignar menús
+      this.standardMenu = loadedMenus.find((menu: MenuDTO) => menu.category === 'Estandar') || new MenuDTO();
+      this.lightMenu = loadedMenus.find((menu: MenuDTO) => menu.category === 'Light') || new MenuDTO();
+      this.proteicMenu = loadedMenus.find((menu: MenuDTO) => menu.category === 'Proteico') || new MenuDTO();
+  
+      // Asignar productos
+      this.standardProducts = this.standardMenu.products || [];
+      this.lightProducts = this.lightMenu.products || [];
+      this.proteicProducts = this.proteicMenu.products || [];
+  
+      // Asignar precios
+      this.standardPrice = this.standardMenu.price || 0;
+      this.lightPrice = this.lightMenu.price || 0;
+      this.proteicPrice = this.proteicMenu.price || 0;
+  
+    }, error => {
+      console.error("Error al cargar menús:", error);
+    });
+  }
+
+  
+  // Expandir/colapsar los menús
+  collapseStandard() { this.standardIsCollapsed = true; }
+  uncollapseStandard() { this.standardIsCollapsed = false; }
+
+  collapseLight() { this.lightIsCollapsed = true; }
+  uncollapseLight() { this.lightIsCollapsed = false; }
+
+  collapseProteic() { this.proteicIsCollapsed = true; }
+  uncollapseProteic() { this.proteicIsCollapsed = false; }
+
+  // Formatear y enviar los menús al backend
+  sendMenus() {
+    this.formatMenus();
+
+    this.menusService.AddMenus(this.toSendPayload).subscribe(response => {
+      if (response.statusCode === 200) {
+        this.alertTool.presentToast('Menús actualizados correctamente');
+      } else {
+        this.alertTool.presentToast('Error al actualizar los menús');
+      }
+    }, error => {
+      console.error("Error al enviar menús:", error);
+      this.alertTool.presentToast('Error al enviar los menús');
+    });
+  }
+
+  // Formatear el payload para enviarlo al backend
+  formatMenus() {
+    this.standardMenu.products = this.standardProducts;
+    this.standardMenu.price = this.standardPrice;
+    this.lightMenu.products = this.lightProducts;
+    this.lightMenu.price = this.lightPrice;
+    this.proteicMenu.products = this.proteicProducts;
+    this.proteicMenu.price = this.proteicPrice;
+
+    this.toSendPayload.Menus = [this.standardMenu, this.lightMenu, this.proteicMenu];
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*import { HttpHeaders } from '@angular/common/http';
 import { MenuDTO } from './../../Models/MenuDTO';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
@@ -45,6 +191,8 @@ export class AddMenuPage {
   standardPrice: number = 0;
   lightPrice: number = 0;
   proteicPrice: number = 0;
+  http: any;
+  baseRoute: string | undefined;
 
   constructor
   (
@@ -60,9 +208,10 @@ export class AddMenuPage {
     this.lightMenu.category = "Light";
     this.proteicMenu.category = "Proteico";
 
-    this.startArray(this.standardProducts);
-    this.startArray(this.lightProducts);
-    this.startArray(this.proteicProducts);
+    this.startArray(this.standardProducts, this.standardMenu ? this.standardMenu.products : []);
+    this.startArray(this.lightProducts, this.lightMenu ? this.lightMenu.products : []);
+    this.startArray(this.proteicProducts, this.proteicMenu ? this.proteicMenu.products : []);
+    
 
     this.toSendPayload.Menus = new Array<MenuDTO>();
 
@@ -171,53 +320,73 @@ saveRole(role: number) {
     this.proteicIsCollapsed = false;
   }
 
+
   sendMenus() {
     this.makeLoadingAnimation();
     this.formatMenus();
 
-    if(this.isValid) {
-      this.menusService.AddMenus(this.toSendPayload).subscribe( response => {
-        this.addResponse = response as ResponseObject;
+    console.log('Payload being sent:', JSON.stringify(this.toSendPayload, null, 2)); // Log del payload
 
-        if(this.addResponse.statusCode === 200) {
-          this.alertTool.presentToast("Menús añadidos exitosamente!");         
-        } else {
-          this.alertTool.presentToast("Oops... Ocurrió un error!");
-        } 
-        this.closeLoader();
-      }, error => {
-        this.alertTool.presentToast("Oops... Ocurrió un error!");
-        this.closeLoader();
-      })
+    if(this.isValid) {
+        this.menusService.AddMenus(this.toSendPayload).subscribe(response => {
+            this.addResponse = response as ResponseObject;
+
+            if(this.addResponse.statusCode === 200) {
+                this.alertTool.presentToast("Menús añadidos exitosamente!");         
+            } else {
+                this.alertTool.presentToast("Oops... Ocurrió un error!");
+            } 
+            this.closeLoader();
+        }, error => {
+            this.alertTool.presentToast("Oops... Ocurrió un error!");
+            this.closeLoader();
+        });
     }
+
     this.toSendPayload = new AddMenusDTO();
     this.toSendPayload.Menus = new Array<MenuDTO>();
+}
+
+
+AddMenus(model: AddMenusDTO) {
+  let token = localStorage.getItem("Token");
+
+  const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+  });
+
+  return this.http.post(this.baseRoute + "menus/add", model, {headers});
+}
+
+  
+    formatMenus() {
+      this.standardMenu.products = this.standardProducts;
+      this.lightMenu.products = this.lightProducts;
+      this.proteicMenu.products = this.proteicProducts;
+  
+      this.standardMenu.price = this.standardPrice || 0;
+      this.lightMenu.price = this.lightPrice || 0;
+      this.proteicMenu.price = this.proteicPrice || 0;
+  
+      // Validar que los productos tienen los nombres y IDs correctos antes de enviarlos
+      this.toSendPayload.Menus.push(this.standardMenu);
+      this.toSendPayload.Menus.push(this.lightMenu);
+      this.toSendPayload.Menus.push(this.proteicMenu);
+  
+      this.toSendPayload.Menus.forEach(menu => {
+          menu.products.forEach(product => {
+              if (!product.id) {
+                  console.error('Error: Producto sin ID o nombre:', product);
+              } else {
+                  console.log('Producto con ID listo para enviar:', product);
+              }
+          });
+      });
+  
+      console.log('Payload preparado para enviar:', this.toSendPayload);
   }
-
-  formatMenus() {
-    this.standardMenu.products = this.standardProducts;
-    this.lightMenu.products = this.lightProducts;
-    this.proteicMenu.products = this.proteicProducts;
-
-    this.standardMenu.price = this.standardPrice;
-    this.lightMenu.price = this.lightPrice;
-    this.proteicMenu.price = this.proteicPrice;
-
-    this.mapToArray(this.standardProducts);
-    this.mapToArray(this.lightProducts);
-    this.mapToArray(this.proteicProducts);
-
-    this.toSendPayload.Menus.push(this.standardMenu);
-    this.toSendPayload.Menus.push(this.lightMenu);
-    this.toSendPayload.Menus.push(this.proteicMenu);
-    
-    this.checkValidation(this.standardMenu);
-    if(this.isValid)
-      this.checkValidation(this.lightMenu);
-    if(this.isValid)
-      this.checkValidation(this.proteicMenu);
-  }
-
+  
   mapToArray(array: Array<ProductDTO>) {
     array.forEach(element => {
       this.addProduct(array, element);
@@ -225,9 +394,17 @@ saveRole(role: number) {
   }
 
   addProduct(array: Array<ProductDTO>, product: ProductDTO) {
-    array[product.day - 1].id = 0;
+    // Si el producto ya tiene un ID, lo mantenemos
+    if (product.id) {
+        array[product.day - 1].id = product.id;
+    } else {
+        console.error('Producto sin ID, no se sobrescribe:', product);
+    }
+
+    // Actualizamos el nombre del producto
     array[product.day - 1].name = product.name;
-  }
+}
+
 
   checkValidation(menu: MenuDTO) {
 
@@ -250,13 +427,90 @@ saveRole(role: number) {
     this.isValid = validated;
   }
 
-  startArray(array: Array<ProductDTO>) {
-    for(let i = 0; i < 5; i++) {
-      let product = new ProductDTO();
-      product.day = i + 1;
-      product.name = "";
-      array.push(product);
+  startArray(array: Array<ProductDTO>, existingProducts: Array<ProductDTO>) {
+    for (let i = 0; i < 5; i++) {
+        if (existingProducts && existingProducts[i]) {
+            // Reutiliza los productos existentes con sus ID
+            console.log('Producto existente cargado:', existingProducts[i]);
+            array.push(existingProducts[i]);
+        } else {
+            // Solo crea nuevos productos si no hay productos existentes
+            let product = new ProductDTO();
+            product.day = i + 1;
+            product.name = "";
+            array.push(product);
+        }
+    }
+
+    console.log('Array después de startArray():', array);  // Verifica que los ID se mantengan
+}
+
+loadMenusFromBackend() {
+  this.menusService.GetAll().subscribe(response => {
+      const loadedMenus = response.model;
+
+      this.standardMenu = loadedMenus.find(menu => menu.category === "Estandar")|| new MenuDTO();
+      this.lightMenu = loadedMenus.find(menu => menu.category === "Light")|| new MenuDTO();
+      this.proteicMenu = loadedMenus.find(menu => menu.category === "Proteico")|| new MenuDTO();
+
+      // Verificar si los productos cargados tienen los IDs correctos
+      console.log('Productos del menú Estandar:', this.standardMenu ? this.standardMenu.products : []);
+      console.log('Productos del menú Light:', this.lightMenu ? this.lightMenu.products : []);
+      console.log('Productos del menú Proteico:', this.proteicMenu ? this.proteicMenu.products : []);
+
+      // Asigna los productos cargados a los arrays correspondientes
+      this.startArray(this.standardProducts, this.standardMenu ? this.standardMenu.products : []);
+      this.startArray(this.lightProducts, this.lightMenu ? this.lightMenu.products : []);
+      this.startArray(this.proteicProducts, this.proteicMenu ? this.proteicMenu.products : []);
+
+      this.closeLoader();
+  }, error => {
+      console.error("Error cargando menús:", error);
+      this.closeLoader();
+  });
+}
+
+  addNewProduct(menuCategory: string) {
+    let newProduct = new ProductDTO();
+    newProduct.name = "Nuevo Producto";  // Nombre predeterminado
+    newProduct.day = this.getNextAvailableDay(menuCategory);  // Asigna el próximo día disponible
+
+    if (menuCategory === 'Estandar') {
+        this.standardProducts.push(newProduct);
+    } else if (menuCategory === 'Light') {
+        this.lightProducts.push(newProduct);
+    } else if (menuCategory === 'Proteico') {
+        this.proteicProducts.push(newProduct);
     }
   }
+  getNextAvailableDay(_menuCategory: string): import("../../Models/Enums/DayOfWeekEnums").DayOfWeek {
+    throw new Error('Method not implemented.');
+  }
   
-}
+}*/
+
+
+
+
+/*sendMenus() {
+    this.makeLoadingAnimation();
+    this.formatMenus();
+
+    if(this.isValid) {
+      this.menusService.AddMenus(this.toSendPayload).subscribe( response => {
+        this.addResponse = response as ResponseObject;
+
+        if(this.addResponse.statusCode === 200) {
+          this.alertTool.presentToast("Menús añadidos exitosamente!");         
+        } else {
+          this.alertTool.presentToast("Oops... Ocurrió un error!");
+        } 
+        this.closeLoader();
+      }, error => {
+        this.alertTool.presentToast("Oops... Ocurrió un error!");
+        this.closeLoader();
+      })
+    }
+    this.toSendPayload = new AddMenusDTO();
+    this.toSendPayload.Menus = new Array<MenuDTO>();
+  }*/

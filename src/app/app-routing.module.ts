@@ -42,7 +42,15 @@ const routes: Routes = [
   {
     path: 'admin-payment-info',
     loadChildren: () => import('./Pages/admin-payment-info/admin-payment-info.module').then( m => m.AdminPaymentInfoPageModule)
+  },
+  {
+    path: 'add-images',
+    loadChildren: () => import('./Pages/add-images/add-images.module').then( m => m.AddImagesPageModule)
   }
+  
+  
+  
+
 ];
 
 @NgModule({
