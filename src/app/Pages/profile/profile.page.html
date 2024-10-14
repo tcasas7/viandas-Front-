@@ -61,13 +61,23 @@
       </ion-button>
     </ion-item>
   </div>
+
   <div *ngIf="isAdmin" style="text-align: center;">
     <ion-button color="warning" (click)="navigateToAdmin()">Panel de administrador</ion-button>
   </div>
+
   <div style="text-align: center;">
-    <ion-button color="danger" (click)="navigateToOrders()">Ver mis ordenes</ion-button>
+    <ion-button color="danger" (click)="navigateToOrders()">Ver mis órdenes</ion-button>
   </div>
+
+  <!-- Botón solo para repartidores -->
   <div style="text-align: center;">
-    <ion-button lines="none" color="primary"(click)="logOut()">Cerrar sesión</ion-button>
+    <ion-button *ngIf="isDeliveryRole" (click)="viewAssignedAddresses()">Ver Direcciones Asignadas</ion-button>
+
   </div>
+
+  <div style="text-align: center;">
+    <ion-button lines="none" color="primary" (click)="logOut()">Cerrar sesión</ion-button>
+  </div>
+
 </ion-content>

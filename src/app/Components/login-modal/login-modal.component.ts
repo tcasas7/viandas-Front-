@@ -53,27 +53,28 @@ export class LoginModalComponent {
   }
 
   doRequest() {
-    this.authService.loginUser(this.loginData).subscribe( response => {
-      this.response = response as ResponseObjectModel<string>
-      console.log(this.response);
-      if(this.response.statusCode === 200) {
-        localStorage.setItem("Logged", "true");
-        localStorage.setItem("Token", this.response.model);
+    this.authService.loginUser(this.loginData).subscribe(
+      (response: ResponseObjectModel<string>) => {
+        this.response = response;
+        if (this.response.statusCode === 200) {
+          localStorage.setItem("Logged", "true");
+          localStorage.setItem("Token", this.response.model);  // Guarda el token en localStorage
+          this.closeLoader();
+          this.alertTool.presentToast("Sesión iniciada");
+          this.closeModal();  // Cierra el modal después del login
+        } else {
+          this.closeLoader();
+          this.alertTool.presentToast(this.response.message);
+        }
+      },
+      (error) => {
         this.closeLoader();
-        this.alertTool.presentToast("Sesión iniciada");
-        this.closeModal();
-      } else {
-        this.closeLoader();
-        this.alertTool.presentToast(this.response.message);
+        this.alertTool.presentToast("Oops... Ocurrió un error!");
       }
-    }, error => {
-      if(error) {
-        this.closeLoader();
-        this.alertTool.presentToast("Oops... Ocurrió un error!");  
-      }
-    })
+    );
     this.isValid = false;
   }
+  
 
   makeLoadingAnimation() {
     this.loadingCtrl.getTop().then(hasLoading => {

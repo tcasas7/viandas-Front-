@@ -146,7 +146,9 @@ formatOrders() {
     var order = new ClientOrder(o);
     this.toDisplayOrders.push(order);
   });
+  console.log('Órdenes a mostrar:', this.toDisplayOrders); // <-- Asegúrate de que aquí se muestren las órdenes
 }
+
 
 collapseOrder(order: ClientOrder) {
   order.isCollapsed = true;
