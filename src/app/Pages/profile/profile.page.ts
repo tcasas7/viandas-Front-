@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { LocationDTO } from 'src/app/Models/LocationDTO';
@@ -13,16 +13,18 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
-export class ProfilePage {
+export class ProfilePage implements OnInit {
 
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
   removeLocationResponse: ResponseObject = new ResponseObject();
   logged: boolean = false;
   didLoad: boolean = false;
   user: UserDTO;
+  isDeliveryRole: boolean = false;
   locations: Array<LocationDTO> = new Array<LocationDTO>();
 
   selectedLocation: LocationDTO | undefined;
+  
 
   selectedLocationId: any;
 
@@ -211,5 +213,30 @@ async getData() {
     //this.alertTool.presentToast("Funcionalidad en desarrollo");
     //Implementacion
     this.router.navigate(["/orders"]);
+  }
+
+
+  checkUserRole() {
+    this.userService.getUserProfile().subscribe((response: UserDTO) => {
+      this.user = response;  // Aquí obtienes los datos del usuario
+      this.isDeliveryRole = this.user.role === 1;  // Si el rol es 1, es un repartidor
+    });
+  }
+  ngOnInit() {
+    this.getUserProfile();
+  }
+
+  getUserProfile() {
+    this.userService.getUserProfile().subscribe((response: any) => {
+      console.log("Perfil del usuario:", response);
+      this.user = response.model;  // Aquí debe estar el modelo completo
+      console.log("¿Es repartidor?", this.user.role === 1);
+      this.isDeliveryRole = this.user.role === 1;
+  });
+  
+  }
+
+  viewAssignedAddresses() {
+    console.log('Mostrando direcciones asignadas...');
   }
 }

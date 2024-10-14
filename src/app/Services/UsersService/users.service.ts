@@ -6,11 +6,17 @@ import { ChangeRoleDTO } from 'src/app/Models/ChangeRoleDTO';
 import { LocationDTO } from 'src/app/Models/LocationDTO';
 import { ChangePhoneDTO } from 'src/app/Models/ChangePhoneDTO';
 import { ContactDTO } from 'src/app/Models/ContactDTO';
+import { Observable } from 'rxjs';
+import { UserDTO } from 'src/app/Models/UserDTO';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService extends MainService{
+  private apiUrl = 'http://localhost:5009/api/users/data';  // URL base correcta
+
+
 
   GetAll() {
     var token = localStorage.getItem('Token');
@@ -126,4 +132,14 @@ export class UsersService extends MainService{
     return this.http.post(this.baseRoute + 'Users/makeActive', model, {headers});
   }
 
+  getUserProfile(): Observable<UserDTO> {
+    const token = localStorage.getItem('Token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return this.http.get<UserDTO>(`${this.apiUrl}`, { headers });
+  }
+  
+  
 }
