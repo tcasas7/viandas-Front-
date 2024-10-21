@@ -160,9 +160,43 @@ uncollapseOrder(order: ClientOrder) {
 
 openPaymentInfoModal(order: ClientOrder) {
   this.toPayTotal = order.price;
-  this.paymentInfoModalIsActive = true;
+
+  // Obtener la información del contacto activo
+  this.userService.GetActiveContact().subscribe(response => {
+    this.contactResponse = response as ResponseObjectModel<ContactDTO>;
+    this.contact = this.contactResponse.model;
+
+    // Activar el modal
+    this.paymentInfoModalIsActive = true;
+  }, error => {
+    this.alertTool.presentToast("Error al cargar la información de pago");
+  });
 }
 
+
+cancelOrder(orderId: number): void {
+  this.ordersService.cancelOrder(orderId).subscribe(
+    (response: any) => {
+      this.alertTool.presentToast('Orden cancelada con éxito');
+      // Actualiza las órdenes mostradas después de cancelar una orden
+      this.toDisplayOrders = this.toDisplayOrders.filter(order => order.id !== orderId);
+    },
+    (error: any) => {
+      this.alertTool.presentToast('Error al cancelar la orden');
+    }
+  );
+}
+
+viewProducts(orderId: number) {
+  this.ordersService.GetProductsByOrderId(orderId).subscribe(
+    (products: any) => { 
+      console.log(products);
+    },
+    (error: any) => {
+      this.alertTool.presentToast('Error al obtener los productos de la orden.');
+    }
+  );
+}
 closePaymentInfoModal() {
   this.paymentInfoModalIsActive = false;
 }

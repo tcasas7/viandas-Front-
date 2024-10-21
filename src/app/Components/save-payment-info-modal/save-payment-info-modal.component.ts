@@ -64,42 +64,43 @@ export class SavePaymentInfoModalComponent implements OnChanges {
   closeModal() {
     this.closeModalEvent.emit();
   }
-
   addPaymentInfo() {
-
-    if(this.isValid === false) {
-      this.alertTool.presentToast("Campos vacíos");
+    this.validateFields();
+  
+    if (!this.isValid) {
       return;
     }
-
+  
     this.makeLoadingAnimation();
-    this.finalPhone = '+' + this.paymentInfoForm.get("preFix")?.value + ' ' + this.paymentInfoForm.get("areaCode")?.value + ' ' + this.paymentInfoForm.get("phone")?.value;
-    this.paymentInfo.Id = 0;
-    this.paymentInfo.phone = this.finalPhone;
+  
+    // Actualizamos los datos del objeto paymentInfo
+    this.paymentInfo.phone = '+' + this.paymentInfoForm.get("preFix")?.value + ' ' +
+                             this.paymentInfoForm.get("areaCode")?.value + ' ' +
+                             this.paymentInfoForm.get("phone")?.value;
     this.paymentInfo.cbu = this.paymentInfoForm.get("cbu")?.value;
     this.paymentInfo.alias = this.paymentInfoForm.get("alias")?.value;
     this.paymentInfo.name = this.paymentInfoForm.get("name")?.value;
-    this.paymentInfo.isActive = false;
-    this.paymentInfo.wppMessage = this.paymentInfoForm.get("wppMessage")?.value;
     this.paymentInfo.accountName = this.paymentInfoForm.get("accountName")?.value;
-
+    this.paymentInfo.isActive = false;
+  
+    // Verificación de los datos antes de enviar
+    console.log('Datos a enviar:', this.paymentInfo);
+  
     this.usersService.AddContact(this.paymentInfo).subscribe(response => {
       this.response = response as ResponseObject;
       if (this.response.statusCode === 200) {
         this.alertTool.presentToast("Información de pago agregada");
         this.closeModal();
-        this.closeLoader();
       } else {
         this.alertTool.presentToast("Error al agregar información de pago");
-        this.closeLoader();
       }
       this.closeLoader();
     }, error => {
-      this.alertTool.presentToast(this.response.message);
+      this.alertTool.presentToast("Error al agregar información de pago");
       this.closeLoader();
     });
   }
-
+  
   modifyPaymentInfo() {
     this.validateFields();
 

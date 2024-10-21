@@ -2,37 +2,43 @@ import { Injectable } from '@angular/core';
 import { MainService } from '../MainService/main.service';
 import { OrderDTO } from 'src/app/Models/OrderDTO';
 import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdersService extends MainService {
 
-  getDates() {
-    var token = localStorage.getItem('Token');
+  cancelOrder(orderId: number): Observable<any> {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
 
-    var headers = this.createHeader(token);
-
-    return this.http.get(this.baseRoute + 'Orders/getDates', {headers});
+    // Cambiamos el método a DELETE y corregimos la URL
+    return this.http.delete(this.baseRoute + 'Orders/remove/' + orderId, { headers });
   }
 
-  GetFromUser(email: string) {
-    var token = localStorage.getItem('Token');
+  getDates(): Observable<any> {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
 
-    var headers = this.createHeader(token);
-
-    return this.http.get(this.baseRoute + 'Orders/' + email, {headers});
+    return this.http.get(this.baseRoute + 'Orders/getDates', { headers });
   }
 
-  GetOwn() {
-    var token = localStorage.getItem('Token');
+  GetFromUser(email: string): Observable<any> {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
 
-    var headers = this.createHeader(token);
-
-    return this.http.get(this.baseRoute + 'Orders/own', {headers});
+    return this.http.get(this.baseRoute + 'Orders/' + email, { headers });
   }
 
-  PlaceOrder(model: PlaceOrderDTO) {
+  GetOwn(): Observable<any> {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+
+    return this.http.get(this.baseRoute + 'Orders/own', { headers });
+  }
+
+  PlaceOrder(model: PlaceOrderDTO): Observable<any> {
     const token = localStorage.getItem('Token');
     const headers = this.createHeader(token);
 
@@ -54,15 +60,24 @@ export class OrdersService extends MainService {
           quantity: delivery.quantity
         }))
       }))
-    }
+    };
+
     return this.http.post(this.baseRoute + 'Orders/place', camelCaseModel, { headers });
-}
-
-  RemoveOrder(orderId: number) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Orders/remove/' + orderId, {headers})
   }
+
+  RemoveOrder(orderId: number): Observable<any> {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+
+    // Cambiamos el método a DELETE y corregimos la URL
+    return this.http.delete(this.baseRoute + 'Orders/remove/' + orderId, { headers });
+  }
+
+  GetProductsByOrderId(orderId: number): Observable<any> {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    
+    return this.http.get(this.baseRoute + 'Orders/getProducts/' + orderId, { headers });
+  }
+
 }
