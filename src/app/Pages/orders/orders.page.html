@@ -1,15 +1,4 @@
-<ion-header style="align-items: end">
-  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
-  </ion-toolbar>
-</ion-header>
-<ion-header>
-  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
-    <div class="user-div"><ion-icon (click)="navigateToProfile()" class="user-label" name="arrow-back-outline"></ion-icon></div>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content class="custom-content">
-  <!-- Modal de información de pago -->
   <app-payment-info 
     *ngIf="paymentInfoModalIsActive" 
     (closeModalEvent)="closePaymentInfoModal()" 
@@ -20,7 +9,6 @@
     [total]="toPayTotal">
   </app-payment-info>
 
-  <!-- Lista de órdenes -->
   <ion-card color="light" *ngFor="let order of toDisplayOrders" style="width: 77vw; max-width: 900px; margin: auto; margin-top: 2vh;">
     <ion-card-header style="color: black; font-weight: bold; font-size: large;">
       <div>
@@ -30,14 +18,11 @@
       </div>
     </ion-card-header>
 
-    <!-- Contenido de la orden -->
     <ion-card-content *ngIf="!order.isCollapsed">
-      <!-- Descripción -->
       <div *ngIf="order.description">
         <b style="color: black;">Descripción: </b>{{order.description || 'Sin descripción'}}
       </div>
 
-      <!-- Método de pago -->
       <div>
         <div *ngIf="order.paymentMethod === 0">
           <b style="color: black;">Método de pago: </b> Efectivo
@@ -47,45 +32,40 @@
         </div>
       </div>
 
-      <!-- Fecha de entrega -->
-      <div>
-        <div *ngIf="order.deliveries && order.deliveries.length > 0">
-          <div *ngIf="order.deliveries[0].deliveryDate === 1">
-            <b style="color: black;">Fecha de entrega: </b> Lunes
-          </div>
-          <div *ngIf="order.deliveries[0].deliveryDate === 2">
-            <b style="color: black;">Fecha de entrega: </b> Martes
-          </div>
-          <div *ngIf="order.deliveries[0].deliveryDate === 3">
-            <b style="color: black;">Fecha de entrega: </b> Miércoles
-          </div>
-          <div *ngIf="order.deliveries[0].deliveryDate === 4">
-            <b style="color: black;">Fecha de entrega: </b> Jueves
-          </div>
-          <div *ngIf="order.deliveries[0].deliveryDate === 5">
-            <b style="color: black;">Fecha de entrega: </b> Viernes
-          </div>
-        </div>
+      <div *ngIf="order.deliveries && order.deliveries.length > 0">
+        <b style="color: black;">Tipo de menú:</b> {{ order.deliveries[0].productName }}<br>
+        <b style="color: black;">Cantidad:</b> {{ order.deliveries[0].quantity }}<br>
+        <b style="color: black;">Fecha de entrega: </b>
+        <span *ngIf="order.deliveries[0].deliveryDate === 1">Lunes</span>
+        <span *ngIf="order.deliveries[0].deliveryDate === 2">Martes</span>
+        <span *ngIf="order.deliveries[0].deliveryDate === 3">Miércoles</span>
+        <span *ngIf="order.deliveries[0].deliveryDate === 4">Jueves</span>
+        <span *ngIf="order.deliveries[0].deliveryDate === 5">Viernes</span>
       </div>
 
-      <!-- Total -->
       <div style="font-size: x-large; color: black; font-weight: bold;">
         <div style="float: inline-start">Total: </div> 
         <div style="float: inline-end;">${{order.price}}</div>
       </div>
 
-      <!-- Botones de acción -->
-      <div>
-        <ion-button style="width: 99.5%;" (click)="viewProducts(order.id)">Ver productos</ion-button>
-      </div>
+      <!-- Separación -->
+      <div style="margin: 50px 0;"></div>
 
-      <!-- Acciones de pago y cancelación -->
-      <div *ngIf="order.paymentMethod === 1">
+      <!-- Mostrar el botón "Cancelar" para todas las órdenes -->
+      <div>
         <ion-button style="float: inline-start; margin-bottom: 1vh;" (click)="cancelOrder(order.id)">Cancelar</ion-button>
-        <ion-button style="float: inline-end; margin-bottom: 1vh;" (click)="openPaymentInfoModal(order)">Realizar pago</ion-button>
+
+        <!-- Mostrar el botón "Realizar pago" solo para órdenes con transferencia -->
+        <ion-button 
+          *ngIf="order.paymentMethod === 1" 
+          style="float: inline-end; margin-bottom: 1vh;" 
+          (click)="openPaymentInfoModal(order)">
+          Realizar pago
+        </ion-button>
       </div>
     </ion-card-content>
   </ion-card>
 </ion-content>
+
 
 <!--app-support-button [phone]="contact.phone" [wppMessage]="contact.wppMessage"></app-support-button-->

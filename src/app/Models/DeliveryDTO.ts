@@ -6,4 +6,5 @@ export class DeliveryDTO {
     delivered!: boolean;
     deliveryDate!: DayOfWeek;
     quantity!: number;
+    productName!: string;
 }
