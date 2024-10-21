@@ -12,6 +12,7 @@ export class PaymentInfoComponent {
 
   @Input() CBU: string = "";
   @Input() alias: string = "";
+  @Input() phone: string = "";
   @Input() name: string = "";
   @Input() total: number = 0;
 
