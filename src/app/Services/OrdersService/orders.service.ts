@@ -3,19 +3,39 @@ import { MainService } from '../MainService/main.service';
 import { OrderDTO } from 'src/app/Models/OrderDTO';
 import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
 import { Observable } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdersService extends MainService {
 
-  cancelOrder(orderId: number): Observable<any> {
+  
+  confirmOrder(orderId: number): Observable<any> {
     const token = localStorage.getItem('Token');
-    const headers = this.createHeader(token);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
 
-    // Cambiamos el método a DELETE y corregimos la URL
-    return this.http.delete(this.baseRoute + 'Orders/remove/' + orderId, { headers });
+    return this.http.post(`http://localhost:5009/api/Orders/confirm/${orderId}`, null, { headers });
   }
+
+  cancelOrder(orderId: number) {
+    const token = localStorage.getItem('token');
+    console.log('Token actual:', token);
+    if (!token) {
+      alert('No estás autenticado');
+      return;
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return this.http.delete(`http://localhost:5009/api/Orders/${orderId}`, { headers });
+  }
+  
+  
 
   getDates(): Observable<any> {
     const token = localStorage.getItem('Token');

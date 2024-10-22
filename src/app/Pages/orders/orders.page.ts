@@ -1,6 +1,9 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import { ClientOrder } from 'src/app/Models/ClientOrder';
 import { ContactDTO } from 'src/app/Models/ContactDTO';
 import { OrderDTO } from 'src/app/Models/OrderDTO';
@@ -9,6 +12,7 @@ import { UserDTO } from 'src/app/Models/UserDTO';
 import { OrdersService } from 'src/app/Services/OrdersService/orders.service';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-orders',
@@ -17,6 +21,7 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
 })
 export class OrdersPage {
 
+  private baseUrl = 'http://localhost:5009/api/Orders';
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
   ordersResponse: ResponseObjectModel<Array<OrderDTO>> = new ResponseObjectModel();
   contactResponse: ResponseObjectModel<ContactDTO> = new ResponseObjectModel();
@@ -33,6 +38,7 @@ export class OrdersPage {
   toPayTotal: number = 0;
 
   constructor(
+    private http: HttpClient,
     private router: Router,
     private userService: UsersService,
     private ordersService: OrdersService,
@@ -40,6 +46,7 @@ export class OrdersPage {
     private loadingCtrl: LoadingController
   )
   {
+    
     this.contact = new ContactDTO();
   }
 
@@ -174,18 +181,27 @@ openPaymentInfoModal(order: ClientOrder) {
 }
 
 
-cancelOrder(orderId: number): void {
-  this.ordersService.cancelOrder(orderId).subscribe(
-    (response: any) => {
-      this.alertTool.presentToast('Orden cancelada con éxito');
-      // Actualiza las órdenes mostradas después de cancelar una orden
-      this.toDisplayOrders = this.toDisplayOrders.filter(order => order.id !== orderId);
+cancelOrder(orderId: number) {
+  this.alertTool.presentToast("Funcionalidad en desarrollo");
+}
+
+
+loadOrders(): void {
+  this.ordersService.GetOwn().subscribe(
+    (response) => {
+      if (response.status === 200) {
+        this.toDisplayOrders = response.data;
+        console.log('Órdenes cargadas:', this.toDisplayOrders);
+      } else {
+        console.error('Error al cargar órdenes:', response.message);
+      }
     },
-    (error: any) => {
-      this.alertTool.presentToast('Error al cancelar la orden');
+    (error) => {
+      console.error('Error al cargar órdenes:', error);
     }
   );
 }
+
 
 viewProducts(orderId: number) {
   this.ordersService.GetProductsByOrderId(orderId).subscribe(

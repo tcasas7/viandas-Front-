@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, Platform } from '@ionic/angular';
+import { LocationDTO } from 'src/app/Models/LocationDTO';
 import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
@@ -22,9 +23,11 @@ export class AdminPage {
   logged: boolean = false;
   didLoad: boolean = false;
 
-  activeModal: number = 0;
-
   isWeb: boolean = false;
+  direcciones: string[] = [];
+
+  activeModal: number = 0;
+  locations: LocationDTO[] = [];
 
   constructor(
     private router: Router,
@@ -63,8 +66,7 @@ export class AdminPage {
   }
 
   activateOrdersModal() {
-    //this.alertTool.presentToast("Funcionalidad en desarrollo");
-    //Implementacion
+    
     this.router.navigate(["admin-orders"]);
     this.activeModal = 1;
   }
@@ -75,8 +77,7 @@ export class AdminPage {
   }
 
   activateStatsModal() {
-    //this.alertTool.presentToast("Funcionalidad en desarrollo");
-    //Implementacion
+   
     this.router.navigate(["stats"])
     this.activeModal = 3;
   }
@@ -86,15 +87,22 @@ export class AdminPage {
   }
 
   activateLocationModal() {
-    //his.alertTool.presentToast("Funcionalidad en desarrollo");
-    //Implementacion
-    this.router.navigate(["location"])
-    this.activeModal = 5;
+    if (this.locations.length > 0) {
+      this.activeModal = 5;
+    } else {
+      this.alertTool.presentToast("No hay direcciones para mostrar.");
+    }
+  }
+  loadDirecciones() {
+    // Simulación de carga de direcciones (puede reemplazarse con una llamada a la API)
+    this.direcciones = [
+      'Jose Hernandez, 720, Mar del Plata, Buenos Aires, Argentina',
+      'Almirante Brown, 9153, Mar del Plata, Buenos Aires, Argentina'
+    ];
   }
 
   activatePaymentInfoModal() {
-    //this.alertTool.presentToast("Funcionalidad en desarrollo");
-    //Implementacion
+   
     this.router.navigate(["admin-payment-info"])
     this.activeModal = 6;
   }
@@ -155,28 +163,39 @@ saveRole(role: number) {
 }
 
 async getData() {
-  this.userService.GetData().subscribe( response => {
+  this.userService.GetData().subscribe(response => {
     this.dataResponse = response as ResponseObjectModel<UserDTO>;
     this.user = this.dataResponse.model;
+    
+    // Almacenar nombre y apellido en localStorage
     localStorage.setItem("firstName", this.dataResponse.model.firstName);
     localStorage.setItem("lastName", this.dataResponse.model.lastName);
+    
+    // Guardar las direcciones obtenidas
+    this.locations = this.user.locations; // <-- Asegúrate de tener esta variable definida en tu componente
+
+    // Guardar el rol del usuario
     this.saveRole(this.dataResponse.model.role);
 
+    // Marcar la carga como completa y cerrar el loader
     this.didLoad = true;
     this.closeLoader();
   }, error => {
+    // Manejar el error
     this.closeLoader();
     this.logged = false;
     this.router.navigate(["/unauthorized"]);
     this.alertTool.presentToast("Oops... Ocurrió un error!");
-  })
+  });
 }
 
-checkPlatform() {
-  if(this.platform.is("desktop")) {
-    this.isWeb = true;
-  } else {
-    this.isWeb = false;
+
+  checkPlatform() {
+    if(this.platform.is("desktop")) {
+      this.isWeb = true;
+    }else {
+      this.isWeb = false;
+    }
   }
-}
+
 }
