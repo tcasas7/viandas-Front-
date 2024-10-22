@@ -23,28 +23,25 @@ export class AdminOrdersPage {
   ordersResponse: ResponseObjectModel<Array<OrderDTO>> = new ResponseObjectModel();
   datesResponse: ResponseObjectList<Array<Date>> = new ResponseObjectList();
 
-  toDisplayOrders: Array<any> = new Array<any>();
-
+  toDisplayOrders: Array<ClientOrder> = new Array<ClientOrder>();
   formatedStringDates: Array<string> = new Array<string>();
-
-  dates: Array<DateSelector> 
+  dates: Array<DateSelector> = new Array<DateSelector>();
 
   user!: UserDTO;
   orders!: Array<OrderDTO>;
 
   isAdmin: boolean = false;
   logged: boolean = false;
-
   activeModal: number = 0;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private userService: UsersService,
     private ordersService: OrdersService,
     private alertTool: AlertTool,
-    private loadingCtrl: LoadingController)
-    {
-      this.dates = new Array<DateSelector>();
-    }
+    private loadingCtrl: LoadingController
+    
+  ) {}
 
   navigateToAdmin() {
     this.router.navigate(["admin"]);
@@ -52,163 +49,161 @@ export class AdminOrdersPage {
 
   ionViewWillEnter() {
     this.makeLoadingAnimation();
-    if(localStorage.getItem("Logged") === "true") {
-      this.logged = true;
-    }
-    else {
-      this.logged = false;
-    }
+    this.logged = localStorage.getItem("Logged") === "true";
 
-    if(!this.logged) {
+    if (!this.logged) {
       this.router.navigate(["/unauthorized"]);
+    } else {
+      this.getData(); 
     }
-
-    this.getData(); 
   }
 
   async getData() {
-    this.userService.GetData().subscribe( response => {
-      this.dataResponse = response as ResponseObjectModel<UserDTO>;
-      this.user = this.dataResponse.model;
-      localStorage.setItem("firstName", this.dataResponse.model.firstName);
-      localStorage.setItem("lastName", this.dataResponse.model.lastName);
-      this.saveRole(this.dataResponse.model.role);
-  
-      this.getOrders();
-      this.getDates();
-      this.closeLoader();
-    }, error => {
-      this.closeLoader();
-      this.router.navigate(["/unauthorized"]);
-      this.alertTool.presentToast("Oops... Ocurrió un error!");
-    });
+    this.userService.GetData().subscribe(
+      (response) => {
+        this.dataResponse = response as ResponseObjectModel<UserDTO>;
+        this.user = this.dataResponse.model;
+        localStorage.setItem("firstName", this.user.firstName);
+        localStorage.setItem("lastName", this.user.lastName);
+        this.saveRole(this.user.role);
+        this.getOrders();
+        this.getDates();
+        this.closeLoader();
+      },
+      (error) => {
+        this.closeLoader();
+        this.router.navigate(["/unauthorized"]);
+        this.alertTool.presentToast("Oops... Ocurrió un error!");
+      }
+    );
   }
 
   async getOrders() {
-    this.ordersService.GetOwn().subscribe( response => {
-      this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
-      this.orders = this.ordersResponse.model;
-      this.formatOrders();
-    }, error => {
-      this.router.navigate(["/unauthorized"]);
-      this.alertTool.presentToast("Oops... Ocurrió un error!");
-    });
+    this.ordersService.GetOwn().subscribe(
+      (response) => {
+        this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
+        this.orders = this.ordersResponse.model;
+        this.formatOrders();
+      },
+      (error) => {
+        this.router.navigate(["/unauthorized"]);
+        this.alertTool.presentToast("Oops... Ocurrió un error!");
+      }
+    );
   }
 
   async getDates() {
-    this.ordersService.getDates().subscribe( response => {
-      this.datesResponse = response as ResponseObjectList<Array<Date>>;
-      this.mapDates(this.datesResponse.model);
-      this.makeStringDates();
-      this.showDates();
-    }, error => {
-      this.router.navigate(["/unauthorized"]);
-      this.alertTool.presentToast("Oops... Ocurrió un error!");
-    });
+    this.ordersService.getDates().subscribe(
+      (response) => {
+        this.datesResponse = response as ResponseObjectList<Array<Date>>;
+        this.mapDates(this.datesResponse.model);
+        this.makeStringDates();
+        this.showDates();
+      },
+      (error) => {
+        this.router.navigate(["/unauthorized"]);
+        this.alertTool.presentToast("Oops... Ocurrió un error!");
+      }
+    );
   }
 
   saveRole(role: number) {
-    if(role === 0) {
+    if (role === 0) {
       localStorage.setItem("role", "CLIENT");
-    } else if( role === 1) {
+    } else if (role === 1) {
       localStorage.setItem("role", "DELIVERY");
-    } else if( role === 2) {
+    } else if (role === 2) {
       localStorage.setItem("role", "ADMIN");
       this.isAdmin = true;
     }
   }
 
   makeLoadingAnimation() {
-    this.loadingCtrl.getTop().then(hasLoading => {
+    this.loadingCtrl.getTop().then((hasLoading) => {
       if (!hasLoading) {
-          this.loadingCtrl.create({
-              spinner: 'circular',
-              cssClass: "custom-loading"
-          }).then(loading => loading.present());
+        this.loadingCtrl.create({
+          spinner: 'circular',
+          cssClass: "custom-loading"
+        }).then((loading) => loading.present());
       }
-  })
-}
+    });
+  }
 
-async closeLoader() {
-  
+  async closeLoader() {
     this.checkAndCloseLoader();
-  
     setTimeout(() => this.checkAndCloseLoader(), 500);
-}
+  }
 
-async checkAndCloseLoader() {
-   
-   const loader = await this.loadingCtrl.getTop();
-   
-    if(loader !== undefined) { 
+  async checkAndCloseLoader() {
+    const loader = await this.loadingCtrl.getTop();
+    if (loader !== undefined) { 
       await this.loadingCtrl.dismiss();
     }
-}
+  }
 
-formatOrders() {
-  this.toDisplayOrders = new Array<ClientOrder>();
-  this.orders.forEach(o => {
-    var order = new ClientOrder(o);
-    this.toDisplayOrders.push(order);
-  });
-}
+  formatOrders() {
+    this.toDisplayOrders = this.orders.map(order => new ClientOrder(order));
+  }
 
-collapseOrder(order: ClientOrder) {
-  order.isCollapsed = true;
-}
+  collapseOrder(order: ClientOrder) {
+    order.isCollapsed = true;
+  }
 
-uncollapseOrder(order: ClientOrder) {
-  order.isCollapsed = false;
-}
+  uncollapseOrder(order: ClientOrder) {
+    order.isCollapsed = false;
+  }
 
-mapDates(array: Array<any>) {
-  array.forEach(d => {
+  mapDates(array: Array<any>) {
+    this.dates = array.map(d => {
+      let dateSelector = new DateSelector();
+      dateSelector.date = new Date(d);
+      return dateSelector;
+    });
+  }
 
-    var dateSelector = new DateSelector();
-    dateSelector.date = new Date(d);
-    this.dates.push(dateSelector);
-  });
-}
+  makeStringDates() {
+    this.dates.forEach(element => {
+      let day: string;
+      const dayMapping = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+      day = dayMapping[element.date.getDay()];
+      element.stringDate = `${day}: ${element.date.getDate()}/${element.date.getMonth()}/${element.date.getFullYear()}`;
+    });
+  }
 
-makeStringDates() {
-  this.dates.forEach(element => {
-    var day;
-    if(element.date.getDay() == 1) {
-      day = 'Lunes';
-    } else if(element.date.getDay() == 2) {
-      day = 'Martes';
-    } else if(element.date.getDay() == 3) {
-      day = 'Miércoles';
-    }
-    else if(element.date.getDay() == 4) {
-      day = 'Jueves';
-    }
-    else if(element.date.getDay() == 5) {
-      day = 'Viernes';
-    }
-    else if(element.date.getDay() == 6) {
-      day = 'Sábado';
-    }
-    else if(element.date.getDay() == 0) {
-      day = 'Domingo';
-    }
+  showDates() {
+    this.dates.forEach(element => console.log(element));
+  }
 
-    element.stringDate = day + ": " + element.date.getDate().toString() + "/" + element.date.getMonth().toString() + "/" + element.date.getFullYear().toString();
-  });
-}
+  loadOrders(): void {
+    this.ordersService?.GetOwn().subscribe(
+      (response) => {
+        if (response?.status === 200) {
+          this.toDisplayOrders = response.data.map((order: OrderDTO) => new ClientOrder(order));
+          console.log('Órdenes cargadas:', this.toDisplayOrders);
+        } else {
+          console.error('Error al cargar órdenes:', response?.message);
+        }
+      },
+      (error) => {
+        console.error('Error al cargar órdenes:', error);
+      }
+    );
+  }
+  
+  cancelOrder(orderId: number): void {
+    this.alertTool.presentToast("Funcionalidad en desarrollo");
+  }
 
-showDates() {
-  this.dates.forEach(element => {
-    console.log(element);
-  });
-}
+ 
+  confirmOrder(orderId: number): void {
+    this.alertTool.presentToast("Funcionalidad en desarrollo");
+  }
+  
+  openCalendarModal() {
+    this.activeModal = 1;
+  }
 
-openCalendarModal() {
-  this.activeModal = 1;
-}
-
-closeModal() {
-  this.activeModal = 0;
-}
-
+  closeModal() {
+    this.activeModal = 0;
+  }
 }
