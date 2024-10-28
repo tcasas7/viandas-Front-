@@ -10,7 +10,6 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content class="custom-content">
   <app-payment-info 
     *ngIf="paymentInfoModalIsActive" 
@@ -25,35 +24,38 @@
   <ion-card color="light" *ngFor="let order of toDisplayOrders" style="width: 77vw; max-width: 900px; margin: auto; margin-top: 2vh;">
     <ion-card-header style="color: black; font-weight: bold; font-size: large;">
       <div>
-        Nro. orden: {{order.id}} 
+        Resumen de Orden
         <ion-icon class="collapse-icon" *ngIf="order.isCollapsed" name="chevron-down-outline" (click)="uncollapseOrder(order)"></ion-icon>
         <ion-icon class="collapse-icon" *ngIf="!order.isCollapsed" name="chevron-up-outline" (click)="collapseOrder(order)"></ion-icon>
       </div>
     </ion-card-header>
 
     <ion-card-content *ngIf="!order.isCollapsed">
-      <div *ngIf="order.description">
-        <b style="color: black;">Descripción: </b>{{order.description || 'Sin descripción'}}
+      <!-- Mostrar la descripción o 'Sin descripción' -->
+      <div>
+        <b style="color: black;">Descripción: </b>{{ order.description ? order.description : 'Sin descripción' }}
       </div>
 
       <div>
-        <div *ngIf="order.paymentMethod === 0">
-          <b style="color: black;">Método de pago: </b> Efectivo
-        </div>
-        <div *ngIf="order.paymentMethod === 1">
-          <b style="color: black;">Método de pago: </b> Transferencia
-        </div>
+        <b style="color: black;">Método de pago: </b> 
+        <span *ngIf="order.paymentMethod === 0">Efectivo</span>
+        <span *ngIf="order.paymentMethod === 1">Transferencia</span>
       </div>
 
-      <div *ngIf="order.deliveries && order.deliveries.length > 0">
-        <b style="color: black;">Tipo de menú:</b> {{ order.deliveries[0].productName }}<br>
-        <b style="color: black;">Cantidad:</b> {{ order.deliveries[0].quantity }}<br>
-        <b style="color: black;">Fecha de entrega: </b>
-        <span *ngIf="order.deliveries[0].deliveryDate === 1">Lunes</span>
-        <span *ngIf="order.deliveries[0].deliveryDate === 2">Martes</span>
-        <span *ngIf="order.deliveries[0].deliveryDate === 3">Miércoles</span>
-        <span *ngIf="order.deliveries[0].deliveryDate === 4">Jueves</span>
-        <span *ngIf="order.deliveries[0].deliveryDate === 5">Viernes</span>
+      <div>
+        <b style="color: black;">Cantidad de Platos: </b>{{order.totalPlates}}
+      </div>
+
+      <!-- Mostrar el tipo de menú -->
+      <div>
+        <b style="color: black;">Tipo de Menú: </b>
+        <span *ngIf="order.menuCounts.estandar > 0">Estandar x{{order.menuCounts.estandar}}, </span>
+        <span *ngIf="order.menuCounts.light > 0">Light x{{order.menuCounts.light}}, </span>
+        <span *ngIf="order.menuCounts.proteico > 0">Proteico x{{order.menuCounts.proteico}}</span>
+      </div>
+
+      <div>
+        <b style="color: black;">Días de Entrega: </b>{{order.daysOfWeek.join(', ')}}
       </div>
 
       <div style="font-size: x-large; color: black; font-weight: bold;">
@@ -61,16 +63,18 @@
         <div style="float: inline-end;">${{order.price}}</div>
       </div>
 
-      <!-- Separación -->
       <div style="margin: 50px 0;"></div>
 
-      <!-- Mostrar el botón "Cancelar" para todas las órdenes -->
+      <!-- Botones de acción -->
       <div>
-        <ion-button style="float: inline-start; margin-bottom: 1vh;" (click)="cancelOrder(order.id)">Cancelar</ion-button>
+        <ion-button color="danger" style="float: inline-start; margin-bottom: 1vh;" (click)="cancelOrder(order.id)">
+          Cancelar
+        </ion-button>
 
         <!-- Mostrar el botón "Realizar pago" solo para órdenes con transferencia -->
         <ion-button 
           *ngIf="order.paymentMethod === 1" 
+          color="success" 
           style="float: inline-end; margin-bottom: 1vh;" 
           (click)="openPaymentInfoModal(order)">
           Realizar pago
@@ -79,6 +83,7 @@
     </ion-card-content>
   </ion-card>
 </ion-content>
+
 
 
 <!--app-support-button [phone]="contact.phone" [wppMessage]="contact.wppMessage"></app-support-button-->

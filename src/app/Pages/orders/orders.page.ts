@@ -13,6 +13,8 @@ import { OrdersService } from 'src/app/Services/OrdersService/orders.service';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 import { HttpClient } from '@angular/common/http';
+import { ToDisplayOrderDTO } from 'src/app/Models/ToDisplayOrderDTO';
+import { DayOfWeek } from 'src/app/Models/Enums/DayOfWeekEnums';
 
 @Component({
   selector: 'app-orders',
@@ -148,12 +150,68 @@ async checkAndCloseLoader() {
 }
 
 formatOrders() {
-  this.toDisplayOrders = new Array<ClientOrder>();
-  this.orders.forEach(o => {
-    var order = new ClientOrder(o);
-    this.toDisplayOrders.push(order);
+  this.toDisplayOrders = [];
+  const consolidatedOrders: ClientOrder[] = [];
+
+  this.orders.forEach(order => {
+    // Buscar si ya existe una orden consolidada con las mismas características
+    let existingOrder = consolidatedOrders.find(existing =>
+      existing.paymentMethod === order.paymentMethod &&
+      existing.description === order.description &&
+      existing.location === order.location
+    );
+
+    // Si no existe, crear una nueva orden consolidada
+    if (!existingOrder) {
+      existingOrder = new ClientOrder(order);
+      existingOrder.totalPlates = 0;
+      existingOrder.daysOfWeek = [];
+      existingOrder.menuCounts = { estandar: 0, light: 0, proteico: 0 };
+
+      consolidatedOrders.push(existingOrder);
+    }
+
+    // Procesar las entregas de la orden actual
+    order.deliveries.forEach(delivery => {
+      existingOrder.totalPlates += delivery.quantity;
+
+      const dayName = this.getDayName(delivery.deliveryDate);
+      if (!existingOrder.daysOfWeek.includes(dayName)) {
+        existingOrder.daysOfWeek.push(dayName);
+      }
+    
+      // Contabilizar el tipo de menú según el 'menuId'
+      switch (delivery.menuId) {
+        case 1: // Estandar
+          existingOrder.menuCounts.estandar += delivery.quantity;
+          break;
+        case 2: // Light
+          existingOrder.menuCounts.light += delivery.quantity;
+          break;
+        case 3: // Proteico
+          existingOrder.menuCounts.proteico += delivery.quantity;
+          break;
+        default:
+          console.log('Tipo de menú desconocido:', delivery);
+          break;
+      }
+    });
+
+    // Sumar el precio total de la orden consolidada
+    existingOrder.price += order.price;
   });
-  console.log('Órdenes a mostrar:', this.toDisplayOrders); // <-- Asegúrate de que aquí se muestren las órdenes
+
+  this.toDisplayOrders = consolidatedOrders;
+
+  // Mostrar el resultado en la consola para depuración
+  console.log('Órdenes a mostrar:', this.toDisplayOrders);
+}
+
+
+
+getDayName(dayNumber: number): string {
+  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+  return days[dayNumber - 1] || '';
 }
 
 

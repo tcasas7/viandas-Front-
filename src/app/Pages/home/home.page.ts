@@ -170,37 +170,6 @@ item: CartItem;
   }
   
   
-
-  /*async instanceItems() {
-    try {
-      const response = await this.menuService.GetAll().toPromise();
-      this.message = response as ResponseObjectList<MenuDTO>;
-      this.menus = this.message.model;
-  
-      // Iterar sobre los menús y productos para obtener las imágenes
-      this.menus.forEach(menu => {
-        menu.products.forEach(product => {
-          this.menuService.Image(product.id).subscribe(blob => {
-            const objectURL = URL.createObjectURL(blob);
-            product.imagePath = objectURL;  // Asignar directamente la URL del blob como imagePath
-            console.log(`Image URL for product ${product.id}:`, objectURL); // Verificar la URL generada
-          }, error => {
-            console.error('Error fetching image', error);
-          });
-        });
-      });
-  
-      await this.formatToCartItems();
-      this.initializeCarouselSets();
-      this.closeLoader();
-    } catch (error) {
-      this.closeLoader();
-      this.alertTool.presentToast("Oops... Ocurrió un error");
-      console.error('Error fetching data:', error);
-    }
-  }*/
-  
-  
   public sanitizeImageUrl(imageBlob: Blob): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(imageBlob));
 }

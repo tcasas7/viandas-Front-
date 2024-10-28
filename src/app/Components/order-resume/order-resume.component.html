@@ -14,7 +14,20 @@
     <div style="padding-left: 5%; font-size: xx-large;" *ngIf="total >= 0" >
       <b>Total:</b> ${{total}}
     </div>
-  <div class="button-container">
-    <ion-button class="login-button" (click)="makeOrder()">Confirmar orden</ion-button>
-  </div>
+    <div class="button-container" style="display: flex; justify-content: space-between; padding: 10px;">
+      <ion-button 
+        class="login-button" 
+        style="width: 45%;" 
+        (click)="closeModal()">
+        Cancelar Orden
+      </ion-button>
+      <ion-button 
+        class="login-button" 
+        color="success" 
+        style="width: 45%;" 
+        (click)="makeOrder()">
+        Confirmar Orden
+      </ion-button>
+    </div>
+    
 </ion-card>
