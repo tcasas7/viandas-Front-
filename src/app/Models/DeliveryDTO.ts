@@ -7,4 +7,5 @@ export class DeliveryDTO {
     deliveryDate!: DayOfWeek;
     quantity!: number;
     productName!: string;
+    menuId!: number;
 }

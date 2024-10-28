@@ -12,6 +12,9 @@ export class OrderDTO {
     deliveries!: Array<DeliveryDTO>;
     location!: string;
     dayOfWeek: DayOfWeek = DayOfWeek.Monday;
+    isCollapsed: boolean = false; // Propiedad para la visualización
+    totalPlates: number = 0;
+    daysOfWeek: string[] = [];
 
     constructor(orderDTO: ToDisplayOrderDTO) {
         this.id = orderDTO.Id;

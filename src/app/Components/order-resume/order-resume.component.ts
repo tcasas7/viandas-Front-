@@ -10,6 +10,7 @@ export class OrderResumeComponent {
   @Output() makeOrderEvent = new EventEmitter<void>();
   @Input() orders!: any;
   @Input() total!: number;
+  @Input() consolidatedOrder!: any;
 
   constructor() {}
   
@@ -20,5 +21,12 @@ export class OrderResumeComponent {
   makeOrder() {
     this.makeOrderEvent.emit();
   }
+
+  getDayName(dayNumber: number): string {
+    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    return days[dayNumber - 1] || 'Desconocido';
+  }
+  
+  
 }
 

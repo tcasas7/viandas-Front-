@@ -6,4 +6,5 @@ export class ToDisplayDeliveryDTO {
     delivered!: boolean
     deliveryDate!: number
     quantity!: number
+    menuId!: number; 
 }
