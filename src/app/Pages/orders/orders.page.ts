@@ -22,22 +22,20 @@ import { DayOfWeek } from 'src/app/Models/Enums/DayOfWeekEnums';
   styleUrls: ['./orders.page.scss'],
 })
 export class OrdersPage {
-
   private baseUrl = 'http://localhost:5009/api/Orders';
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
   ordersResponse: ResponseObjectModel<Array<OrderDTO>> = new ResponseObjectModel();
   contactResponse: ResponseObjectModel<ContactDTO> = new ResponseObjectModel();
 
   user!: UserDTO;
-  orders!: Array<OrderDTO>;
-  contact: ContactDTO;
-  toDisplayOrders: Array<ClientOrder> = new Array<ClientOrder>() ;
+  orders: Array<OrderDTO> = [];
+  contact: ContactDTO = new ContactDTO();
+  toDisplayOrders: Array<ClientOrder> = [];
 
-  isAdmin: boolean = false;
-  logged: boolean = false;
-  paymentInfoModalIsActive: boolean = false;
-
-  toPayTotal: number = 0;
+  isAdmin = false;
+  logged = false;
+  paymentInfoModalIsActive = false;
+  toPayTotal = 0;
 
   constructor(
     private http: HttpClient,
@@ -46,11 +44,7 @@ export class OrdersPage {
     private ordersService: OrdersService,
     private alertTool: AlertTool,
     private loadingCtrl: LoadingController
-  )
-  {
-    
-    this.contact = new ContactDTO();
-  }
+  ) {}
 
   navigateToProfile() {
     this.router.navigate(['/profile']);
@@ -58,65 +52,69 @@ export class OrdersPage {
 
   ionViewWillEnter() {
     this.makeLoadingAnimation();
-    if(localStorage.getItem("Logged") === "true") {
-      this.logged = true;
-    }
-    else {
-      this.logged = false;
-    }
+    this.logged = localStorage.getItem("Logged") === "true";
 
-    if(!this.logged) {
-      this.router.navigate(["/unauthorized"]);
+    if (!this.logged) {
+      this.router.navigate(['/unauthorized']);
+    } else {
+      this.getData();
     }
-
-    this.getData(); 
   }
 
   async getData() {
-    this.userService.GetData().subscribe( response => {
-      this.dataResponse = response as ResponseObjectModel<UserDTO>;
-      this.user = this.dataResponse.model;
-      localStorage.setItem("firstName", this.dataResponse.model.firstName);
-      localStorage.setItem("lastName", this.dataResponse.model.lastName);
-      this.saveRole(this.dataResponse.model.role);
-  
-      this.getOrders();
-      this.getActiveContact();
-      this.closeLoader();
-    }, error => {
-      this.closeLoader();
-      this.router.navigate(["/unauthorized"]);
-      this.alertTool.presentToast("Oops... Ocurrió un error!");
-    });
+    this.userService.GetData().subscribe(
+      response => {
+        this.dataResponse = response as ResponseObjectModel<UserDTO>;
+        this.user = this.dataResponse.model;
+        localStorage.setItem("firstName", this.user.firstName);
+        localStorage.setItem("lastName", this.user.lastName);
+        this.saveRole(this.user.role);
+
+        this.getOrders();
+        this.getActiveContact();
+        this.closeLoader();
+      },
+      error => {
+        this.closeLoader();
+        this.router.navigate(['/unauthorized']);
+        this.alertTool.presentToast("Oops... Ocurrió un error!");
+      }
+    );
   }
 
   async getOrders() {
-    this.ordersService.GetOwn().subscribe( response => {
-      this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
-      this.orders = this.ordersResponse.model;
-      this.formatOrders();
-    }, error => {
-      this.router.navigate(["/unauthorized"]);
-      this.alertTool.presentToast("Oops... Ocurrió un error!");
-    });
+    this.ordersService.GetOwn().subscribe(
+      response => {
+        this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
+        this.orders = this.ordersResponse.model;
+        this.formatOrders();
+      },
+      error => {
+        this.router.navigate(['/unauthorized']);
+        this.alertTool.presentToast("Oops... Ocurrió un error!");
+      }
+    );
   }
 
   async getActiveContact() {
-    this.userService.GetActiveContact().subscribe( response => {
-      this.contactResponse = response as ResponseObjectModel<ContactDTO>;
-      this.contact = this.contactResponse.model;
-    }, error => {
-      this.router.navigate(["/unauthorized"]);
-      this.alertTool.presentToast("Oops... Ocurrió un error!");
-    });
+    this.userService.GetActiveContact().subscribe(
+      response => {
+        this.contactResponse = response as ResponseObjectModel<ContactDTO>;
+        this.contact = this.contactResponse.model;
+      },
+      error => {
+        this.router.navigate(['/unauthorized']);
+        this.alertTool.presentToast("Oops... Ocurrió un error!");
+      }
+    );
   }
 
   saveRole(role: number) {
-    if(role === 0) {
+    if (role === 0) {
       localStorage.setItem("role", "CLIENT");
-    } else if( role === 1) {
+    } else if (role === 1) {
       localStorage.setItem("role", "DELIVERY");
-    } else if( role === 2) {
+    } else if (role === 2) {
       localStorage.setItem("role", "ADMIN");
       this.isAdmin = true;
     }
@@ -125,71 +123,56 @@ export class OrdersPage {
   makeLoadingAnimation() {
     this.loadingCtrl.getTop().then(hasLoading => {
       if (!hasLoading) {
-          this.loadingCtrl.create({
-              spinner: 'circular',
-              cssClass: "custom-loading"
-          }).then(loading => loading.present());
+        this.loadingCtrl.create({
+          spinner: 'circular',
+          cssClass: "custom-loading"
+        }).then(loading => loading.present());
       }
-  })
-}
+    });
+  }
 
-async closeLoader() {
-  
+  async closeLoader() {
     this.checkAndCloseLoader();
-  
     setTimeout(() => this.checkAndCloseLoader(), 500);
-}
+  }
 
-async checkAndCloseLoader() {
-   
-   const loader = await this.loadingCtrl.getTop();
-   
-    if(loader !== undefined) { 
+  async checkAndCloseLoader() {
+    const loader = await this.loadingCtrl.getTop();
+    if (loader !== undefined) {
       await this.loadingCtrl.dismiss();
     }
-}
+  }
 
-formatOrders() {
+ formatOrders() {
   this.toDisplayOrders = [];
-  const consolidatedOrders: ClientOrder[] = [];
 
+  // Iterar sobre cada orden para crear un resumen único por pedido
   this.orders.forEach(order => {
-    // Buscar si ya existe una orden consolidada con las mismas características
-    let existingOrder = consolidatedOrders.find(existing =>
-      existing.paymentMethod === order.paymentMethod &&
-      existing.description === order.description &&
-      existing.location === order.location
-    );
+    // Crear un nuevo objeto `ClientOrder` para cada pedido
+    const consolidatedOrder = new ClientOrder(order);
+    consolidatedOrder.totalPlates = 0;
+    consolidatedOrder.daysOfWeek = [];
+    consolidatedOrder.menuCounts = { estandar: 0, light: 0, proteico: 0 };
 
-    // Si no existe, crear una nueva orden consolidada
-    if (!existingOrder) {
-      existingOrder = new ClientOrder(order);
-      existingOrder.totalPlates = 0;
-      existingOrder.daysOfWeek = [];
-      existingOrder.menuCounts = { estandar: 0, light: 0, proteico: 0 };
-
-      consolidatedOrders.push(existingOrder);
-    }
-
-    // Procesar las entregas de la orden actual
+    // Procesar todas las entregas dentro de este pedido
     order.deliveries.forEach(delivery => {
-      existingOrder.totalPlates += delivery.quantity;
+      consolidatedOrder.totalPlates += delivery.quantity;
 
       const dayName = this.getDayName(delivery.deliveryDate);
-      if (!existingOrder.daysOfWeek.includes(dayName)) {
-        existingOrder.daysOfWeek.push(dayName);
+      if (!consolidatedOrder.daysOfWeek.includes(dayName)) {
+        consolidatedOrder.daysOfWeek.push(dayName);
       }
-    
+
       // Contabilizar el tipo de menú según el 'menuId'
       switch (delivery.menuId) {
         case 1: // Estandar
-          existingOrder.menuCounts.estandar += delivery.quantity;
+          consolidatedOrder.menuCounts.estandar += delivery.quantity;
           break;
         case 2: // Light
-          existingOrder.menuCounts.light += delivery.quantity;
+          consolidatedOrder.menuCounts.light += delivery.quantity;
           break;
         case 3: // Proteico
-          existingOrder.menuCounts.proteico += delivery.quantity;
+          consolidatedOrder.menuCounts.proteico += delivery.quantity;
           break;
         default:
           console.log('Tipo de menú desconocido:', delivery);
@@ -197,81 +180,77 @@ formatOrders() {
       }
     });
 
-    // Sumar el precio total de la orden consolidada
-    existingOrder.price += order.price;
-  });
+    // Asignar el precio total del pedido
+    consolidatedOrder.price = order.price;
 
-  this.toDisplayOrders = consolidatedOrders;
+    // Añadir el resumen consolidado de esta orden al arreglo de órdenes a mostrar
+    this.toDisplayOrders.push(consolidatedOrder);
+  });
 
   // Mostrar el resultado en la consola para depuración
   console.log('Órdenes a mostrar:', this.toDisplayOrders);
 }
+ 
+  getDayName(dayNumber: number): string {
+    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    return days[dayNumber - 1] || '';
+  }
 
+  collapseOrder(order: ClientOrder) {
+    order.isCollapsed = true;
+  }
 
+  uncollapseOrder(order: ClientOrder) {
+    order.isCollapsed = false;
+  }
 
-getDayName(dayNumber: number): string {
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-  return days[dayNumber - 1] || '';
-}
+  openPaymentInfoModal(order: ClientOrder) {
+    this.toPayTotal = order.price;
 
-
-collapseOrder(order: ClientOrder) {
-  order.isCollapsed = true;
-}
-
-uncollapseOrder(order: ClientOrder) {
-  order.isCollapsed = false;
-}
-
-openPaymentInfoModal(order: ClientOrder) {
-  this.toPayTotal = order.price;
-
-  // Obtener la información del contacto activo
-  this.userService.GetActiveContact().subscribe(response => {
-    this.contactResponse = response as ResponseObjectModel<ContactDTO>;
-    this.contact = this.contactResponse.model;
-
-    // Activar el modal
-    this.paymentInfoModalIsActive = true;
-  }, error => {
-    this.alertTool.presentToast("Error al cargar la información de pago");
-  });
-}
-
-
-cancelOrder(orderId: number) {
-  this.alertTool.presentToast("Funcionalidad en desarrollo");
-}
-
-
-loadOrders(): void {
-  this.ordersService.GetOwn().subscribe(
-    (response) => {
-      if (response.status === 200) {
-        this.toDisplayOrders = response.data;
-        console.log('Órdenes cargadas:', this.toDisplayOrders);
-      } else {
-        console.error('Error al cargar órdenes:', response.message);
+    this.userService.GetActiveContact().subscribe(
+      response => {
+        this.contactResponse = response as ResponseObjectModel<ContactDTO>;
+        this.contact = this.contactResponse.model;
+        this.paymentInfoModalIsActive = true;
+      },
+      error => {
+        this.alertTool.presentToast("Error al cargar la información de pago");
       }
-    },
-    (error) => {
-      console.error('Error al cargar órdenes:', error);
-    }
-  );
-}
+    );
+  }
 
+  cancelOrder(orderId: number) {
+    this.alertTool.presentToast("Funcionalidad en desarrollo");
+  }
 
-viewProducts(orderId: number) {
-  this.ordersService.GetProductsByOrderId(orderId).subscribe(
-    (products: any) => { 
-      console.log(products);
-    },
-    (error: any) => {
-      this.alertTool.presentToast('Error al obtener los productos de la orden.');
-    }
-  );
-}
-closePaymentInfoModal() {
-  this.paymentInfoModalIsActive = false;
-}
+  loadOrders(): void {
+    this.ordersService.GetOwn().subscribe(
+      response => {
+        if (response.status === 200) {
+          this.toDisplayOrders = response.data;
+          console.log('Órdenes cargadas:', this.toDisplayOrders);
+        } else {
+          console.error('Error al cargar órdenes:', response.message);
+        }
+      },
+      error => {
+        console.error('Error al cargar órdenes:', error);
+      }
+    );
+  }
+
+  viewProducts(orderId: number) {
+    this.ordersService.GetProductsByOrderId(orderId).subscribe(
+      products => {
+        console.log(products);
+      },
+      error => {
+        this.alertTool.presentToast('Error al obtener los productos de la orden.');
+      }
+    );
+  }
+
+  closePaymentInfoModal() {
+    this.paymentInfoModalIsActive = false;
+  }
 }
