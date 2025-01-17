@@ -8,4 +8,7 @@ export class ToDisplayDeliveryDTO {
     quantity!: number;
     menuId!: number; 
     precioPromo?: number;
+    productPromoPrice!: number;
+    appliedPrice!: number; 
+    discountApplied!: boolean;
 }

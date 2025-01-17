@@ -11,6 +11,7 @@ export class OrderResumeComponent {
   @Input() orders!: any;
   @Input() total!: number;
   @Input() consolidatedOrder!: any;
+  @Input() finalDiscountedTotal!: number;
 
   constructor() {}
   
@@ -27,6 +28,15 @@ export class OrderResumeComponent {
     return days[dayNumber - 1] || 'Desconocido';
   }
   
-  
+  applyGlobalDiscount(): boolean {
+    const totalPlates = this.orders.reduce((total: number, order: any) => {
+      return (
+        total +
+        order.deliveries.reduce((subtotal: number, delivery: any) => subtotal + delivery.quantity, 0)
+      );
+    }, 0);
+
+    return totalPlates >= 4;
+  }
 }
 

@@ -31,7 +31,7 @@ export class HomePage implements OnInit {
   showChangePasswordModal: boolean = false;
   showOrderResumeModal: boolean = false;
   showOrderDetailsModal: boolean = false;
-
+  finalDiscountedTotal: number = 0;
   carouselItems: CartItem[];
   carouselSets: any[][] = [];
   currentIndex = 0;
@@ -280,21 +280,75 @@ item: CartItem;
 
   navigateToOrderResume() {
     this.total = 0;
-    this.orders.forEach(o => {
-      var totalOrders = 0;
-      o.deliveries.forEach(d => {
-        totalOrders += d.quantity;
-        this.total += d.quantity * d.productPrice;
+    this.finalDiscountedTotal = 0; // Inicializar el total con descuento
+  
+    // Calcular el total de platos para la orden completa
+    const totalPlatesForOrder = this.orders.reduce(
+      (acc, order) =>
+        acc +
+        order.deliveries.reduce((dayAcc, delivery) => dayAcc + delivery.quantity, 0),
+      0
+    );
+  
+    console.log(`Total de Platos en la Orden: ${totalPlatesForOrder}`);
+  
+    // Procesar cada día y sus entregas
+    this.orders.forEach((order) => {
+      let totalPlatesForDay = 0; // Total de platos para cada día
+      order.deliveries.forEach((delivery) => {
+        if (delivery.quantity > 0) {
+          totalPlatesForDay += delivery.quantity;
+  
+          // Encontrar el producto correspondiente
+          const menu = this.menus.find((menu) =>
+            menu.products.some((product) => product.id === delivery.productId)
+          );
+          const product = menu?.products.find((p) => p.id === delivery.productId);
+  
+          if (product && menu) {
+            // Inicializar precios del producto
+            delivery.productPrice = menu.price ?? 0;
+            delivery.productPromoPrice = menu.precioPromo ?? menu.price ?? 0;
+  
+            // Determinar el precio aplicado
+            if (totalPlatesForOrder >= 4) {
+              delivery.discountApplied = true;
+              delivery.appliedPrice = delivery.productPromoPrice;
+            } else {
+              delivery.discountApplied = false;
+              delivery.appliedPrice = delivery.productPrice;
+            }
+  
+            // Calcular subtotales
+            const normalPriceTotal = delivery.productPrice * delivery.quantity;
+            const discountedPriceTotal = delivery.appliedPrice * delivery.quantity;
+  
+            // Sumar subtotales a los totales generales
+            this.total += normalPriceTotal;
+            this.finalDiscountedTotal += discountedPriceTotal;
+  
+            // Debugging para asegurar que los cálculos son correctos
+            console.log(
+              `Producto: ${delivery.productName}, Cantidad: ${delivery.quantity}, ` +
+                `Precio Normal: ${delivery.productPrice}, Precio Promocional: ${delivery.productPromoPrice}, ` +
+                `Subtotal Normal: ${normalPriceTotal}, Subtotal con Descuento: ${discountedPriceTotal}`
+            );
+          } else {
+            console.warn(
+              `Producto no encontrado para delivery con ID: ${delivery.productId}`
+            );
+          }
+        }
       });
-      if(totalOrders > 0) {
-        o.hasOrder = true;
-      } else {
-        o.hasOrder = false;
-      }
+  
+      order.hasOrder = totalPlatesForDay > 0;
     });
-    console.log(this.total);
+  
+    // Debugging para mostrar los totales calculados
+    console.log(`Total Normal: ${this.total}, Total con Descuento: ${this.finalDiscountedTotal}`);
     this.showOrderResumeModal = true;
   }
+  
 
   navigateToOrderDetails() {
     this.showOrderResumeModal = false;
