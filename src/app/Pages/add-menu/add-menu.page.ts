@@ -48,6 +48,10 @@ this.router.navigate(['/admin']);
   lightPrice: number = 0;
   proteicPrice: number = 0;
 
+  standardPromoPrice: number = 0;
+  lightPromoPrice: number = 0;
+  proteicPromoPrice: number = 0;
+
   // Control de visualización (collapse)
   standardIsCollapsed: boolean = true;
   lightIsCollapsed: boolean = true;
@@ -76,6 +80,10 @@ this.router.navigate(['/admin']);
       this.standardPrice = this.standardMenu.price || 0;
       this.lightPrice = this.lightMenu.price || 0;
       this.proteicPrice = this.proteicMenu.price || 0;
+
+      this.standardPromoPrice = this.standardMenu.precioPromo || 0;
+      this.lightPromoPrice = this.lightMenu.precioPromo || 0;
+      this.proteicPromoPrice = this.proteicMenu.precioPromo || 0;
   
     }, error => {
       console.error("Error al cargar menús:", error);
@@ -109,17 +117,22 @@ this.router.navigate(['/admin']);
     });
   }
 
-  // Formatear el payload para enviarlo al backend
   formatMenus() {
     this.standardMenu.products = this.standardProducts;
     this.standardMenu.price = this.standardPrice;
+    this.standardMenu.precioPromo = this.standardPromoPrice; // Precio promocional
+  
     this.lightMenu.products = this.lightProducts;
     this.lightMenu.price = this.lightPrice;
+    this.lightMenu.precioPromo = this.lightPromoPrice; // Precio promocional
+  
     this.proteicMenu.products = this.proteicProducts;
     this.proteicMenu.price = this.proteicPrice;
-
+    this.proteicMenu.precioPromo = this.proteicPromoPrice; // Precio promocional
+  
     this.toSendPayload.Menus = [this.standardMenu, this.lightMenu, this.proteicMenu];
   }
+  
 }
 
 

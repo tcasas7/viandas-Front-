@@ -30,22 +30,6 @@ export class AddDetailsModalComponent implements OnInit {
     this.closeModalEvent.emit();
   }
 
-  /*makeOrder() {
-    if(this.paymentMethod === -1 || this.selectedLocation === 'empty') {
-      this.alertTool.presentToast("Campos vacios, por favor llene todos los campos.");
-    } else {
-      this.orders.Orders.forEach(o => {
-        o.id = 0;
-        o.location = this.selectedLocation;
-        o.description = this.description;
-        o.paymentMethod = this.paymentMethod;
-        o.hasSalt = false;
-        o.orderDate = new Date().toISOString();
-      });
-      console.log(this.orders.Orders)
-      this.placeOrder();
-    }
-  }*/
 
     makeOrder() {
       if (this.paymentMethod === -1 || this.selectedLocation === 'empty') {
@@ -74,30 +58,6 @@ export class AddDetailsModalComponent implements OnInit {
       }
   }
   
-
-
-    /*makeOrder() {
-      // Verifica si falta algún campo requerido
-      if (this.paymentMethod === -1 || this.selectedLocation === 'empty') {
-        this.alertTool.presentToast("Campos vacíos, por favor llene todos los campos.");
-      } else {
-        this.orders.Orders.forEach(o => {
-          o.id = 0;
-          o.location = this.selectedLocation;
-          o.description = this.description;
-          o.paymentMethod = this.paymentMethod;
-          o.hasSalt = false;
-          o.orderDate = new Date().toISOString();
-
-          o.deliveries.forEach(delivery => {
-            console.log('Día de la semana (antes de enviar):', delivery.deliveryDate);  // Esto debe ser un número entre 1-5
-        });
-        });
-        
-        console.log(this.orders.Orders);
-        this.placeOrder();
-      }
-    }*/
     ngOnInit() {
       if (this.locations.length === 0) {
         this.locations = [{

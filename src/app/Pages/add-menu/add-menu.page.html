@@ -20,6 +20,7 @@
     </ion-card-header>
     <ion-card-content *ngIf="!standardIsCollapsed">  
       <ion-input [(ngModel)]="standardPrice" type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio" placeholder="Precio del menú"></ion-input>
+      <ion-input [(ngModel)]="standardPromoPrice" type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio Promocional" placeholder="Precio promocional del menú"></ion-input>
       <ion-input [(ngModel)]="standardProducts[0].name" labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
       <ion-input [(ngModel)]="standardProducts[1].name" labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
       <ion-input [(ngModel)]="standardProducts[2].name" labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>
@@ -36,6 +37,7 @@
     </ion-card-header>
     <ion-card-content *ngIf="!lightIsCollapsed">
       <ion-input [(ngModel)]="lightPrice" type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio" placeholder="Precio del menú"></ion-input>
+      <ion-input [(ngModel)]="lightPromoPrice" type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio Promocional" placeholder="Precio promocional del menú"></ion-input>
       <ion-input [(ngModel)]="lightProducts[0].name" labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
       <ion-input [(ngModel)]="lightProducts[1].name" labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
       <ion-input [(ngModel)]="lightProducts[2].name" labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>
@@ -52,6 +54,7 @@
     </ion-card-header>
     <ion-card-content *ngIf="!proteicIsCollapsed">
       <ion-input [(ngModel)]="proteicPrice" type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio" placeholder="Precio del menú"></ion-input>
+      <ion-input [(ngModel)]="proteicPromoPrice" type="tel" style="font-size: large; font-weight: bold;" labelPlacement="floating" label="Precio Promocional" placeholder="Precio promocional del menú"></ion-input>
       <ion-input [(ngModel)]="proteicProducts[0].name" labelPlacement="floating" label="Lunes" placeholder="Nombre producto"></ion-input>
       <ion-input [(ngModel)]="proteicProducts[1].name" labelPlacement="floating" label="Martes" placeholder="Nombre producto"></ion-input>
       <ion-input [(ngModel)]="proteicProducts[2].name" labelPlacement="floating" label="Miercoles" placeholder="Nombre producto"></ion-input>

@@ -146,15 +146,15 @@ export class OrdersPage {
  formatOrders() {
   this.toDisplayOrders = [];
 
-  // Iterar sobre cada orden para crear un resumen único por pedido
+  
   this.orders.forEach(order => {
-    // Crear un nuevo objeto `ClientOrder` para cada pedido
+   
     const consolidatedOrder = new ClientOrder(order);
     consolidatedOrder.totalPlates = 0;
     consolidatedOrder.daysOfWeek = [];
     consolidatedOrder.menuCounts = { estandar: 0, light: 0, proteico: 0 };
 
-    // Procesar todas las entregas dentro de este pedido
+   
     order.deliveries.forEach(delivery => {
       consolidatedOrder.totalPlates += delivery.quantity;
 
@@ -163,7 +163,7 @@ export class OrdersPage {
         consolidatedOrder.daysOfWeek.push(dayName);
       }
 
-      // Contabilizar el tipo de menú según el 'menuId'
+      
       switch (delivery.menuId) {
         case 1: // Estandar
           consolidatedOrder.menuCounts.estandar += delivery.quantity;
@@ -180,14 +180,14 @@ export class OrdersPage {
       }
     });
 
-    // Asignar el precio total del pedido
+   
     consolidatedOrder.price = order.price;
 
-    // Añadir el resumen consolidado de esta orden al arreglo de órdenes a mostrar
+    
     this.toDisplayOrders.push(consolidatedOrder);
   });
 
-  // Mostrar el resultado en la consola para depuración
+  
   console.log('Órdenes a mostrar:', this.toDisplayOrders);
 }
  
