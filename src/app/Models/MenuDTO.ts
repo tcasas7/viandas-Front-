@@ -5,4 +5,5 @@ export class MenuDTO {
     category!: string;
     products: ProductDTO[] = [];
     price!: number;
+    precioPromo?: number;
   }

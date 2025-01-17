@@ -5,6 +5,7 @@ import { DayOfWeek } from './Enums/DayOfWeekEnums';
 export class OrderDTO {
     id!: number;
     price!: number;
+    precioPromo?: number
     paymentMethod!: number;
     hasSalt!: boolean;
     description!: string;
@@ -19,12 +20,16 @@ export class OrderDTO {
     constructor(orderDTO: ToDisplayOrderDTO) {
         this.id = orderDTO.Id;
         this.price = orderDTO.price;
+        this.precioPromo = orderDTO.precioPromo;
         this.paymentMethod = orderDTO.paymentMethod;
         this.hasSalt = orderDTO.hasSalt;
         this.description = orderDTO.description;
         this.orderDate = orderDTO.orderDate;
         this.deliveries = orderDTO.deliveries;
         this.location = orderDTO.location;
+
+        this.deliveries = orderDTO.deliveries.filter(delivery => delivery.quantity > 0);
+
    
         this.deliveries.forEach(delivery =>{
             delivery.deliveryDate = this.getDayAsNumber(delivery.deliveryDate);

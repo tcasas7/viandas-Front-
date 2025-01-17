@@ -21,7 +21,7 @@ export class ClientOrder {
   };
 
   constructor(orderDTO: OrderDTO) {
-    // Inicializar propiedades de OrderDTO en ClientOrder
+    
     this.id = orderDTO.id;
     this.price = orderDTO.price;
     this.paymentMethod = orderDTO.paymentMethod;
@@ -31,7 +31,7 @@ export class ClientOrder {
     this.deliveries = orderDTO.deliveries;
     this.location = orderDTO.location;
 
-    // Inicializar propiedades específicas de ClientOrder
+    
     this.totalPlates = orderDTO.totalPlates;
     this.daysOfWeek = orderDTO.daysOfWeek;
 
