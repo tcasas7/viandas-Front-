@@ -1,33 +1,46 @@
-<ion-card color="light" style="width: 77vw; max-width: 600px; max-height: 70vh; margin: 0 auto; overflow: auto; overflow: auto;">
-  <ion-item lines="none" color="translucent" class="tittle-item" style="position: sticky; top: 0; z-index: 1;">Resumen de orden<ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon>
+<ion-card color="light" style="width: 77vw; max-width: 600px; max-height: 70vh; margin: 0 auto; overflow: auto;">
+  <ion-item lines="none" color="translucent" class="tittle-item" style="position: sticky; top: 0; z-index: 1;">
+    Resumen de orden
+    <ion-icon
+      name="close"
+      (click)="closeModal()"
+      style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;">
+    </ion-icon>
   </ion-item>
-    <div style="margin-bottom: 1vh;" *ngFor="let order of orders">
-      <b *ngIf="order.hasOrder" style="padding-left: 5%; font-size: large;">{{order.dayOfWeek}}</b>
-      <div *ngFor="let delivery of order.deliveries">
-        <div *ngIf="delivery.quantity > 0">
-          <div style="padding-left: 5%;">
-            <b>{{delivery.productName}}</b> <div>${{delivery.productPrice}} x {{delivery.quantity}} = ${{delivery.productPrice * delivery.quantity}}</div>
-          </div>
+  <div style="margin-bottom: 1vh;" *ngFor="let order of orders">
+    <b *ngIf="order.hasOrder" style="padding-left: 5%; font-size: large;">{{ order.dayOfWeek }}</b>
+    <div *ngFor="let delivery of order.deliveries">
+      <div *ngIf="delivery.quantity > 0" style="padding-left: 5%;">
+        <b>{{ delivery.productName }}</b>
+        <div>
+          <span
+            *ngIf="applyGlobalDiscount()"
+            style="text-decoration: line-through; color: red; margin-right: 4px;">
+            ${{ delivery.productPrice }}
+          </span>
+          ${{ applyGlobalDiscount() ? delivery.productPromoPrice : delivery.productPrice }}
+          x {{ delivery.quantity }} =
+          ${{ (applyGlobalDiscount() ? delivery.productPromoPrice : delivery.productPrice) * delivery.quantity }}
         </div>
       </div>
     </div>
-    <div style="padding-left: 5%; font-size: xx-large;" *ngIf="total >= 0" >
-      <b>Total:</b> ${{total}}
-    </div>
-    <div class="button-container" style="display: flex; justify-content: space-between; padding: 10px;">
-      <ion-button 
-        class="login-button" 
-        style="width: 45%;" 
-        (click)="closeModal()">
-        Cancelar Orden
-      </ion-button>
-      <ion-button 
-        class="login-button" 
-        color="success" 
-        style="width: 45%;" 
-        (click)="makeOrder()">
-        Confirmar Orden
-      </ion-button>
-    </div>
-    
+  </div>
+
+  <!-- Mostrar total normal tachado y el total con descuento si aplica -->
+  <div style="padding-left: 5%; font-size: large;" *ngIf="total >= 0">
+    <b *ngIf="applyGlobalDiscount()" style="display: block;">
+      <span style="text-decoration: line-through; color: red;">Total Normal: ${{ total }}</span>
+    </b>
+    <b *ngIf="applyGlobalDiscount()" style="display: block; color: green;">
+      Total con Descuento Aplicado: ${{ finalDiscountedTotal }}
+    </b>
+    <b *ngIf="!applyGlobalDiscount()" style="display: block;">
+      Total: ${{ total }}
+    </b>
+  </div>
+
+  <div class="button-container" style="display: flex; justify-content: space-between; padding: 10px;">
+    <ion-button class="login-button" style="width: 45%;" (click)="closeModal()">Cancelar Orden</ion-button>
+    <ion-button class="login-button" color="success" style="width: 45%;" (click)="makeOrder()">Confirmar Orden</ion-button>
+  </div>
 </ion-card>
