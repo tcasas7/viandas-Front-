@@ -5,6 +5,7 @@ import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { UsersService } from 'src/app/Services/UsersService/users.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-stats',
@@ -13,6 +14,7 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
 })
 export class StatsPage {
 
+  clientes: any[] = [];
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
   user: UserDTO;
   isAdmin: boolean = false;
@@ -26,7 +28,8 @@ export class StatsPage {
     private userService: UsersService,
     private loadingCtrl: LoadingController,
     private alertTool: AlertTool,
-    private platform: Platform
+    private platform: Platform,
+    private cdr: ChangeDetectorRef
   ) 
   {
     this.user = new UserDTO();
@@ -36,85 +39,98 @@ export class StatsPage {
     this.router.navigate(["admin"]);
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.makeLoadingAnimation();
-    if(localStorage.getItem("Logged") === "true"){
+
+    if (localStorage.getItem('Logged') === 'true') {
       this.logged = true;
-    }
-    else {
+    } else {
       this.logged = false;
     }
 
-    if(!this.logged || localStorage.getItem("role") !== "ADMIN") {
-      this.router.navigate(["/unauthorized"]);
+    if (!this.logged || localStorage.getItem('role') !== 'ADMIN') {
+      this.router.navigate(['/unauthorized']);
     }
 
     this.checkPlatform();
-
-    this.getData();
+    this.obtenerClientesPendientes(); 
   }
 
-  async getData() {
-    this.userService.GetData().subscribe( response => {
-      this.dataResponse = response as ResponseObjectModel<UserDTO>;
-      this.user = this.dataResponse.model;
-      localStorage.setItem("firstName", this.dataResponse.model.firstName);
-      localStorage.setItem("lastName", this.dataResponse.model.lastName);
-      this.saveRole(this.dataResponse.model.role);
+  obtenerClientesPendientes() {
+    this.userService.GetPendingUsers().subscribe(
+      (response: any) => {
+        if (response && response.model) {
+          this.clientes = response.model;
+          console.log('Clientes cargados:', this.clientes);
+        } else {
+          this.alertTool.presentToast('No se encontraron clientes pendientes.');
+        }
+        this.didLoad = true;
+        this.closeLoader(); // Asegura que el spinner se cierra
+        this.cdr.detectChanges(); // Forzar actualización del DOM
+      },
+      (error) => {
+        this.alertTool.presentToast('Oops... Ocurrió un error al cargar los clientes!');
+        this.didLoad = true;
+        this.closeLoader(); // Asegura que el spinner se cierra
+        this.cdr.detectChanges(); // Forzar actualización del DOM
+      }
+    );
+  }
   
-      this.didLoad = true;
-      this.closeLoader();
-    }, () => {
-      this.closeLoader();
-      this.logged = false;
-      this.router.navigate(["/unauthorized"]);
-      this.alertTool.presentToast("Oops... Ocurrió un error!");
-    })
+  aprobarCliente(clienteId: number) {
+    this.userService.ApproveUser(clienteId).subscribe({
+      next: () => {
+        this.clientes = this.clientes.filter(cliente => cliente.id !== clienteId); // Elimina el cliente aprobado de la lista
+        this.alertTool.presentToast('Cliente aprobado exitosamente!');
+      },
+      error: () => {
+        this.alertTool.presentToast('Oops... No se pudo aprobar el cliente!');
+      }
+    });
   }
-
-  saveRole(role: number) {
-    if(role === 0) {
-      localStorage.setItem("role", "CLIENT");
-      this.isAdmin = false;
-    } else if( role === 1) {
-      localStorage.setItem("role", "DELIVERY");
-      this.isAdmin = false;
-    } else if( role === 2) {
-      localStorage.setItem("role", "ADMIN");
-      this.isAdmin = true;
-    }
+  rechazarCliente(clienteId: number) {
+    this.userService.RejectUser(clienteId).subscribe({
+      next: () => {
+        this.clientes = this.clientes.filter(cliente => cliente.id !== clienteId);
+        this.alertTool.presentToast('Cliente rechazado exitosamente!');
+      },
+      error: (err) => {
+        console.error('Error al rechazar cliente:', err);
+        this.alertTool.presentToast('Oops... No se pudo rechazar el cliente!');
+      }
+    });
   }
-
+  
   makeLoadingAnimation() {
     this.loadingCtrl.getTop().then(hasLoading => {
       if (!hasLoading) {
-          this.loadingCtrl.create({
-              spinner: 'circular',
-              cssClass: "custom-loading"
-          }).then(loading => loading.present());
+        this.loadingCtrl
+          .create({
+            spinner: 'circular',
+            cssClass: 'custom-loading',
+          })
+          .then(loading => loading.present());
       }
-  })
-}
+    });
+  }
 
   async closeLoader() {
-  
     this.checkAndCloseLoader();
-  
     setTimeout(() => this.checkAndCloseLoader(), 500);
-}
+  }
 
-async checkAndCloseLoader() {
-   
-  const loader = await this.loadingCtrl.getTop();
-  
-   if(loader !== undefined) { 
-     await this.loadingCtrl.dismiss();
-   }
-}
+  async checkAndCloseLoader() {
+    const loader = await this.loadingCtrl.getTop();
+    if (loader !== undefined) {
+      await this.loadingCtrl.dismiss();
+    }
+  }
 
   checkPlatform() {
-    if(this.platform.is("desktop")) {
+    if (this.platform.is('desktop')) {
       this.isWeb = true;
     }
   }
 }
+

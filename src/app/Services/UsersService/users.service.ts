@@ -11,135 +11,123 @@ import { UserDTO } from 'src/app/Models/UserDTO';
 import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class UsersService extends MainService{
-  private apiUrl = 'http://localhost:5009/api/users/data';  // URL base correcta
-
-
-
+export class UsersService extends MainService {
   GetAll() {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.get(this.baseRoute + 'Users', {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.get(`${this.baseRoute}Users`, { headers });
   }
 
   Register(model: RegisterDTO) {
-    return this.http.post(this.baseRoute + 'Users/register', model);
+    return this.http.post(`${this.baseRoute}Users/register`, model);
   }
 
   ChangePassword(model: ChangePasswordDTO) {
-    return this.http.post(this.baseRoute + 'Users/changePassword', model);
+    return this.http.post(`${this.baseRoute}Users/changePassword`, model);
   }
 
   ChangeRole(model: ChangeRoleDTO) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Users/changeRole', model, {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/changeRole`, model, { headers });
   }
 
   ChangePhone(model: ChangePhoneDTO) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    console.log(model);
-
-    return this.http.post(this.baseRoute + 'Users/changePhone', model,  {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/changePhone`, model, { headers });
   }
 
   GetData() {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.get(this.baseRoute + 'Users/data', {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.get(`${this.baseRoute}Users/data`, { headers });
   }
 
   AddLocation(model: LocationDTO | undefined) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Users/addLocation', model, {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/addLocation`, model, { headers });
   }
 
   MakeDefault(model: LocationDTO | undefined) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Users/makeDefault', model, {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/makeDefault`, model, { headers });
   }
 
   RemoveLocation(model: LocationDTO | undefined) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Users/removeLocation', model, {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/removeLocation`, model, { headers });
   }
 
   AddContact(model: ContactDTO | undefined) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Users/addContact', model, {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/addContact`, model, { headers });
   }
 
   GetContacts() {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.get(this.baseRoute + 'Users/getContacts', {headers});
-  } 
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.get(`${this.baseRoute}Users/getContacts`, { headers });
+  }
 
   GetActiveContact() {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.get(this.baseRoute + 'Users/getActiveContact', {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.get(`${this.baseRoute}Users/getActiveContact`, { headers });
   }
 
   UpdateContact(model: ContactDTO | undefined) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Users/updateContact', model, {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/updateContact`, model, { headers });
   }
 
   RemoveContact(model: ContactDTO | undefined) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Users/removeContact', model, {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/removeContact`, model, { headers });
   }
 
   MakeActive(model: ContactDTO | undefined) {
-    var token = localStorage.getItem('Token');
-
-    var headers = this.createHeader(token);
-
-    return this.http.post(this.baseRoute + 'Users/makeActive', model, {headers});
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.post(`${this.baseRoute}Users/makeActive`, model, { headers });
   }
 
-  getUserProfile(): Observable<UserDTO> {
+  GetPendingUsers() {
     const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.get(`${this.baseRoute}Users/pendingUsers`, { headers });
+  }
+
+  ApproveUser(userId: number) {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.put(`${this.baseRoute}Users/approveUser/${userId}`, {}, { headers });
+  }
+
+  RejectUser(clienteId: number) {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      'dontskip': 'true', 
+      Authorization: `Bearer ${localStorage.getItem('Token')}`, // Nota: Asegúrate de que el token se llama "Token" con mayúscula
+      'Content-Type': 'application/json-patch+json'
     });
   
-    return this.http.get<UserDTO>(`${this.apiUrl}`, { headers });
+    const url = this.baseRoute + 'Users/rejectUser';
+  
+    return this.http.post(url, clienteId, { headers });
   }
   
   
+  getUserProfile(): Observable<UserDTO> {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.get<UserDTO>(`${this.baseRoute}Users/data`, { headers });
+  }
 }
