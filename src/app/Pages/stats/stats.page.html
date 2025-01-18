@@ -1,105 +1,45 @@
-<ion-header style="align-items: end">
-  <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
-  </ion-toolbar>
-</ion-header>
-<ion-header>
-  <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
-    <div class="menu">Panel de estadísticas</div>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <h2 class="page-title">Clientes Pendientes de Aprobación</h2>
 
-<ion-content class="custom-content">
-  <ion-grid *ngIf="!isWeb" >
-    <ion-row>
-      <ion-col size="6" class="mosaic">
-        <div class="title">Total de ventas</div>
-        <div style="background-color: var(--ion-color-secondary);" class="square-tile">
-          <ion-icon name="cash-outline"></ion-icon>
-        </div>
-      </ion-col>
-      <ion-col size="6" class="mosaic">
-        <div class="title">Por menú</div>
-        <div style="background-color: var(--ion-color-primary);" class="square-tile">
-          <ion-icon name="restaurant-outline"></ion-icon>
-        </div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="6" class="mosaic">
-        <div class="title">Por producto</div>
-        <div style="background-color: var(--ion-color-warning);" class="square-tile">
-          <ion-icon name="pizza-outline"></ion-icon>
-        </div>
-      </ion-col>
-      <ion-col size="6" class="mosaic">
-        <div class="title">Por dia</div>
-        <div style="background-color: var(--ion-color-success);" class="square-tile">
-          <ion-icon name="today-outline"></ion-icon>
-        </div>
-      </ion-col>  
-    </ion-row>
-    <ion-row>
-      <ion-col size="6" class="mosaic">
-        <div class="title">Por método</div>
-        <div style="background-color: var(--ion-color-warning-shade);" class="square-tile">
-          <ion-icon name="card-outline"></ion-icon>
-        </div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12" class="mosaic">
-        <div class="title">Volver</div>
-        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile-top" (click)="navigateToAdmin()">
-          <ion-icon name="arrow-back-circle-outline"></ion-icon>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <!-- Mensaje de carga -->
+  <div *ngIf="!didLoad" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando clientes...</p>
+  </div>
 
-  <ion-grid *ngIf="isWeb" >
-    <ion-row>
-      <ion-col size="6" class="web-mosaic">
-        <div class="title">Total de ventas</div>
-        <div style="background-color: var(--ion-color-secondary);" class="square-tile-web">
-          <ion-icon name="cash-outline"></ion-icon>
-        </div>
-      </ion-col>
-      <ion-col size="6" class="web-mosaic">
-        <div class="title">Por menú</div>
-        <div style="background-color: var(--ion-color-primary);" class="square-tile-web">
-          <ion-icon name="restaurant-outline"></ion-icon>
-        </div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="6" class="web-mosaic">
-        <div class="title">Por producto</div>
-        <div style="background-color: var(--ion-color-warning);" class="square-tile-web">
-          <ion-icon name="pizza-outline"></ion-icon>
-        </div>
-      </ion-col>
-      <ion-col size="6" class="web-mosaic">
-        <div class="title">Por día</div>
-        <div style="background-color: var(--ion-color-success);" class="square-tile-web">
-          <ion-icon name="today-outline"></ion-icon>
-        </div>
-      </ion-col> 
-    </ion-row>
-    <ion-row>
-      <ion-col size="6" class="web-mosaic">
-        <div class="title">Por método</div>
-        <div style="background-color: var(--ion-color-warning-shade);" class="square-tile-web">
-          <ion-icon name="card-outline"></ion-icon>
-        </div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12" class="web-mosaic">
-        <div class="title">Volver</div>
-        <div style="background-color: var(--ion-color-secondary-tint);" class="square-tile-web-top" (click)="navigateToAdmin()">
-          <ion-icon name="arrow-back-circle-outline"></ion-icon>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <!-- Tabla de clientes -->
+  <div *ngIf="didLoad && clientes && clientes.length > 0" class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientes">
+          <td>{{ cliente.firstName }} {{ cliente.lastName }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.phone }}</td>
+          <td class="actions">
+            <button class="approve" (click)="aprobarCliente(cliente.id)">Aprobar</button>
+            <button class="reject" (click)="rechazarCliente(cliente.id)">Rechazar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje si no hay clientes -->
+  <div *ngIf="didLoad && (!clientes || clientes.length === 0)" class="no-clientes">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>No hay clientes pendientes de aprobación.</p>
+  </div>
+
+  <!-- Botón de volver -->
+  <div class="volver">
+    <button (click)="navigateToAdmin()">Volver</button>
+  </div>
 </ion-content>
