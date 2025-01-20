@@ -79,19 +79,35 @@ export class AdminOrdersPage {
   }
 
   async getOrders() {
-    this.ordersService.GetOwn().subscribe(
-      (response) => {
-        this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
-        this.orders = this.ordersResponse.model;
-        this.formatOrders();
-      },
-      (error) => {
-        this.router.navigate(["/unauthorized"]);
-        this.alertTool.presentToast("Oops... Ocurrió un error!");
-      }
-    );
+    if (this.isAdmin) {
+      // Si es administrador, obtiene todas las órdenes
+      this.ordersService.GetAll().subscribe(
+        (response) => {
+          this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
+          this.orders = this.ordersResponse.model;
+          this.formatOrders();
+        },
+        (error) => {
+          this.router.navigate(["/unauthorized"]);
+          this.alertTool.presentToast("Oops... Ocurrió un error al obtener las órdenes!");
+        }
+      );
+    } else {
+      // Si no es administrador, obtiene solo las órdenes propias
+      this.ordersService.GetOwn().subscribe(
+        (response) => {
+          this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
+          this.orders = this.ordersResponse.model;
+          this.formatOrders();
+        },
+        (error) => {
+          this.router.navigate(["/unauthorized"]);
+          this.alertTool.presentToast("Oops... Ocurrió un error al obtener las órdenes!");
+        }
+      );
+    }
   }
-
+  
   async getDates() {
     this.ordersService.getDates().subscribe(
       (response) => {
