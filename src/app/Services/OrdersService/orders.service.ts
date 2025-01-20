@@ -4,13 +4,24 @@ import { OrderDTO } from 'src/app/Models/OrderDTO';
 import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdersService extends MainService {
 
+  GetAll(): Observable<ResponseObjectModel<Array<OrderDTO>>> {
+    const token = localStorage.getItem('Token'); // Obtén el token del almacenamiento
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}` // Añade el token al encabezado
+    });
   
+    return this.http.get<ResponseObjectModel<Array<OrderDTO>>>(`${this.baseRoute}Orders/getAll`, { headers });
+  }
+  
+  
+
   confirmOrder(orderId: number): Observable<any> {
     const token = localStorage.getItem('Token');
     const headers = new HttpHeaders({
