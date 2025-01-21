@@ -9,6 +9,7 @@ import { ContactDTO } from 'src/app/Models/ContactDTO';
 import { Observable } from 'rxjs';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { HttpHeaders } from '@angular/common/http';
+import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
 
 @Injectable({
   providedIn: 'root',
@@ -58,12 +59,12 @@ export class UsersService extends MainService {
     return this.http.post(`${this.baseRoute}Users/makeDefault`, model, { headers });
   }
 
-  RemoveLocation(model: LocationDTO | undefined) {
+  RemoveLocation(model: LocationDTO): Observable<ResponseObject> {
     const token = localStorage.getItem('Token');
     const headers = this.createHeader(token);
-    return this.http.post(`${this.baseRoute}Users/removeLocation`, model, { headers });
+    return this.http.post<ResponseObject>(`${this.baseRoute}Users/removeLocation`, model, { headers });
   }
-
+  
   AddContact(model: ContactDTO | undefined) {
     const token = localStorage.getItem('Token');
     const headers = this.createHeader(token);
@@ -123,7 +124,6 @@ export class UsersService extends MainService {
   
     return this.http.post(url, clienteId, { headers });
   }
-  
   
   getUserProfile(): Observable<UserDTO> {
     const token = localStorage.getItem('Token');

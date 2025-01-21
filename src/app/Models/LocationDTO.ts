@@ -1,5 +1,7 @@
 export class LocationDTO {
-    id: number = 0;
-    dir!: string
-    isDefault!: boolean
+    id?: number;
+    dir!: string;
+    isDefault!: boolean;
+    latitude?: number;
+    longitude?: number;
 }

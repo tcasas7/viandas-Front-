@@ -44,15 +44,24 @@ export class AddLocationModalComponent {
 
   registerUser() {
     this.validateFields();
-    if(this.isValid === true) {
-      this.locationData.dir = this.locationForm.get("street")?.value + ', ' + this.locationForm.get("number")?.value
+    if (this.isValid) {
+      const street = this.locationForm.get("street")?.value.trim();
+      const number = this.locationForm.get("number")?.value.trim();
+  
+      // Agregar contexto a la dirección
+      this.locationData.dir = `${street} ${number}, Mar del Plata, General Pueyrredon, Argentina`;
+  
+      // Eliminar el ID si no es necesario
+      delete this.locationData.id;
+  
       this.makeLoadingAnimation();
       this.doRequest();
     } else {
       this.alertTool.presentToast("Campos vacíos");
     }
   }
-
+  
+  
   doRequest() {
     this.userService.AddLocation(this.locationData).subscribe( response => {
       this.response = response as ResponseObject
