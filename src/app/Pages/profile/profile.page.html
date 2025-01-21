@@ -48,18 +48,25 @@
     </ion-item>
 
     <ion-item>
+      <!-- Icono y texto de "Dirección" -->
       <div style="padding-right: 0px; font-size: 2vh;">
         <ion-icon style="font-size: 2.5vh; vertical-align: bottom;" name="location-outline"></ion-icon>
       </div>
       &nbsp;&thinsp;<b> Dir: </b>
-      <ion-select interface="popover" placeholder="Direcciones" [(ngModel)]="selectedLocationId" (ionChange)="handleSelection($event)" style="float:inline-start">
-        <ion-select-option *ngFor="let item of locations" [value]="item.id">&nbsp;{{item.dir}}</ion-select-option>
-        <ion-select-option [value]="'add_new'">Agregar dirección</ion-select-option>    
+      
+      <!-- Dropdown para seleccionar direcciones o agregar una nueva -->
+      <ion-select interface="popover" placeholder="Seleccionar dirección" [(ngModel)]="selectedLocationId" (ionChange)="handleSelection($event)" style="float:inline-start">
+        <ion-select-option *ngFor="let item of locations" [value]="item.id">&nbsp;{{ item.dir }}</ion-select-option>
+        <ion-select-option [value]="'add_new'">Agregar dirección</ion-select-option>
       </ion-select>
-      <ion-button *ngIf="selectedLocationId" fill="clear" slot="end" (click)="removeLocation()">
-        <ion-icon name="close-circle"></ion-icon>
+      
+      <!-- Botón para eliminar dirección seleccionada -->
+      <ion-button *ngIf="selectedLocationId && selectedLocationId !== 'add_new'" fill="clear" slot="end" (click)="removeLocation()">
+        <ion-icon name="close-circle-outline"></ion-icon>
       </ion-button>
     </ion-item>
+    
+     
   </div>
 
   <div *ngIf="isAdmin" style="text-align: center;">

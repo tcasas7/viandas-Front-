@@ -23,7 +23,7 @@ export class ProfilePage implements OnInit {
   isDeliveryRole: boolean = false;
   locations: Array<LocationDTO> = new Array<LocationDTO>();
 
-  selectedLocation: LocationDTO | undefined;
+  selectedLocation: LocationDTO | undefined | null = null;
   
 
   selectedLocationId: any;
@@ -126,33 +126,54 @@ navigateToChangePhone() {
 
 handleSelection(event: any) {
   if (event.detail.value === 'add_new') {
+    // Si selecciona "Agregar nueva dirección", abrir el modal
     this.onAddNewAddress();
   } else {
+    // Actualizar la dirección seleccionada
     this.selectedLocationId = event.detail.value;
-    this.makeDefault();
+    this.selectedLocation = this.locations.find(location => location.id === this.selectedLocationId) || null;
   }
+}
+
+addLocation(newLocation: LocationDTO) {
+  // Agregar la nueva dirección a la lista
+  this.locations.push(newLocation);
+
+  // Actualizar la dirección seleccionada
+  this.selectedLocation = newLocation;
+  this.selectedLocationId = newLocation.id;
+
+  // Cerrar el modal
+  this.closeAddLocationModal();
+}
+
+confirmRemoveLocation(location: LocationDTO) {
+  this.selectedLocation = location;
+  this.removeLocation();
 }
 
 removeLocation() {
-  this.makeLoadingAnimation();
-  if (this.selectedLocationId !== null) {
-    this.selectedLocation = this.user.locations.find(location => location.id === this.selectedLocationId);
+  if (this.selectedLocation) {
+    this.userService.RemoveLocation(this.selectedLocation).subscribe(response => {
+      if (response.statusCode === 200) {
+        // Eliminar la dirección de la lista
+        this.locations = this.locations.filter(location => location.id !== this.selectedLocation?.id);
 
-    this.userService.RemoveLocation(this.selectedLocation).subscribe( async response => {
-      this.removeLocationResponse = response as ResponseObject;
-      if(this.removeLocationResponse.statusCode === 200) {
-        this.alertTool.presentToast("Dirección eliminada");
-        this.user.locations = this.user.locations.filter(location => location.id === this.selectedLocationId);
-        await this.getData()
+        // Limpiar la selección
+        this.selectedLocation = null;
+        this.selectedLocationId = null;
+
+        this.alertTool.presentToast('Dirección eliminada.');
       } else {
-        this.alertTool.presentToast(this.removeLocationResponse.message);
+        this.alertTool.presentToast(response.message);
       }
     }, error => {
-      this.alertTool.presentToast("Oops... Ocurrió un error");
-    })
+      this.alertTool.presentToast('Error al eliminar la dirección.');
+    });
   }
-  this.closeLoader();
 }
+
+
 
 makeDefault() {
   this.makeLoadingAnimation();
