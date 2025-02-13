@@ -9,10 +9,9 @@ export class OrderDTO {
     paymentMethod!: number;
     hasSalt!: boolean;
     description!: string;
-    orderDate!: string;
+    orderDate!: Date;
     deliveries!: Array<DeliveryDTO>;
     location!: string;
-    dayOfWeek: DayOfWeek = DayOfWeek.Monday;
     isCollapsed: boolean = false; // Propiedad para la visualización
     totalPlates: number = 0;
     daysOfWeek: string[] = [];
@@ -24,18 +23,15 @@ export class OrderDTO {
         this.paymentMethod = orderDTO.paymentMethod;
         this.hasSalt = orderDTO.hasSalt;
         this.description = orderDTO.description;
-        this.orderDate = orderDTO.orderDate;
-        this.deliveries = orderDTO.deliveries;
+        this.orderDate = new Date(orderDTO.orderDate);  // ✅ Convertir a Date al asignarlo
+        this.deliveries = orderDTO.deliveries.filter(delivery => delivery.quantity > 0);
         this.location = orderDTO.location;
 
-        this.deliveries = orderDTO.deliveries.filter(delivery => delivery.quantity > 0);
-
-   
-        this.deliveries.forEach(delivery =>{
-            delivery.deliveryDate = this.getDayAsNumber(delivery.deliveryDate);
+        // Convertir deliveryDate de string a Date en cada entrega
+        this.deliveries.forEach(delivery => {
+            delivery.deliveryDate = new Date(delivery.deliveryDate); // ✅ Convertir a Date
         });
     }
-
     getDayAsNumber(day: DayOfWeek): number {
         // Mapea el enum DayOfWeek a números (Lunes a Viernes = 1-5)
         switch (day) {

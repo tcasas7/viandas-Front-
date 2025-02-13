@@ -7,7 +7,7 @@ export class ClientOrder {
   paymentMethod!: number;
   hasSalt!: boolean;
   description!: string;
-  orderDate!: string;
+  orderDate!: Date;
   deliveries!: Array<DeliveryDTO>;
   location!: string;
   isCollapsed: boolean = true;
@@ -19,6 +19,8 @@ export class ClientOrder {
     light: 0,
     proteico: 0
   };
+  groupedDeliveries: { [date: string]: { type: string; quantity: number }[] } = {};
+
 
   constructor(orderDTO: OrderDTO) {
     
@@ -36,10 +38,27 @@ export class ClientOrder {
     this.daysOfWeek = orderDTO.daysOfWeek;
 
     this.deliveries.forEach(delivery => {
-      if (delivery.menuId === 1) this.menuTypes.estandar += delivery.quantity;
-      if (delivery.menuId === 2) this.menuTypes.light += delivery.quantity;
-      if (delivery.menuId === 3) this.menuTypes.proteico += delivery.quantity;
+      const deliveryDate = new Date(delivery.deliveryDate).toLocaleDateString("es-ES");
+
+      // ✅ Agrupar por fecha
+      if (!this.groupedDeliveries[deliveryDate]) {
+        this.groupedDeliveries[deliveryDate] = [];
+      }
+
+      let type = "Desconocido";
+      if (delivery.menuId === 1) {
+        type = "Estandar";
+        this.menuCounts.estandar += delivery.quantity;
+      } else if (delivery.menuId === 2) {
+        type = "Light";
+        this.menuCounts.light += delivery.quantity;
+      } else if (delivery.menuId === 3) {
+        type = "Proteico";
+        this.menuCounts.proteico += delivery.quantity;
+      }
+
+      this.groupedDeliveries[deliveryDate].push({ type, quantity: delivery.quantity });
+      this.totalPlates += delivery.quantity;
     });
-    
   }
 }

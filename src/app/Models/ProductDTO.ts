@@ -8,6 +8,7 @@ export class ProductDTO {
     imageName!: string;
     imagePath!: string;
     imageFile?: File;
+    menuId!: number;
 
     constructor(init?: Partial<ProductDTO>) {
         Object.assign(this, init);
