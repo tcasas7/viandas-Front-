@@ -2,6 +2,7 @@
   <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
   </ion-toolbar>
 </ion-header>
+
 <ion-header>
   <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
     <div class="user-div">
@@ -11,54 +12,62 @@
 </ion-header>
 
 <ion-content class="custom-content">
-  <app-calendar (closeModalEvent)="closeModal()"></app-calendar>
   <ion-card color="light" *ngFor="let order of toDisplayOrders" style="width: 77vw; max-width: 900px; margin: auto; margin-top: 2vh;">
     <ion-card-header style="color: black; font-weight: bold; font-size: large;">
       <div>
-        Nro. orden: {{order.id}} 
+        <b>Nro. orden: {{order.id}}</b>
         <ion-icon class="collapse-icon" *ngIf="order.isCollapsed" name="chevron-down-outline" (click)="uncollapseOrder(order)"></ion-icon>
         <ion-icon class="collapse-icon" *ngIf="!order.isCollapsed" name="chevron-up-outline" (click)="collapseOrder(order)"></ion-icon>
       </div>
     </ion-card-header>
-    
+
     <ion-card-content *ngIf="!order.isCollapsed">
-      <div *ngIf="order.description !== ''">
-        <b style="color: black;">Descripción: </b>{{order.description}}
-      </div>
+      <!-- Descripción -->
+      <div><b style="color: black;">Descripción: </b>{{ order.description || 'Sin descripción' }}</div>
+
+      <!-- Método de Pago -->
       <div>
-        <div *ngIf="order.paymentMethod === 0">
-          <b style="color: black;">Método de pago: </b> Efectivo
-        </div>
-        <div *ngIf="order.paymentMethod === 1">
-          <b style="color: black;">Método de pago: </b> Transferencia
+        <b style="color: black;">Método de pago: </b> 
+        <span *ngIf="order.paymentMethod === 0">Efectivo</span>
+        <span *ngIf="order.paymentMethod === 1">Transferencia</span>
+      </div>
+
+      <!-- Cantidad de Platos -->
+      <div><b style="color: black;">Cantidad de Platos: </b>{{order.totalPlates}}</div>
+
+      <!-- 🔹 Dirección de Entrega -->
+      <div><b style="color: black;">Dirección: </b>{{ order.location }}</div>
+
+      <!-- Días de Entrega con detalles -->
+      <div><b style="color: black;">Días de Entrega:</b></div>
+      <div *ngFor="let date of getObjectKeys(order.groupedDeliveries)">
+        <b>{{ date }}</b>  
+        <div *ngFor="let delivery of order.groupedDeliveries[date]">
+          🍽️ {{ delivery.type }} - Cantidad: {{ delivery.quantity }}
         </div>
       </div>
-      <div>
-        <div *ngIf="getDayNumber(order.deliveries[0].deliveryDate) === 1">
-          <b style="color: black;">Fecha de entrega: </b> Lunes
-        </div>
-        <div *ngIf="getDayNumber(order.deliveries[0].deliveryDate) === 2">
-          <b style="color: black;">Fecha de entrega: </b> Martes
-        </div>
-        <div *ngIf="getDayNumber(order.deliveries[0].deliveryDate) === 3">
-          <b style="color: black;">Fecha de entrega: </b> Miércoles
-        </div>
-        <div *ngIf="getDayNumber(order.deliveries[0].deliveryDate) === 4">
-          <b style="color: black;">Fecha de entrega: </b> Jueves
-        </div>
-        <div *ngIf="getDayNumber(order.deliveries[0].deliveryDate) === 5">
-          <b style="color: black;">Fecha de entrega: </b> Viernes
-        </div>
-      </div>
+
+      <!-- Total -->
       <div style="font-size: x-large; color: black; font-weight: bold;">
         <div style="float: inline-start">Total: </div> 
         <div style="float: inline-end;">${{order.price}}</div>
       </div>
+
       <div style="margin: 50px 0;"></div>
-      <!-- Botones de Cancelar y Confirmar -->
-      <div *ngIf="order.paymentMethod === 1">
-        <ion-button style="float: inline-start; margin-bottom: 1vh;"(click)="cancelOrder(order.id)">Cancelar</ion-button>
-        <ion-button style="float: inline-end; margin-bottom: 1vh;"(click)="confirmOrder(order.id)">Confirmar</ion-button>
+
+      <!-- Botones de acción -->
+      <div>
+        <ion-button color="danger" style="float: inline-start; margin-bottom: 1vh;" (click)="cancelOrder(order.id)">
+          Cancelar
+        </ion-button>
+
+        <!-- Botón "Confirmar Orden" -->
+        <ion-button 
+          color="success" 
+          style="float: inline-end; margin-bottom: 1vh;" 
+          (click)="confirmOrder(order.id)">
+          Confirmar Orden
+        </ion-button>
       </div>
     </ion-card-content>
   </ion-card>

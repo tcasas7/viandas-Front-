@@ -162,11 +162,23 @@ export class AdminOrdersPage {
     return day === 0 || day === 6 ? -1 : day; // Si es sábado o domingo, devolver -1 (nunca debería pasar)
   }
   
-
-  formatOrders() {
-    this.toDisplayOrders = this.orders.map(order => new ClientOrder(order));
+  getObjectKeys(obj: any): string[] {
+    return obj ? Object.keys(obj) : [];
   }
-
+  
+  formatOrders() {
+    this.toDisplayOrders = this.orders.map(order => {
+      const clientOrder = new ClientOrder(order);
+  
+      // ✅ Asegurar que totalPlates se calcula correctamente
+      clientOrder.totalPlates = order.deliveries?.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0) || 0;
+  
+      return clientOrder;
+    });
+  
+    console.log("📌 Órdenes procesadas:", this.toDisplayOrders);
+  }
+  
   collapseOrder(order: ClientOrder) {
     order.isCollapsed = true;
   }
