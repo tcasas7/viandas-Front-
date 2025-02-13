@@ -9,7 +9,7 @@ export class ToDisplayOrderDTO {
     hasOrder!: Boolean
     hasSalt!: boolean
     description!: string
-    orderDate!: string;
+    orderDate!: Date;
     deliveries!: Array<ToDisplayDeliveryDTO>
     location!: string;
 }

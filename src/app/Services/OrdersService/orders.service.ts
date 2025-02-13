@@ -81,19 +81,21 @@ export class OrdersService extends MainService {
         paymentMethod: order.paymentMethod.valueOf(),
         hasSalt: order.hasSalt,
         description: order.description,
-        orderDate: order.orderDate,
+        orderDate: order.orderDate instanceof Date ? order.orderDate.toISOString() : order.orderDate,
         location: order.location,
         deliveries: order.deliveries.map(delivery => ({
           id: delivery.Id,
           productId: delivery.productId,
           delivered: delivery.delivered,
-          deliveryDate: delivery.deliveryDate,
+          deliveryDate: delivery.deliveryDate instanceof Date ? delivery.deliveryDate.toISOString() : delivery.deliveryDate,
           quantity: delivery.quantity
         }))
       }))
     };
 
+    console.log("📦 JSON a enviar:", JSON.stringify(camelCaseModel, null, 2));
     return this.http.post(this.baseRoute + 'Orders/place', camelCaseModel, { headers });
+
   }
 
   RemoveOrder(orderId: number): Observable<any> {

@@ -157,6 +157,12 @@ export class AdminOrdersPage {
     }
   }
 
+  getDayNumber(date: Date): number {
+    const day = new Date(date).getDay();
+    return day === 0 || day === 6 ? -1 : day; // Si es sábado o domingo, devolver -1 (nunca debería pasar)
+  }
+  
+
   formatOrders() {
     this.toDisplayOrders = this.orders.map(order => new ClientOrder(order));
   }

@@ -4,7 +4,7 @@ export class ToDisplayDeliveryDTO {
     productName!: string;
     productPrice!: number;
     delivered!: boolean;
-    deliveryDate!: number;
+    deliveryDate!: Date;
     quantity!: number;
     menuId!: number; 
     precioPromo?: number;

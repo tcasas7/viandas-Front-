@@ -89,11 +89,12 @@
     <div class="carousel-content-wrapper" #carouselContentWrapper>
       <div class="carousel-content">
         <div class="carousel-set" *ngFor="let set of carouselSets">
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 1 && !isDesktop">Lunes</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 2 && !isDesktop">Martes</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 3 && !isDesktop">Miércoles</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 4 && !isDesktop">Jueves</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="set[0].day === 5 && !isDesktop">Viernes</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 1 && !isDesktop">Lunes</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 2 && !isDesktop">Martes</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 3 && !isDesktop">Miércoles</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 4 && !isDesktop">Jueves</div>
+          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 5 && !isDesktop">Viernes</div>
+          
           <div class="carousel-item" *ngFor="let item of set">
             <div class="image-container">
               <!-- Mostrar la imagen del producto -->

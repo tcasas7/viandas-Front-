@@ -31,33 +31,38 @@ export class AddDetailsModalComponent implements OnInit {
   }
 
 
-    makeOrder() {
-      if (this.paymentMethod === -1 || this.selectedLocation === 'empty') {
-          this.alertTool.presentToast("Campos vacíos, por favor llene todos los campos.");
-      } else {
-          // Recorremos cada orden para asegurarnos de que los campos estén asignados correctamente
-          this.orders.Orders.forEach(o => {
-              o.id = 0;
-              o.location = this.selectedLocation;
-              o.description = this.description;
-              o.paymentMethod = this.paymentMethod;
-              o.hasSalt = false;
-              o.orderDate = new Date().toISOString();
-  
-              // Agregar log detallado para depuración
-              console.log(`Orden ID: ${o.id}`);
-              console.log(`Día (dayOfWeek) antes de enviar: ${o.dayOfWeek}`);
-              console.log(`Método de pago: ${o.paymentMethod}`);
-              console.log(`Ubicación seleccionada: ${this.selectedLocation}`);
-          });
-  
-          // Loguear toda la estructura de la orden para ver cómo está antes de enviarla
-          console.log('Estructura completa de las órdenes:', JSON.stringify(this.orders.Orders, null, 2));
-  
-          this.placeOrder();
-      }
-  }
-  
+  makeOrder() {
+    if (this.paymentMethod === -1 || this.selectedLocation === 'empty') {
+        this.alertTool.presentToast("Campos vacíos, por favor llene todos los campos.");
+    } else {
+        // Recorremos cada orden para asegurarnos de que los campos estén asignados correctamente
+        this.orders.Orders.forEach(o => {
+            o.id = 0;
+            o.location = this.selectedLocation;
+            o.description = this.description;
+            o.paymentMethod = this.paymentMethod;
+            o.hasSalt = false;
+            o.orderDate = new Date(); // ✅ Ahora es Date en vez de string
+
+            // ✅ Convertimos deliveryDate a Date en cada entrega
+            o.deliveries.forEach(d => {
+                d.deliveryDate = new Date(d.deliveryDate);
+            });
+
+            // Agregar log detallado para depuración
+            console.log(`Orden ID: ${o.id}`);
+            console.log(`Fecha de la orden (orderDate): ${o.orderDate}`);
+            console.log(`Método de pago: ${o.paymentMethod}`);
+            console.log(`Ubicación seleccionada: ${this.selectedLocation}`);
+        });
+
+        // Loguear toda la estructura de la orden para ver cómo está antes de enviarla
+        console.log('Estructura completa de las órdenes:', JSON.stringify(this.orders.Orders, null, 2));
+
+        this.placeOrder();
+    }
+}
+
     ngOnInit() {
       if (this.locations.length === 0) {
         this.locations = [{

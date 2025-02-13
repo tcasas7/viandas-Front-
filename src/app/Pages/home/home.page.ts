@@ -526,27 +526,40 @@ item: CartItem;
     }
   }
 
+  getNextWeekday(day: number): Date {
+    let today = new Date();
+    let daysToAdd = (day - today.getDay() + 7) % 7;
+
+    if (daysToAdd === 0) daysToAdd = 7; // Si es el mismo día, saltar a la próxima semana
+
+    return new Date(today.setDate(today.getDate() + daysToAdd));
+}
+
+  getDayNumber(date: Date): number {
+   const day = new Date(date).getDay();
+   return day === 0 || day === 6 ? -1 : day; // Si es sábado o domingo, devolver -1 (no debería pasar)
+  }
+
+
   makeDeliveryDTO(prod: CartItem) {
     var delivDTO = new ToDisplayDeliveryDTO();
-        delivDTO.productId = prod.id;
-        delivDTO.quantity = 0;
-        delivDTO.delivered = false;
-        delivDTO.deliveryDate = prod.day;
-        delivDTO.productName = prod.name;
-        delivDTO.productPrice = prod.price;
+    delivDTO.productId = prod.id;
+    delivDTO.quantity = 0;
+    delivDTO.delivered = false;
+    delivDTO.deliveryDate = this.getNextWeekday(prod.day); // ✅ Convertimos número a fecha
+    delivDTO.productName = prod.name;
+    delivDTO.productPrice = prod.price;
 
-        if(prod.day === 1) {
-          this.orderMonday.deliveries.push(delivDTO);
-        } else if(prod.day === 2) {
-          this.orderTuesday.deliveries.push(delivDTO);
-        } else if(prod.day === 3) {
-          this.orderWednesday.deliveries.push(delivDTO);
-        } else if(prod.day === 4) {
-          this.orderThursday.deliveries.push(delivDTO);
-        } else if(prod.day === 5) {
-          this.orderFriday.deliveries.push(delivDTO);
-        }
-  }
+    // ✅ Asignar el DTO a la orden correspondiente según el día
+    switch (prod.day) {
+        case 1: this.orderMonday.deliveries.push(delivDTO); break;
+        case 2: this.orderTuesday.deliveries.push(delivDTO); break;
+        case 3: this.orderWednesday.deliveries.push(delivDTO); break;
+        case 4: this.orderThursday.deliveries.push(delivDTO); break;
+        case 5: this.orderFriday.deliveries.push(delivDTO); break;
+        default: console.log('Día de entrega inválido:', prod.day); break;
+    }
+}
 
   getData() {
     this.userService.GetData().subscribe( response => {

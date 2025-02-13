@@ -143,59 +143,81 @@ export class OrdersPage {
     }
   }
 
- formatOrders() {
-  this.toDisplayOrders = [];
-
+  formatOrders() {
+    this.toDisplayOrders = [];
   
-  this.orders.forEach(order => {
-   
-    const consolidatedOrder = new ClientOrder(order);
-    consolidatedOrder.totalPlates = 0;
-    consolidatedOrder.daysOfWeek = [];
-    consolidatedOrder.menuCounts = { estandar: 0, light: 0, proteico: 0 };
-
-   
-    order.deliveries.forEach(delivery => {
-      consolidatedOrder.totalPlates += delivery.quantity;
-
-      const dayName = this.getDayName(delivery.deliveryDate);
-      if (!consolidatedOrder.daysOfWeek.includes(dayName)) {
-        consolidatedOrder.daysOfWeek.push(dayName);
-      }
-
-      
-      switch (delivery.menuId) {
-        case 1: // Estandar
+    this.orders.forEach(order => {
+      const consolidatedOrder = new ClientOrder(order);
+      consolidatedOrder.totalPlates = 0;
+      consolidatedOrder.daysOfWeek = [];
+      consolidatedOrder.menuCounts = { estandar: 0, light: 0, proteico: 0 };
+      consolidatedOrder.groupedDeliveries = {}; // ✅ Inicializamos groupedDeliveries
+  
+      order.deliveries.forEach(delivery => {
+        const deliveryDate = new Date(delivery.deliveryDate).toLocaleDateString("es-ES");
+  
+        // ✅ Agrupar entregas por fecha
+        if (!consolidatedOrder.groupedDeliveries[deliveryDate]) {
+          consolidatedOrder.groupedDeliveries[deliveryDate] = [];
+        }
+  
+        let type = "Desconocido";
+        if (delivery.menuId === 1) {
+          type = "Estandar";
           consolidatedOrder.menuCounts.estandar += delivery.quantity;
-          break;
-        case 2: // Light
+        } else if (delivery.menuId === 2) {
+          type = "Light";
           consolidatedOrder.menuCounts.light += delivery.quantity;
-          break;
-        case 3: // Proteico
+        } else if (delivery.menuId === 3) {
+          type = "Proteico";
           consolidatedOrder.menuCounts.proteico += delivery.quantity;
-          break;
-        default:
-          console.log('Tipo de menú desconocido:', delivery);
-          break;
-      }
-    });
-
-   
-    consolidatedOrder.price = order.price;
-
-    
-    this.toDisplayOrders.push(consolidatedOrder);
-  });
-
+        }
   
-  console.log('Órdenes a mostrar:', this.toDisplayOrders);
-}
- 
-  getDayName(dayNumber: number): string {
-    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-    return days[dayNumber - 1] || '';
+        consolidatedOrder.groupedDeliveries[deliveryDate].push({ type, quantity: delivery.quantity });
+        consolidatedOrder.totalPlates += delivery.quantity;
+      });
+  
+      consolidatedOrder.price = order.price;
+      this.toDisplayOrders.push(consolidatedOrder);
+    });
+  
+    console.log('Órdenes a mostrar:', this.toDisplayOrders);
   }
+  
+  // Función auxiliar para obtener el tipo de menú según el ID
+  getMenuType(menuId: number): string {
+    const menuTypes: { [key: number]: string } = {
+      1: 'Estandar',
+      2: 'Light',
+      3: 'Proteico'
+    };
+    return menuTypes[menuId] || 'Desconocido';
+  }
+  
+  getObjectKeys(obj: any): string[] {
+    return obj ? Object.keys(obj) : [];
+  }
+  
 
+  getDayName(date: any): string {
+    if (typeof date === 'string') {
+      date = new Date(date); // Convertir el string a Date
+    }
+  
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+      console.error("❌ Error: Fecha inválida", date);
+      return "Fecha inválida"; 
+    }
+  
+    const days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    return days[date.getDay()];
+  }
+  
+  isLastItem(array: any[], item: any): boolean {
+    return array.indexOf(item) === array.length - 1;
+  }
+  
+  
   collapseOrder(order: ClientOrder) {
     order.isCollapsed = true;
   }

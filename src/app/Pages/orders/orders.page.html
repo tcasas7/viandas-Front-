@@ -2,6 +2,7 @@
   <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
   </ion-toolbar>
 </ion-header>
+
 <ion-header>
   <ion-toolbar style="position: relative; height: 50px; border-bottom-right-radius: 30px;" class="gradient-toolbar custom-header">
     <div class="user-div">
@@ -31,33 +32,29 @@
     </ion-card-header>
 
     <ion-card-content *ngIf="!order.isCollapsed">
-      <!-- Mostrar la descripción o 'Sin descripción' -->
-      <div>
-        <b style="color: black;">Descripción: </b>{{ order.description ? order.description : 'Sin descripción' }}
-      </div>
+      <!-- Descripción -->
+      <div><b style="color: black;">Descripción: </b>{{ order.description || 'Sin descripción' }}</div>
 
+      <!-- Método de Pago -->
       <div>
         <b style="color: black;">Método de pago: </b> 
         <span *ngIf="order.paymentMethod === 0">Efectivo</span>
         <span *ngIf="order.paymentMethod === 1">Transferencia</span>
       </div>
 
-      <div>
-        <b style="color: black;">Cantidad de Platos: </b>{{order.totalPlates}}
+      <!-- Cantidad de Platos -->
+      <div><b style="color: black;">Cantidad de Platos: </b>{{order.totalPlates}}</div>
+
+      <!-- Días de Entrega con detalles -->
+      <div><b style="color: black;">Días de Entrega:</b></div>
+      <div *ngFor="let date of getObjectKeys(order.groupedDeliveries)">
+        <b>{{ date }}</b>  
+        <div *ngFor="let delivery of order.groupedDeliveries[date]">
+          🍽️ {{ delivery.type }} - Cantidad: {{ delivery.quantity }}
+        </div>
       </div>
 
-      <!-- Mostrar el tipo de menú -->
-      <div>
-        <b style="color: black;">Tipo de Menú: </b>
-        <span *ngIf="order.menuCounts.estandar > 0">Estandar x{{order.menuCounts.estandar}}, </span>
-        <span *ngIf="order.menuCounts.light > 0">Light x{{order.menuCounts.light}}, </span>
-        <span *ngIf="order.menuCounts.proteico > 0">Proteico x{{order.menuCounts.proteico}}</span>
-      </div>
-
-      <div>
-        <b style="color: black;">Días de Entrega: </b>{{order.daysOfWeek.join(', ')}}
-      </div>
-
+      <!-- Total -->
       <div style="font-size: x-large; color: black; font-weight: bold;">
         <div style="float: inline-start">Total: </div> 
         <div style="float: inline-end;">${{order.price}}</div>
@@ -71,7 +68,7 @@
           Cancelar
         </ion-button>
 
-        <!-- Mostrar el botón "Realizar pago" solo para órdenes con transferencia -->
+        <!-- Botón "Realizar pago" solo si es transferencia -->
         <ion-button 
           *ngIf="order.paymentMethod === 1" 
           color="success" 
@@ -83,7 +80,3 @@
     </ion-card-content>
   </ion-card>
 </ion-content>
-
-
-
-<!--app-support-button [phone]="contact.phone" [wppMessage]="contact.wppMessage"></app-support-button-->
