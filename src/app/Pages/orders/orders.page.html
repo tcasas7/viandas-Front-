@@ -44,7 +44,10 @@
 
       <!-- Cantidad de Platos -->
       <div><b style="color: black;">Cantidad de Platos: </b>{{order.totalPlates}}</div>
-
+      <div>
+        <b style="color: black;">Dirección: </b>{{ order.location }}
+      </div>
+      
       <!-- Días de Entrega con detalles -->
       <div><b style="color: black;">Días de Entrega:</b></div>
       <div *ngFor="let date of getObjectKeys(order.groupedDeliveries)">

@@ -32,6 +32,7 @@ export class ClientOrder {
     this.orderDate = orderDTO.orderDate;
     this.deliveries = orderDTO.deliveries;
     this.location = orderDTO.location;
+    this.totalPlates = 0;
 
     
     this.totalPlates = orderDTO.totalPlates;
@@ -58,7 +59,7 @@ export class ClientOrder {
       }
 
       this.groupedDeliveries[deliveryDate].push({ type, quantity: delivery.quantity });
-      this.totalPlates += delivery.quantity;
+      this.totalPlates += delivery.quantity || 0; 
     });
   }
 }
