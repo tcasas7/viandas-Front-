@@ -87,7 +87,16 @@ export class OrdersPage {
       response => {
         this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
         this.orders = this.ordersResponse.model;
-        this.formatOrders();
+  
+        // 🔹 Recuperar órdenes ocultas del localStorage
+        let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders") || "[]");
+  
+        // 🔹 Filtrar las órdenes que NO están ocultas
+        this.toDisplayOrders = this.orders
+          .filter(order => !hiddenOrders.includes(order.id))
+          .map(order => new ClientOrder(order));
+  
+        this.formatOrders(); // Si necesitas formatear algo adicional
       },
       error => {
         this.router.navigate(['/unauthorized']);
@@ -95,6 +104,7 @@ export class OrdersPage {
       }
     );
   }
+  
 
   async getActiveContact() {
     this.userService.GetActiveContact().subscribe(
@@ -240,10 +250,31 @@ export class OrdersPage {
       }
     );
   }
-
-  cancelOrder(orderId: number) {
-    this.alertTool.presentToast("Funcionalidad en desarrollo");
+  async hideOrder(orderId: number) {
+    const alert = document.createElement('ion-alert');
+    alert.header = 'Confirmar ocultación';
+    alert.message = '¿Estás seguro de que deseas ocultar esta orden?';
+    alert.buttons = [
+      {
+        text: 'Cancelar',
+        role: 'cancel'
+      },
+      {
+        text: 'Ocultar',
+        handler: () => {
+          let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders") || "[]");
+          hiddenOrders.push(orderId);
+          localStorage.setItem("hiddenOrders", JSON.stringify(hiddenOrders));
+          this.getOrders(); // Refrescar la lista después de ocultar
+        }
+      }
+    ];
+  
+    document.body.appendChild(alert);
+    return alert.present();
   }
+  
+  
 
   loadOrders(): void {
     this.ordersService.GetOwn().subscribe(

@@ -189,7 +189,6 @@ async getData() {
   });
 }
 
-
   checkPlatform() {
     if(this.platform.is("desktop")) {
       this.isWeb = true;

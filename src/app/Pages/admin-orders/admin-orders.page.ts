@@ -167,16 +167,20 @@ export class AdminOrdersPage {
   }
   
   formatOrders() {
-    this.toDisplayOrders = this.orders.map(order => {
-      const clientOrder = new ClientOrder(order);
+    let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders") || "[]");
   
-      // ✅ Asegurar que totalPlates se calcula correctamente
-      clientOrder.totalPlates = order.deliveries?.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0) || 0;
+    this.toDisplayOrders = this.orders
+      .map(order => {
+        const clientOrder = new ClientOrder(order);
   
-      return clientOrder;
-    });
+        // ✅ Calcular total de platos correctamente
+        clientOrder.totalPlates = order.deliveries?.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0) || 0;
   
-    console.log("📌 Órdenes procesadas:", this.toDisplayOrders);
+        return clientOrder;
+      })
+      .filter(order => !hiddenOrders.includes(order.id)); // ❌ Ocultar las órdenes guardadas
+  
+    console.log("📌 Órdenes visibles:", this.toDisplayOrders);
   }
   
   collapseOrder(order: ClientOrder) {
@@ -224,11 +228,30 @@ export class AdminOrdersPage {
     );
   }
   
-  cancelOrder(orderId: number): void {
-    this.alertTool.presentToast("Funcionalidad en desarrollo");
+  async hideOrder(orderId: number) {
+    const alert = document.createElement('ion-alert');
+    alert.header = 'Confirmar ocultación';
+    alert.message = '¿Estás seguro de que deseas ocultar esta orden?';
+    alert.buttons = [
+      {
+        text: 'Cancelar',
+        role: 'cancel'
+      },
+      {
+        text: 'Ocultar',
+        handler: () => {
+          let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders") || "[]");
+          hiddenOrders.push(orderId);
+          localStorage.setItem("hiddenOrders", JSON.stringify(hiddenOrders));
+          this.getOrders(); // 🔄 Recargar lista
+        }
+      }
+    ];
+  
+    document.body.appendChild(alert);
+    return alert.present();
   }
-
- 
+  
   confirmOrder(orderId: number): void {
     this.alertTool.presentToast("Funcionalidad en desarrollo");
   }
