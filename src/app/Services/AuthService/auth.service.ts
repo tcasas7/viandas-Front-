@@ -3,7 +3,7 @@ import { MainService } from '../MainService/main.service';
 import { HttpHeaders } from '@angular/common/http';
 import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 import { LoginDTO } from 'src/app/Models/LoginDTO';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,16 +14,19 @@ export class AuthService extends MainService {
     const headers = new HttpHeaders({
       'dontskip': 'true'
     });
-    
-    // Devuelve el Observable para que el componente se suscriba
-    return this.http.post<ResponseObjectModel<string>>(this.baseRoute + 'Auth/login', user, { headers });
+  
+    return this.http.post<ResponseObjectModel<string>>(this.baseRoute + 'Auth/login', user, { headers }).pipe(
+      tap(response => {
+        if (response.model) {
+          //localStorage.setItem("token", response.model);  // ✅ Guarda el token correctamente
+          //console.log("🔑 Token guardado:", response.model);
+        } else {
+          console.error("❌ No se recibió token en la respuesta.");
+        }
+      })
+    );
   }
-
-
-  // Método para verificar el estado del servidor
-  healthCheck() {
-    return this.http.get(this.baseRoute + "Auth/health");
-  }
+  
 
   renewToken() {
     let token = localStorage.getItem("Token");
