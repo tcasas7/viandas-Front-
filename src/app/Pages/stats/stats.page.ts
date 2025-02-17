@@ -15,6 +15,7 @@ import { ChangeDetectorRef } from '@angular/core';
 export class StatsPage {
 
   clientes: any[] = [];
+  clientesActivos: any[] = []
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
   user: UserDTO;
   isAdmin: boolean = false;
@@ -54,6 +55,8 @@ export class StatsPage {
 
     this.checkPlatform();
     this.obtenerClientesPendientes(); 
+    this.obtenerClientesActivos(); 
+
   }
 
   obtenerClientesPendientes() {
@@ -77,6 +80,36 @@ export class StatsPage {
       }
     );
   }
+
+  obtenerClientesActivos() {
+    this.userService.GetUsers().subscribe(
+      (response: ResponseObjectModel<UserDTO[]>) => {
+        if (response && response.model) {
+          // 🔹 Filtrar solo los clientes activos (isVerified === true y role === 0)
+          this.clientesActivos = response.model
+            .filter(user => user.isVerified && user.role === 0)
+            .map(user => ({
+              ...user,
+              formattedLocations: user.locations.length
+                ? user.locations.map(loc => loc.dir).join(' | ') // Formatear direcciones en una cadena
+                : 'Sin direcciones'
+            }));
+  
+          console.log('Clientes activos:', this.clientesActivos);
+        } else {
+          this.alertTool.presentToast('No se encontraron clientes activos.');
+        }
+        this.cdr.detectChanges();
+      },
+      (error: any) => {
+        console.error('Error al cargar clientes activos:', error);
+        this.alertTool.presentToast('Oops... Error al cargar los clientes activos!');
+        this.cdr.detectChanges();
+      }
+    );
+  }
+  
+  
   
   aprobarCliente(clienteId: number) {
     this.userService.ApproveUser(clienteId).subscribe({
@@ -89,6 +122,7 @@ export class StatsPage {
       }
     });
   }
+
   rechazarCliente(clienteId: number) {
     this.userService.RejectUser(clienteId).subscribe({
       next: () => {

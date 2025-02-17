@@ -173,8 +173,6 @@ removeLocation() {
   }
 }
 
-
-
 makeDefault() {
   this.makeLoadingAnimation();
   if (this.selectedLocationId !== null) {

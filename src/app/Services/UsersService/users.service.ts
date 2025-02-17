@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { UserDTO } from 'src/app/Models/UserDTO';
 import { HttpHeaders } from '@angular/common/http';
 import { ResponseObject } from 'src/app/Models/Response/ResponseObj';
+import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 
 @Injectable({
   providedIn: 'root',
@@ -123,6 +124,12 @@ export class UsersService extends MainService {
     const url = this.baseRoute + 'Users/rejectUser';
   
     return this.http.post(url, clienteId, { headers });
+  }
+
+  GetUsers(): Observable<ResponseObjectModel<UserDTO[]>> {
+    const token = localStorage.getItem('Token');
+    const headers = this.createHeader(token);
+    return this.http.get<ResponseObjectModel<UserDTO[]>>(`${this.baseRoute}Users`, { headers });
   }
   
   getUserProfile(): Observable<UserDTO> {
