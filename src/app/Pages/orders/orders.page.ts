@@ -36,6 +36,7 @@ export class OrdersPage {
   logged = false;
   paymentInfoModalIsActive = false;
   toPayTotal = 0;
+  showHiddenOrders: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -155,22 +156,24 @@ export class OrdersPage {
 
   formatOrders() {
     this.toDisplayOrders = [];
-  
+
+    // Obtener órdenes ocultas del cliente desde localStorage
+    const hiddenOrders: number[] = JSON.parse(localStorage.getItem("hiddenOrders_client") || "[]");
+
     this.orders.forEach(order => {
-      const consolidatedOrder = new ClientOrder(order);
+      let consolidatedOrder = new ClientOrder(order);
       consolidatedOrder.totalPlates = 0;
       consolidatedOrder.daysOfWeek = [];
       consolidatedOrder.menuCounts = { estandar: 0, light: 0, proteico: 0 };
-      consolidatedOrder.groupedDeliveries = {}; // ✅ Inicializamos groupedDeliveries
-  
+      consolidatedOrder.groupedDeliveries = {};
+
       order.deliveries.forEach(delivery => {
         const deliveryDate = new Date(delivery.deliveryDate).toLocaleDateString("es-ES");
-  
-        // ✅ Agrupar entregas por fecha
+
         if (!consolidatedOrder.groupedDeliveries[deliveryDate]) {
           consolidatedOrder.groupedDeliveries[deliveryDate] = [];
         }
-  
+
         let type = "Desconocido";
         if (delivery.menuId === 1) {
           type = "Estandar";
@@ -182,17 +185,54 @@ export class OrdersPage {
           type = "Proteico";
           consolidatedOrder.menuCounts.proteico += delivery.quantity;
         }
-  
+
         consolidatedOrder.groupedDeliveries[deliveryDate].push({ type, quantity: delivery.quantity });
         consolidatedOrder.totalPlates += delivery.quantity;
       });
-  
+
       consolidatedOrder.price = order.price;
-      this.toDisplayOrders.push(consolidatedOrder);
+
+      // Filtrar órdenes ocultas, pero permitir mostrarlas si `showHiddenOrders` es true
+      if (this.showHiddenOrders || !hiddenOrders.includes(order.id)) {
+        this.toDisplayOrders.push(consolidatedOrder);
+      }
     });
-  
-    console.log('Órdenes a mostrar:', this.toDisplayOrders);
+
+    console.log('📌 Órdenes visibles (cliente):', this.toDisplayOrders);
+}
+
+hideOrder(orderId: number) {
+    const alert = document.createElement('ion-alert');
+    alert.header = 'Confirmar ocultación';
+    alert.message = '¿Estás seguro de que deseas ocultar esta orden?';
+    alert.buttons = [
+      {
+        text: 'Cancelar',
+        role: 'cancel'
+      },
+      {
+        text: 'Ocultar',
+        handler: () => {
+          let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders_client") || "[]");
+          if (!hiddenOrders.includes(orderId)) {
+            hiddenOrders.push(orderId);
+            localStorage.setItem("hiddenOrders_client", JSON.stringify(hiddenOrders));
+          }
+          this.formatOrders(); // Refrescar la lista después de ocultar
+        }
+      }
+    ];
+
+    document.body.appendChild(alert);
+    return alert.present();
+}
+
+
+  toggleHiddenOrders() {
+    this.showHiddenOrders = !this.showHiddenOrders;
+    this.formatOrders();
   }
+  
   
   // Función auxiliar para obtener el tipo de menú según el ID
   getMenuType(menuId: number): string {
@@ -249,32 +289,7 @@ export class OrdersPage {
         this.alertTool.presentToast("Error al cargar la información de pago");
       }
     );
-  }
-  async hideOrder(orderId: number) {
-    const alert = document.createElement('ion-alert');
-    alert.header = 'Confirmar ocultación';
-    alert.message = '¿Estás seguro de que deseas ocultar esta orden?';
-    alert.buttons = [
-      {
-        text: 'Cancelar',
-        role: 'cancel'
-      },
-      {
-        text: 'Ocultar',
-        handler: () => {
-          let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders") || "[]");
-          hiddenOrders.push(orderId);
-          localStorage.setItem("hiddenOrders", JSON.stringify(hiddenOrders));
-          this.getOrders(); // Refrescar la lista después de ocultar
-        }
-      }
-    ];
-  
-    document.body.appendChild(alert);
-    return alert.present();
-  }
-  
-  
+  } 
 
   loadOrders(): void {
     this.ordersService.GetOwn().subscribe(

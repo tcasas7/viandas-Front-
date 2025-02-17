@@ -8,38 +8,50 @@
     <div class="user-div">
       <ion-icon (click)="navigateToAdmin()" class="user-label-left" name="arrow-back-outline"></ion-icon>
     </div>
+    <ion-buttons slot="end">
+      <ion-button expand="full" color="black" (click)="hidePastOrders()">
+        {{ pastOrdersHidden ? 'Mostrar Órdenes Viejas' : 'Limpiar Órdenes Viejas' }}
+      </ion-button>      
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="custom-content">
-  <ion-card color="light" *ngFor="let order of toDisplayOrders" style="width: 77vw; max-width: 900px; margin: auto; margin-top: 2vh;">
-    <ion-card-header style="color: black; font-weight: bold; font-size: large;">
-      <div>
-        <b>Nro. orden: {{order.id}}</b>
-        <ion-icon class="collapse-icon" *ngIf="order.isCollapsed" name="chevron-down-outline" (click)="uncollapseOrder(order)"></ion-icon>
-        <ion-icon class="collapse-icon" *ngIf="!order.isCollapsed" name="chevron-up-outline" (click)="collapseOrder(order)"></ion-icon>
-      </div>
+  
+  <!-- Botón flotante para abrir el filtro -->
+<div class="filter-toggle" (click)="toggleFilter()">
+  📅 Filtrar
+</div>
+
+<!-- Contenedor del Filtro (oculto por defecto) -->
+<div class="filter-container" *ngIf="showFilter">
+  <ion-item class="filter-item">
+    <ion-label position="stacked">Filtrar por Fecha</ion-label>
+    <ion-datetime 
+      displayFormat="YYYY-MM-DD" 
+      [(ngModel)]="filterDate" 
+      (ionChange)="filterOrders()">
+    </ion-datetime>
+  </ion-item>
+
+  <ion-button expand="block" (click)="resetFilter()" class="reset-button">
+    Restablecer
+  </ion-button>
+</div>
+
+
+  <!-- LISTA DE ÓRDENES FILTRADAS -->
+  <ion-card color="light" *ngFor="let order of filteredOrders" class="order-card">
+    <ion-card-header>
+      <b>Nro. orden: {{order.id}}</b>
     </ion-card-header>
 
-    <ion-card-content *ngIf="!order.isCollapsed">
-      <!-- Descripción -->
-      <div><b style="color: black;">Descripción: </b>{{ order.description || 'Sin descripción' }}</div>
+    <ion-card-content>
+      <div><b>Descripción: </b>{{ order.description || 'Sin descripción' }}</div>
+      <div><b>Método de pago: </b> {{ order.paymentMethod === 0 ? 'Efectivo' : 'Transferencia' }}</div>
+      <div><b>Cantidad de Platos: </b>{{ order.totalPlates }}</div>
+      <div><b>Dirección: </b>{{ order.location }}</div>
 
-      <!-- Método de Pago -->
-      <div>
-        <b style="color: black;">Método de pago: </b> 
-        <span *ngIf="order.paymentMethod === 0">Efectivo</span>
-        <span *ngIf="order.paymentMethod === 1">Transferencia</span>
-      </div>
-
-      <!-- Cantidad de Platos -->
-      <div><b style="color: black;">Cantidad de Platos: </b>{{order.totalPlates}}</div>
-
-      <!-- 🔹 Dirección de Entrega -->
-      <div><b style="color: black;">Dirección: </b>{{ order.location }}</div>
-
-      <!-- Días de Entrega con detalles -->
-      <div><b style="color: black;">Días de Entrega:</b></div>
       <div *ngFor="let date of getObjectKeys(order.groupedDeliveries)">
         <b>{{ date }}</b>  
         <div *ngFor="let delivery of order.groupedDeliveries[date]">
@@ -47,29 +59,20 @@
         </div>
       </div>
 
-      <!-- Total -->
-      <div style="font-size: x-large; color: black; font-weight: bold;">
+      <div style="font-size: x-large; font-weight: bold;">
         <div style="float: inline-start">Total: </div> 
         <div style="float: inline-end;">${{order.price}}</div>
       </div>
 
-      <div style="margin: 50px 0;"></div>
-
-      <!-- Botones de acción -->
-      <div>
+      <!--div>
         <ion-button color="danger" (click)="hideOrder(order.id)">
           Ocultar Orden
         </ion-button>
-        
-
-        <!-- Botón "Confirmar Orden" -->
-        <ion-button 
-          color="success" 
-          style="float: inline-end; margin-bottom: 1vh;" 
-          (click)="confirmOrder(order.id)">
+        <ion-button color="success" (click)="confirmOrder(order.id)">
           Confirmar Orden
         </ion-button>
-      </div>
+      </div-->
     </ion-card-content>
   </ion-card>
+
 </ion-content>

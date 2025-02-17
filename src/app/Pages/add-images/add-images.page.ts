@@ -4,6 +4,7 @@ import { ProductDTO } from 'src/app/Models/ProductDTO';
 import { MenuDTO } from 'src/app/Models/MenuDTO';
 import { HttpHeaders } from '@angular/common/http';
 import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-images',
@@ -13,12 +14,10 @@ import { AlertController } from '@ionic/angular';
 export class AddImagesPage implements OnInit {
   menus: MenuDTO[] = [];
   selectedFiles: File[] = [];
-  router: any;
   http: any;
   
   
-  constructor(private menusService: MenusService,private alertController: AlertController 
-  ) { }
+  constructor(private menusService: MenusService,private alertController: AlertController, private router: Router) { }
 
   ngOnInit() {
     this.loadMenus();
@@ -37,8 +36,12 @@ export class AddImagesPage implements OnInit {
     }
   }
 
+  navigateToAddMenu() {
+    this.router.navigate(['/add-menu']); // Ajusta la ruta según sea necesario
+  }
+
   navigateToAdmin() {
-    this.router.navigate(['/admin']); // Ajusta la ruta según sea necesario
+    this.router.navigate(['/admin-page']); // Ajusta la ruta según sea necesario
   }
   
   uploadProductImage(productId: number, formData: FormData) {

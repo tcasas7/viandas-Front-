@@ -8,8 +8,14 @@
     <div class="user-div">
       <ion-icon (click)="navigateToProfile()" class="user-label-left" name="arrow-back-outline"></ion-icon>
     </div>
+    <ion-buttons slot="end">
+      <ion-button color="warning" (click)="toggleHiddenOrders()">
+        {{ showHiddenOrders ? "Ocultar órdenes ocultas" : "Mostrar órdenes ocultas" }}
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content class="custom-content">
   <app-payment-info 
