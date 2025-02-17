@@ -8,4 +8,5 @@ export class UserDTO {
     firstName!: string
     lastName!: string
     locations: Array<LocationDTO> = new Array<LocationDTO>();
+    isVerified!: boolean;
 }

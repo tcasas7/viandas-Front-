@@ -7,7 +7,7 @@
     <p>Cargando clientes...</p>
   </div>
 
-  <!-- Tabla de clientes -->
+  <!-- Tabla de clientes pendientes -->
   <div *ngIf="didLoad && clientes && clientes.length > 0" class="table-container">
     <table>
       <thead>
@@ -32,10 +32,44 @@
     </table>
   </div>
 
-  <!-- Mensaje si no hay clientes -->
+  <!-- Mensaje si no hay clientes pendientes -->
   <div *ngIf="didLoad && (!clientes || clientes.length === 0)" class="no-clientes">
     <ion-icon name="alert-circle-outline"></ion-icon>
     <p>No hay clientes pendientes de aprobación.</p>
+  </div>
+
+  <hr> <!-- Separador visual -->
+
+  <!-- Sección de Clientes Activos -->
+  <h2 class="page-title">Clientes Activos</h2>
+
+  <!-- Tabla de clientes activos -->
+  <div *ngIf="didLoad && clientesActivos && clientesActivos.length > 0" class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Direcciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientesActivos">
+          <td>{{ cliente.firstName }} {{ cliente.lastName }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.phone }}</td>
+          <td>{{ cliente.formattedLocations }}</td>
+        
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje si no hay clientes activos -->
+  <div *ngIf="didLoad && (!clientesActivos || clientesActivos.length === 0)" class="no-clientes">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>No hay clientes activos.</p>
   </div>
 
   <!-- Botón de volver -->
