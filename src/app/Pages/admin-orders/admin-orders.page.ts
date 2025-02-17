@@ -1,6 +1,6 @@
 import { DateSelector } from './../../Models/DateSelector';
 import { formatDate } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { ClientOrder } from 'src/app/Models/ClientOrder';
@@ -17,22 +17,24 @@ import { AlertTool } from 'src/app/Tools/AlertTool';
   templateUrl: './admin-orders.page.html',
   styleUrls: ['./admin-orders.page.scss'],
 })
-export class AdminOrdersPage {
+export class AdminOrdersPage implements OnInit{
 
   dataResponse: ResponseObjectModel<UserDTO> = new ResponseObjectModel();
   ordersResponse: ResponseObjectModel<Array<OrderDTO>> = new ResponseObjectModel();
   datesResponse: ResponseObjectList<Array<Date>> = new ResponseObjectList();
-
   toDisplayOrders: Array<ClientOrder> = new Array<ClientOrder>();
   formatedStringDates: Array<string> = new Array<string>();
   dates: Array<DateSelector> = new Array<DateSelector>();
-
   user!: UserDTO;
   orders!: Array<OrderDTO>;
-
   isAdmin: boolean = false;
   logged: boolean = false;
   activeModal: number = 0;
+  showHiddenOrders: boolean = false;
+  filteredOrders: Array<ClientOrder> = new Array<ClientOrder>();
+  filterDate: string = '';
+  showFilter: boolean = false;
+  pastOrdersHidden: boolean = false;
 
   constructor(
     private router: Router,
@@ -42,6 +44,40 @@ export class AdminOrdersPage {
     private loadingCtrl: LoadingController
     
   ) {}
+
+  ngOnInit() {
+    this.filteredOrders = [...this.toDisplayOrders]; // Inicializar con todas las órdenes
+  }
+  
+
+  filterOrders() {
+    if (!this.filterDate) {
+      this.filteredOrders = this.orders.map(order => new ClientOrder(order));
+      return;
+    }
+  
+    const selectedDate = new Date(this.filterDate).toISOString().split('T')[0];
+  
+    this.filteredOrders = this.orders
+      .filter(order =>
+        order.deliveries.some(delivery =>
+          new Date(delivery.deliveryDate).toISOString().split('T')[0] === selectedDate
+        )
+      )
+      .map(order => {
+        const clientOrder = new ClientOrder(order);
+        clientOrder.totalPlates = clientOrder.deliveries.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0); // 🔹 Recalcular cantidad de platos
+        return clientOrder;
+      });
+  
+    console.log("📌 Órdenes filtradas:", this.filteredOrders);
+  }
+  
+  resetFilter() {
+    this.filterDate = '';
+    this.filteredOrders = [...this.toDisplayOrders];
+  }
+
 
   navigateToAdmin() {
     this.router.navigate(["admin"]);
@@ -106,7 +142,7 @@ export class AdminOrdersPage {
         }
       );
     }
-  }
+  } 
   
   async getDates() {
     this.ordersService.getDates().subscribe(
@@ -167,22 +203,55 @@ export class AdminOrdersPage {
   }
   
   formatOrders() {
-    let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders") || "[]");
-  
+    let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders_admin") || "[]");
+
     this.toDisplayOrders = this.orders
       .map(order => {
         const clientOrder = new ClientOrder(order);
-  
+
         // ✅ Calcular total de platos correctamente
         clientOrder.totalPlates = order.deliveries?.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0) || 0;
-  
+
         return clientOrder;
       })
-      .filter(order => !hiddenOrders.includes(order.id)); // ❌ Ocultar las órdenes guardadas
-  
-    console.log("📌 Órdenes visibles:", this.toDisplayOrders);
+      .filter(order => this.showHiddenOrders || !hiddenOrders.includes(order.id));
+
+    console.log("📌 Órdenes visibles (Admin):", this.toDisplayOrders);
+}
+
+async hideOrder(orderId: number) {
+    const alert = document.createElement('ion-alert');
+    alert.header = 'Confirmar ocultación';
+    alert.message = '¿Estás seguro de que deseas ocultar esta orden en Admin?';
+    alert.buttons = [
+      {
+        text: 'Cancelar',
+        role: 'cancel'
+      },
+      {
+        text: 'Ocultar',
+        handler: () => {
+          let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders_admin") || "[]");
+          
+          if (!hiddenOrders.includes(orderId)) {
+            hiddenOrders.push(orderId);
+            localStorage.setItem("hiddenOrders_admin", JSON.stringify(hiddenOrders));
+          }
+
+          this.getOrders(); // 🔄 Recargar lista
+        }
+      }
+    ];
+
+    document.body.appendChild(alert);
+    return alert.present();
+}
+
+  toggleHiddenOrders() {
+    this.showHiddenOrders = !this.showHiddenOrders;
+    this.formatOrders();
   }
-  
+
   collapseOrder(order: ClientOrder) {
     order.isCollapsed = true;
   }
@@ -228,33 +297,62 @@ export class AdminOrdersPage {
     );
   }
   
-  async hideOrder(orderId: number) {
+  toggleFilter() {
+    this.showFilter = !this.showFilter; 
+  }
+  confirmOrder(orderId: number): void {
+    this.alertTool.presentToast("Funcionalidad en desarrollo");
+  }
+
+  async hidePastOrders() {
     const alert = document.createElement('ion-alert');
-    alert.header = 'Confirmar ocultación';
-    alert.message = '¿Estás seguro de que deseas ocultar esta orden?';
+    alert.header = this.pastOrdersHidden ? 'Mostrar órdenes viejas' : 'Confirmar limpieza';
+    alert.message = this.pastOrdersHidden 
+      ? '¿Quieres volver a mostrar las órdenes viejas?' 
+      : '¿Seguro que quieres limpiar las órdenes viejas? Podrás mostrarlas nuevamente si lo deseas.';
+    
     alert.buttons = [
       {
         text: 'Cancelar',
         role: 'cancel'
       },
       {
-        text: 'Ocultar',
+        text: this.pastOrdersHidden ? 'Mostrar' : 'Limpiar',
         handler: () => {
-          let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders") || "[]");
-          hiddenOrders.push(orderId);
-          localStorage.setItem("hiddenOrders", JSON.stringify(hiddenOrders));
-          this.getOrders(); // 🔄 Recargar lista
+          if (this.pastOrdersHidden) {
+            // 🔹 Mostrar todas las órdenes otra vez
+            this.filteredOrders = this.orders.map(order => {
+              const clientOrder = new ClientOrder(order);
+              clientOrder.totalPlates = clientOrder.deliveries.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0);
+              return clientOrder;
+            });
+            this.pastOrdersHidden = false;
+          } else {
+            // 🔹 Ocultar órdenes viejas
+            const today = new Date().toISOString().split('T')[0];
+
+            this.filteredOrders = this.orders
+              .filter(order =>
+                order.deliveries.some(delivery =>
+                  new Date(delivery.deliveryDate).toISOString().split('T')[0] >= today
+                )
+              )
+              .map(order => {
+                const clientOrder = new ClientOrder(order);
+                clientOrder.totalPlates = clientOrder.deliveries.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0);
+                return clientOrder;
+              });
+
+            this.pastOrdersHidden = true;
+          }
         }
       }
     ];
-  
+
     document.body.appendChild(alert);
     return alert.present();
-  }
-  
-  confirmOrder(orderId: number): void {
-    this.alertTool.presentToast("Funcionalidad en desarrollo");
-  }
+}
+
   
   openCalendarModal() {
     this.activeModal = 1;
