@@ -31,8 +31,16 @@ export class AddImagesPage implements OnInit {
 
   onFileSelected(event: any, product: ProductDTO) {
     const file: File = event.target.files[0];
+
     if (file) {
-      product.imageFile = file;
+      
+      if (!file.type.match('image/jpeg')) {
+        this.showAlert('Formato inválido', 'Solo se pueden subir imágenes en formato JPG.');
+        event.target.value = ''; 
+        return;
+      }
+
+      product.imageFile = file; // Asignamos el archivo si es válido
     }
   }
 

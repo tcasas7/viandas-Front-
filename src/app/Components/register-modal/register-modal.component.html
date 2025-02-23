@@ -1,95 +1,140 @@
 <ion-card color="light" style="width: 77vw; max-width: 600px; margin: 0 auto; position: relative;">
-  <ion-item lines="none" color="translucent" class="tittle-item">Registrarse <ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon>
+  <ion-item lines="none" color="translucent" class="tittle-item">
+    Registrarse 
+    <ion-icon name="close" (click)="closeModal()" 
+      style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;">
+    </ion-icon>
   </ion-item>
+
   <form [formGroup]="registerForm">
-    <ion-item color="translucent">
+    <!-- Nombre -->
+    <ion-item color="translucent" style="display: flex; flex-direction: column; align-items: flex-start;">
+      <ion-label position="floating" style="margin-bottom: 8px;">
+        Nombre <span style="color: red;">*</span>
+      </ion-label>
       <ion-input 
-      style="margin: 0 auto; border-radius: 20px;"
-      label="Nombre"
-      labelPlacement="floating" 
-      placeholder="Juan"
-      formControlName="firstName"
-      type="text"
-      fill="clear"></ion-input>
+        style="border-radius: 20px; width: 100%;"
+        placeholder="Juan"
+        formControlName="firstName"
+        type="text"
+        fill="clear">
+      </ion-input>
     </ion-item>
-    <ion-item color="translucent">
+
+    <!-- Apellido -->
+    <ion-item color="translucent" style="display: flex; flex-direction: column; align-items: flex-start;">
+      <ion-label position="floating" style="margin-bottom: 8px;">
+        Apellido <span style="color: red;">*</span>
+      </ion-label>
       <ion-input 
-      style="margin: 0 auto; border-radius: 20px;"
-      label="Apellido"
-      labelPlacement="floating" 
-      placeholder="Perez"
-      formControlName="lastName"
-      type="text"
-      fill="clear"></ion-input>
+        style="border-radius: 20px; width: 100%;"
+        placeholder="Perez"
+        formControlName="lastName"
+        type="text"
+        fill="clear">
+      </ion-input>
     </ion-item>
-    <ion-item color="translucent">
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px; width: 20%;"
-      label="Prefijo"
-      labelPlacement="stacked" 
-      placeholder="54"
-      formControlName="preFix"
-      type="tel"
-      fill="clear"
-      maxlength="2"
-      ></ion-input>
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px; width: 30%;"
-      label="Codigo de área"
-      labelPlacement="stacked" 
-      placeholder="223"
-      formControlName="areaCode"
-      type="tel"
-      fill="clear"
-      maxlength="3"></ion-input>
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px;"
-      label="Número"
-      labelPlacement="stacked" 
-      placeholder="1234567"
-      formControlName="phone"
-      type="tel"
-      fill="clear"
-      maxlength="7"></ion-input>
+
+    <!-- Teléfono -->
+    <ion-item color="translucent" style="display: flex; flex-direction: column; align-items: flex-start;">
+      <ion-label position="floating" style="margin-bottom: 8px;">
+        Teléfono <span style="color: red;">*</span>
+      </ion-label>
+      <div style="display: flex; width: 100%; justify-content: space-between;">
+        <ion-input 
+          style="border-radius: 10px; width: 20%;"
+          placeholder="54"
+          formControlName="preFix"
+          type="tel"
+          fill="clear"
+          maxlength="2">
+        </ion-input>
+        <ion-input 
+          style="border-radius: 10px; width: 30%;"
+          placeholder="223"
+          formControlName="areaCode"
+          type="tel"
+          fill="clear"
+          maxlength="3">
+        </ion-input>
+        <ion-input 
+          style="border-radius: 10px; width: 45%;"
+          placeholder="1234567"
+          formControlName="phone"
+          type="tel"
+          fill="clear"
+          maxlength="7">
+        </ion-input>
+      </div>
     </ion-item>
-    <ion-item color="translucent">
+
+    <!-- Email -->
+    <ion-item color="translucent" style="display: flex; flex-direction: column; align-items: flex-start;">
+      <ion-label position="floating" style="margin-bottom: 8px;">
+        Email <span style="color: red;">*</span>
+      </ion-label>
       <ion-input 
-      style="margin: 0 auto; border-radius: 20px;"
-      label="Email"
-      labelPlacement="floating" 
-      placeholder="ejemplo@dominio.com"
-      formControlName="email"
-      type="email"
-      fill="clear"></ion-input>
+        style="border-radius: 20px; width: 100%;"
+        placeholder="ejemplo@dominio.com"
+        formControlName="email"
+        type="email"
+        fill="clear">
+      </ion-input>
     </ion-item>
-    <ion-item color="translucent">
-      <ion-input
-      style="margin: 0 auto;"
-      label="Contraseña"
-      labelPlacement="floating"
-      placeholder="Contraseña"
-      formControlName="password"
-      type="{{ showPassword ? 'text' : 'password' }}"
-      fill="clear"></ion-input>
+
+    <!-- Contraseña -->
+    <ion-item color="translucent" style="display: flex; flex-direction: column; align-items: flex-start;">
+      <ion-label position="floating" style="margin-bottom: 8px;">
+        Contraseña <span style="color: red;">*</span>
+      </ion-label>
+      <div style="display: flex; width: 100%; align-items: center;">
+        <ion-input
+          style="border-radius: 20px; width: 100%;"
+          placeholder="Contraseña"
+          formControlName="password"
+          type="{{ showPassword ? 'text' : 'password' }}"
+          fill="clear">
+        </ion-input>
+        <ion-icon name="{{ showPassword ? 'eye-off' : 'eye' }}" 
+          slot="end" 
+          (click)="togglePasswordVisibility()" 
+          style="margin-left: 10px; cursor: pointer;">
+        </ion-icon>
+      </div>
     </ion-item>
-    <ion-item color="translucent">
-      <ion-input
-      style="margin: 0 auto;"
-      label="Repetir contraseña"
-      labelPlacement="floating"
-      placeholder="Repetir contraseña"
-      formControlName="repeatPassword"
-      type="{{ showPassword ? 'text' : 'password' }}"
-      fill="clear"></ion-input>
+
+    <!-- Repetir Contraseña -->
+    <ion-item color="translucent" style="display: flex; flex-direction: column; align-items: flex-start;">
+      <ion-label position="floating" style="margin-bottom: 8px;">
+        Repetir Contraseña <span style="color: red;">*</span>
+      </ion-label>
+      <div style="display: flex; width: 100%; align-items: center;">
+        <ion-input
+          style="border-radius: 20px; width: 100%;"
+          placeholder="Repetir contraseña"
+          formControlName="repeatPassword"
+          type="{{ showPassword ? 'text' : 'password' }}"
+          fill="clear">
+        </ion-input>
+        <ion-icon name="{{ showPassword ? 'eye-off' : 'eye' }}" 
+          slot="end" 
+          (click)="togglePasswordVisibility()" 
+          style="margin-left: 10px; cursor: pointer;">
+        </ion-icon>
+      </div>
     </ion-item>
   </form>
+
+  <!-- Botón de registro -->
   <div class="button-container">
     <ion-button class="login-button" (click)="registerUser()">Registrarse</ion-button>
   </div>
-  <div class="register-button" (click)="closeModal()">
-    Ya tienes cuenta?
-  </div>
+
+  <!-- Enlaces adicionales -->
   <div class="retrieve-password-button" (click)="openChangePasswordModal()">
     Olvidé mi contraseña
+  </div>
+  <div class="register-button" (click)="closeModal()">
+    <span style="color: blue; cursor: pointer;">Ya tienes cuenta?</span>
   </div>
 </ion-card>

@@ -5,7 +5,7 @@
   </ion-item>
 
   <!-- Campo de detalles del pedido -->
-  <ion-card color="light" style="height: 33vh; margin-left: 5%; margin-right: 5%; padding-left: 1%; padding-bottom: 1%; padding-right: 1%; margin-bottom: 1vh;">
+  <ion-card color="light" style="height: 33vh; margin: 5% 5% 1% 5%; padding: 1%;">
     <ion-textarea 
       [(ngModel)]="description" 
       class="auto-resize-textarea" 
@@ -13,25 +13,47 @@
       label="Detalles" 
       labelPlacement="floating" 
       fill="outline" 
-      placeholder="Especificar para qué día es cada plato y detalles del pedido.
+      placeholder="Ejemplo: sin sal.
 
-Ejemplo: 
-x1 Estandar sin sal para el lunes, x2 Light para el martes, x3 Proteico sin mayonesa para el miercoles.">
+Si es un pedido grande, especificar plato y detalle:
+
+Ejemplo: (pedido de 4 platos)
+
+x1 Estandar del lunes, sin sal.
+
+x1 Light del miercoles, sin mayonesa. 
+x1 Light del jueves sin sal. 
+      
+x1 Proteico del viernes, sin cebolla. ">
     </ion-textarea>
     <p style="font-size: small; color: gray; margin-top: 5px;">Ej: Sin sal.</p>
   </ion-card>
 
   <!-- Selector de dirección de envío -->
   <div style="margin-left: 5%; margin-right: 5%; margin-bottom: 1%;">
-    <ion-select interface="popover" placeholder="Dirección de envío" [(ngModel)]="selectedLocation" (ionChange)="handleSelectionDir($event)" style="float:inline-start">
+    <ion-label> <span style="color: red;">*</span></ion-label>
+    <ion-select 
+      interface="popover" 
+      placeholder="Seleccione una dirección" 
+      [(ngModel)]="selectedLocation" 
+      (ionChange)="handleSelectionDir($event)" 
+      required
+      [ngClass]="{ 'input-error': formSubmitted && !selectedLocation }"
+    >
       <ion-select-option *ngFor="let item of locations" [value]="item.dir">&nbsp;{{item.dir}}</ion-select-option>
       <ion-select-option *ngIf="locations.length === 0" [value]="'empty'">No hay direcciones</ion-select-option>  
     </ion-select>
   </div>
 
   <!-- Opciones de método de pago -->
-  <div style="margin-left: 7%; margin-right: 7%;">
-    <ion-segment [(ngModel)]="paymentMethod" (ionChange)="handleSelectionPay($event)">
+  <div style="margin-left: 5%; margin-right: 5%; margin-top: 10px;">
+    <ion-label> <span style="color: red;">*</span></ion-label>
+    <ion-segment 
+      [(ngModel)]="paymentMethod" 
+      (ionChange)="handleSelectionPay($event)" 
+      required
+      [ngClass]="{ 'input-error': formSubmitted && paymentMethod === undefined }"
+    >
       <ion-segment-button [value]="0">
         <ion-label style="color: #595755;">Efectivo</ion-label>
       </ion-segment-button>
@@ -43,6 +65,6 @@ x1 Estandar sin sal para el lunes, x2 Light para el martes, x3 Proteico sin mayo
 
   <!-- Botón para enviar la orden -->
   <div class="button-container">
-    <ion-button class="login-button" (click)="makeOrder()">Enviar orden</ion-button>
+    <ion-button class="login-button" (click)="validateAndSubmit()">Enviar orden</ion-button>
   </div>
 </ion-card>

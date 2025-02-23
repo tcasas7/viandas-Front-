@@ -25,12 +25,27 @@ export class AddDetailsModalComponent implements OnInit {
   response: ResponseObject = new ResponseObject();
 
   constructor(private loadingCtrl: LoadingController, private alertTool: AlertTool, private ordersService: OrdersService) {}
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
   closeModal() {
     this.closeModalEvent.emit();
   }
 
+  formSubmitted = false;
 
+  validateAndSubmit() {
+    this.formSubmitted = true;
+    
+    if (!this.selectedLocation || this.paymentMethod === undefined) {
+      return; // No envía el formulario si hay campos vacíos
+    }
+    
+    this.makeOrder(); // Si todo está completo, envía la orden
+  }
+  
+  
   makeOrder() {
     if (this.paymentMethod === -1 || this.selectedLocation === 'empty') {
         this.alertTool.presentToast("Campos vacíos, por favor llene todos los campos.");
@@ -63,16 +78,8 @@ export class AddDetailsModalComponent implements OnInit {
     }
 }
 
-    ngOnInit() {
-      if (this.locations.length === 0) {
-        this.locations = [{
-          dir: 'Dirección de prueba', isDefault: true,
-          id: 0
-        }];
-      }
-    }
-        
-
+    
+      
   placeOrder() {
       this.makeLoadingAnimation();
       this.doRequest();

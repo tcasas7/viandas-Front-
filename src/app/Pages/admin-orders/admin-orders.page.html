@@ -16,7 +16,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="custom-content">
+<ion-content class="custom-content" style="overflow-y: auto; height: 100vh; padding-bottom: 250px;">
+
+
+
   
   <!-- Botón flotante para abrir el filtro -->
 <div class="filter-toggle" (click)="toggleFilter()">
@@ -59,7 +62,7 @@
         </div>
       </div>
 
-      <div style="font-size: x-large; font-weight: bold;">
+      <div style="font-size: x-large; font-weight: bold; padding-bottom: 80px;">
         <div style="float: inline-start">Total: </div> 
         <div style="float: inline-end;">${{order.price}}</div>
       </div>
