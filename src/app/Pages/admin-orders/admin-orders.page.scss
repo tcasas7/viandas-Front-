@@ -126,7 +126,7 @@
   }
   
   ion-content {
-      --padding-bottom: 16px;
+      --padding-bottom: 80px;;
       --padding-top: 16px;
     }
     
@@ -701,7 +701,7 @@
   /* 🔹 Botón flotante para abrir el filtro */
 .filter-toggle {
   position: fixed;
-  bottom: 15px;
+  bottom: 25px;
   right: 15px;
   background: #4caf50; /* Verde */
   color: white;
@@ -758,4 +758,7 @@ ion-datetime {
   --padding: 5px;
   font-size: 14px;
   max-width: 200px; /* 🔹 Aumentamos el ancho */
+}
+.order-card {
+  margin-bottom: 20px; 
 }

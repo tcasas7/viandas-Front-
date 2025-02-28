@@ -31,10 +31,20 @@ export class AddImagesPage implements OnInit {
 
   onFileSelected(event: any, product: ProductDTO) {
     const file: File = event.target.files[0];
-    if (file) {
-      product.imageFile = file;
+    
+    if (!file) return;
+
+    
+    const validExtensions = ["image/jpeg"];
+    
+    if (!validExtensions.includes(file.type)) {
+        this.showAlert("Error", "Solo se permiten imágenes en formato JPG.");
+        return;
     }
-  }
+
+    product.imageFile = file;
+}
+
 
   navigateToAddMenu() {
     this.router.navigate(['/add-menu']); // Ajusta la ruta según sea necesario

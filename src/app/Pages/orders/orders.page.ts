@@ -31,12 +31,15 @@ export class OrdersPage {
   orders: Array<OrderDTO> = [];
   contact: ContactDTO = new ContactDTO();
   toDisplayOrders: Array<ClientOrder> = [];
-
   isAdmin = false;
   logged = false;
   paymentInfoModalIsActive = false;
   toPayTotal = 0;
   showHiddenOrders: boolean = false;
+  filteredOrders: Array<ClientOrder> = [];
+  filterDate: string = '';
+  pastOrdersHidden: boolean = false;
+  showFilter: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -88,16 +91,14 @@ export class OrdersPage {
       response => {
         this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
         this.orders = this.ordersResponse.model;
-  
-        // 🔹 Recuperar órdenes ocultas del localStorage
-        let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders") || "[]");
-  
-        // 🔹 Filtrar las órdenes que NO están ocultas
+
+        let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders_client") || "[]");
+
         this.toDisplayOrders = this.orders
           .filter(order => !hiddenOrders.includes(order.id))
           .map(order => new ClientOrder(order));
-  
-        this.formatOrders(); // Si necesitas formatear algo adicional
+
+        this.formatOrders();
       },
       error => {
         this.router.navigate(['/unauthorized']);
@@ -105,7 +106,6 @@ export class OrdersPage {
       }
     );
   }
-  
 
   async getActiveContact() {
     this.userService.GetActiveContact().subscribe(
@@ -154,10 +154,9 @@ export class OrdersPage {
     }
   }
 
+
   formatOrders() {
     this.toDisplayOrders = [];
-
-    // Obtener órdenes ocultas del cliente desde localStorage
     const hiddenOrders: number[] = JSON.parse(localStorage.getItem("hiddenOrders_client") || "[]");
 
     this.orders.forEach(order => {
@@ -192,47 +191,81 @@ export class OrdersPage {
 
       consolidatedOrder.price = order.price;
 
-      // Filtrar órdenes ocultas, pero permitir mostrarlas si `showHiddenOrders` es true
       if (this.showHiddenOrders || !hiddenOrders.includes(order.id)) {
         this.toDisplayOrders.push(consolidatedOrder);
       }
     });
 
+    this.filteredOrders = [...this.toDisplayOrders]; // Inicializar filtro
     console.log('📌 Órdenes visibles (cliente):', this.toDisplayOrders);
-}
+  }
 
-hideOrder(orderId: number) {
+
+
+  filterOrders() {
+    if (!this.filterDate) {
+      this.filteredOrders = [...this.toDisplayOrders];
+      return;
+    }
+
+    const selectedDate = new Date(this.filterDate).toISOString().split('T')[0];
+
+    this.filteredOrders = this.toDisplayOrders.filter(order =>
+      order.deliveries.some(delivery =>
+        new Date(delivery.deliveryDate).toISOString().split('T')[0] === selectedDate
+      )
+    );
+
+    console.log("📌 Órdenes filtradas:", this.filteredOrders);
+  }
+
+  // 🔹 Restablecer el filtro de fecha
+  resetFilter() {
+    this.filterDate = '';
+    this.filteredOrders = [...this.toDisplayOrders];
+  }
+
+  // 🔹 Ocultar órdenes pasadas
+  async hidePastOrders() {
     const alert = document.createElement('ion-alert');
-    alert.header = 'Confirmar ocultación';
-    alert.message = '¿Estás seguro de que deseas ocultar esta orden?';
+    alert.header = this.pastOrdersHidden ? 'Mostrar órdenes viejas' : 'Confirmar limpieza';
+    alert.message = this.pastOrdersHidden 
+      ? '¿Quieres volver a mostrar las órdenes viejas?' 
+      : '¿Seguro que quieres limpiar las órdenes viejas?';
+
     alert.buttons = [
       {
         text: 'Cancelar',
         role: 'cancel'
       },
       {
-        text: 'Ocultar',
+        text: this.pastOrdersHidden ? 'Mostrar' : 'Limpiar',
         handler: () => {
-          let hiddenOrders = JSON.parse(localStorage.getItem("hiddenOrders_client") || "[]");
-          if (!hiddenOrders.includes(orderId)) {
-            hiddenOrders.push(orderId);
-            localStorage.setItem("hiddenOrders_client", JSON.stringify(hiddenOrders));
+          if (this.pastOrdersHidden) {
+            this.filteredOrders = [...this.toDisplayOrders];
+            this.pastOrdersHidden = false;
+          } else {
+            const today = new Date().toISOString().split('T')[0];
+
+            this.filteredOrders = this.toDisplayOrders.filter(order =>
+              order.deliveries.some(delivery =>
+                new Date(delivery.deliveryDate).toISOString().split('T')[0] >= today
+              )
+            );
+
+            this.pastOrdersHidden = true;
           }
-          this.formatOrders(); // Refrescar la lista después de ocultar
         }
       }
     ];
 
     document.body.appendChild(alert);
     return alert.present();
-}
-
-
-  toggleHiddenOrders() {
-    this.showHiddenOrders = !this.showHiddenOrders;
-    this.formatOrders();
   }
   
+  toggleFilter() {
+    this.showFilter = !this.showFilter;
+  }
   
   // Función auxiliar para obtener el tipo de menú según el ID
   getMenuType(menuId: number): string {
@@ -283,13 +316,16 @@ hideOrder(orderId: number) {
       response => {
         this.contactResponse = response as ResponseObjectModel<ContactDTO>;
         this.contact = this.contactResponse.model;
-        this.paymentInfoModalIsActive = true;
+        
+        console.log("📌 Modal activado con datos:", this.contact); // Debugging
+        
+        this.paymentInfoModalIsActive = true; // Activamos el modal
       },
       error => {
         this.alertTool.presentToast("Error al cargar la información de pago");
       }
     );
-  } 
+}
 
   loadOrders(): void {
     this.ordersService.GetOwn().subscribe(
@@ -320,5 +356,7 @@ hideOrder(orderId: number) {
 
   closePaymentInfoModal() {
     this.paymentInfoModalIsActive = false;
-  }
+    console.log("📌 Modal cerrado"); // Debugging
+}
+
 }
