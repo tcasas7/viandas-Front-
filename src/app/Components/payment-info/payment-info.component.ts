@@ -19,8 +19,10 @@ export class PaymentInfoComponent {
   constructor(private alertTool: AlertTool) { }
 
   closeModal() {
+    console.log("📌 Emitiendo evento para cerrar modal"); 
     this.closeModalEvent.emit();
-  }
+}
+
 
   copyCBUToClipboard() {
     navigator.clipboard.writeText(this.CBU).then(() => {

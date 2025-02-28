@@ -46,33 +46,34 @@ export class AdminOrdersPage implements OnInit{
   ) {}
 
   ngOnInit() {
-    this.filteredOrders = [...this.toDisplayOrders]; // Inicializar con todas las órdenes
-  }
-  
+    this.getOrders(); // Cargar las órdenes al iniciar
+}
 
-  filterOrders() {
-    if (!this.filterDate) {
-      this.filteredOrders = this.orders.map(order => new ClientOrder(order));
+
+filterOrders() {
+  if (!this.filterDate) {
+      this.filteredOrders = [...this.toDisplayOrders]; // 🔹 Mostrar todo si no hay filtro
       return;
-    }
-  
-    const selectedDate = new Date(this.filterDate).toISOString().split('T')[0];
-  
-    this.filteredOrders = this.orders
+  }
+
+  const selectedDate = new Date(this.filterDate).toISOString().split('T')[0];
+
+  this.filteredOrders = this.orders
       .filter(order =>
-        order.deliveries.some(delivery =>
-          new Date(delivery.deliveryDate).toISOString().split('T')[0] === selectedDate
-        )
+          order.deliveries.some(delivery =>
+              new Date(delivery.deliveryDate).toISOString().split('T')[0] === selectedDate
+          )
       )
       .map(order => {
-        const clientOrder = new ClientOrder(order);
-        clientOrder.totalPlates = clientOrder.deliveries.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0); // 🔹 Recalcular cantidad de platos
-        return clientOrder;
+          const clientOrder = new ClientOrder(order);
+          clientOrder.totalPlates = clientOrder.deliveries.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0);
+          return clientOrder;
       });
-  
-    console.log("📌 Órdenes filtradas:", this.filteredOrders);
-  }
-  
+
+  console.log("📌 Órdenes filtradas:", this.filteredOrders);
+}
+
+
   resetFilter() {
     this.filterDate = '';
     this.filteredOrders = [...this.toDisplayOrders];
@@ -122,6 +123,7 @@ export class AdminOrdersPage implements OnInit{
           this.ordersResponse = response as ResponseObjectModel<Array<OrderDTO>>;
           this.orders = this.ordersResponse.model;
           this.formatOrders();
+          this.filteredOrders = [...this.toDisplayOrders];
         },
         (error) => {
           this.router.navigate(["/unauthorized"]);

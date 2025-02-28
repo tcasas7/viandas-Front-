@@ -1,95 +1,57 @@
 <ion-card color="light" style="width: 77vw; max-width: 600px; margin: 0 auto; position: relative;">
-  <ion-item lines="none" color="translucent" class="tittle-item">Registrarse <ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon>
+  <ion-item lines="none" color="translucent" class="tittle-item">
+    Registrarse 
+    <ion-icon name="close" (click)="closeModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;"></ion-icon>
   </ion-item>
   <form [formGroup]="registerForm">
+    
+    <!-- Nombre -->
     <ion-item color="translucent">
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px;"
-      label="Nombre"
-      labelPlacement="floating" 
-      placeholder="Juan"
-      formControlName="firstName"
-      type="text"
-      fill="clear"></ion-input>
+      <ion-input label="Nombre *" formControlName="firstName" type="text" placeholder="Juan"></ion-input>
     </ion-item>
+    <small *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" style="color: red;">❌ Campo obligatorio.</small>
+
+    <!-- Apellido -->
     <ion-item color="translucent">
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px;"
-      label="Apellido"
-      labelPlacement="floating" 
-      placeholder="Perez"
-      formControlName="lastName"
-      type="text"
-      fill="clear"></ion-input>
+      <ion-input label="Apellido *" formControlName="lastName" type="text" placeholder="Perez"></ion-input>
     </ion-item>
+    <small *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" style="color: red;">❌ Campo obligatorio.</small>
+
+    <!-- Teléfono -->
     <ion-item color="translucent">
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px; width: 20%;"
-      label="Prefijo"
-      labelPlacement="stacked" 
-      placeholder="54"
-      formControlName="preFix"
-      type="tel"
-      fill="clear"
-      maxlength="2"
-      ></ion-input>
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px; width: 30%;"
-      label="Codigo de área"
-      labelPlacement="stacked" 
-      placeholder="223"
-      formControlName="areaCode"
-      type="tel"
-      fill="clear"
-      maxlength="3"></ion-input>
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px;"
-      label="Número"
-      labelPlacement="stacked" 
-      placeholder="1234567"
-      formControlName="phone"
-      type="tel"
-      fill="clear"
-      maxlength="7"></ion-input>
+      <ion-input label="Prefijo *" formControlName="preFix" type="tel" placeholder="54"></ion-input>
+      <ion-input label="Código de área *" formControlName="areaCode" type="tel" placeholder="223"></ion-input>
+      <ion-input label="Número *" formControlName="phone" type="tel" placeholder="1234567"></ion-input>
     </ion-item>
+    <small *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" style="color: red;">❌ Número de teléfono inválido.</small>
+
+    <!-- Email -->
     <ion-item color="translucent">
-      <ion-input 
-      style="margin: 0 auto; border-radius: 20px;"
-      label="Email"
-      labelPlacement="floating" 
-      placeholder="ejemplo@dominio.com"
-      formControlName="email"
-      type="email"
-      fill="clear"></ion-input>
+      <ion-input label="Correo Electrónico *" formControlName="email" type="email" placeholder="ejemplo@dominio.com"></ion-input>
     </ion-item>
+    <small *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" style="color: red;">❌ Ingrese un correo válido.</small>
+
+    <!-- Contraseña -->
     <ion-item color="translucent">
-      <ion-input
-      style="margin: 0 auto;"
-      label="Contraseña"
-      labelPlacement="floating"
-      placeholder="Contraseña"
-      formControlName="password"
-      type="{{ showPassword ? 'text' : 'password' }}"
-      fill="clear"></ion-input>
+      <ion-input label="Contraseña *" formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña"></ion-input>
+      <ion-icon name="{{ showPassword ? 'eye-off-outline' : 'eye-outline' }}" (click)="togglePasswordVisibility()" style="cursor: pointer;"></ion-icon>
     </ion-item>
+    <small *ngIf="registerForm.get('password')?.hasError('minlength')" style="color: red;">
+      ❌ La contraseña debe tener al menos 6 caracteres.
+    </small>
+    <small *ngIf="registerForm.hasError('mismatch')" style="color: red;">
+      ❌ Las contraseñas no coinciden.
+    </small>
+    
+
+    <!-- Repetir Contraseña -->
     <ion-item color="translucent">
-      <ion-input
-      style="margin: 0 auto;"
-      label="Repetir contraseña"
-      labelPlacement="floating"
-      placeholder="Repetir contraseña"
-      formControlName="repeatPassword"
-      type="{{ showPassword ? 'text' : 'password' }}"
-      fill="clear"></ion-input>
+      <ion-input label="Repetir Contraseña *" formControlName="repeatPassword" [type]="showPassword ? 'text' : 'password'" placeholder="Repetir contraseña"></ion-input>
     </ion-item>
+
   </form>
+
   <div class="button-container">
-    <ion-button class="login-button" (click)="registerUser()">Registrarse</ion-button>
-  </div>
-  <div class="register-button" (click)="closeModal()">
-    Ya tienes cuenta?
-  </div>
-  <div class="retrieve-password-button" (click)="openChangePasswordModal()">
-    Olvidé mi contraseña
+    <ion-button class="login-button" (click)="registerUser()" [disabled]="!registerForm.valid">Registrarse</ion-button>
   </div>
 </ion-card>
