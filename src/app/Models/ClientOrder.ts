@@ -20,7 +20,8 @@ export class ClientOrder {
     proteico: 0
   };
   groupedDeliveries: { [date: string]: { type: string; quantity: number }[] } = {};
-
+  clientEmail!: string;
+  clientPhone!: string;
 
   constructor(orderDTO: OrderDTO) {
     
@@ -33,7 +34,8 @@ export class ClientOrder {
     this.deliveries = orderDTO.deliveries;
     this.location = orderDTO.location;
     this.totalPlates = 0;
-
+    this.clientEmail = orderDTO.clientEmail || "No disponible";
+    this.clientPhone = orderDTO.clientPhone || "No disponible";
     
     this.totalPlates = orderDTO.totalPlates;
     this.daysOfWeek = orderDTO.daysOfWeek;

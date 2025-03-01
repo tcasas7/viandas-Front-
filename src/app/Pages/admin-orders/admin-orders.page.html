@@ -50,6 +50,8 @@
       <div><b>Descripción: </b>{{ order.description || 'Sin descripción' }}</div>
       <div><b>Método de pago: </b> {{ order.paymentMethod === 0 ? 'Efectivo' : 'Transferencia' }}</div>
       <div><b>Cantidad de Platos: </b>{{ order.totalPlates }}</div>
+      <div><b>Cliente:</b> {{ order.clientEmail }}</div>
+      <div><b>Teléfono:</b> {{ order.clientPhone }}</div>
       <div><b>Dirección: </b>{{ order.location }}</div>
 
       <div *ngFor="let date of getObjectKeys(order.groupedDeliveries)">

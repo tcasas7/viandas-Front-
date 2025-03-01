@@ -15,7 +15,9 @@ export class OrderDTO {
     isCollapsed: boolean = false; // Propiedad para la visualización
     totalPlates: number = 0;
     daysOfWeek: string[] = [];
-
+    clientEmail!: string;
+    clientPhone!: string
+    
     constructor(orderDTO: ToDisplayOrderDTO) {
         this.id = orderDTO.Id;
         this.price = orderDTO.price;
@@ -26,6 +28,8 @@ export class OrderDTO {
         this.orderDate = new Date(orderDTO.orderDate);  // ✅ Convertir a Date al asignarlo
         this.deliveries = orderDTO.deliveries.filter(delivery => delivery.quantity > 0);
         this.location = orderDTO.location;
+        this.clientEmail = orderDTO.clientEmail || "No disponible";
+        this.clientPhone = orderDTO.clientPhone || "No disponible";
 
         // Convertir deliveryDate de string a Date en cada entrega
         this.deliveries.forEach(delivery => {

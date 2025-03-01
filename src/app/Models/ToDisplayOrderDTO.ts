@@ -12,4 +12,6 @@ export class ToDisplayOrderDTO {
     orderDate!: Date;
     deliveries!: Array<ToDisplayDeliveryDTO>
     location!: string;
+    clientEmail!: string;
+    clientPhone!: string;
 }
