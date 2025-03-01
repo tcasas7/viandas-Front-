@@ -49,37 +49,6 @@ export class AdminOrdersPage implements OnInit{
     this.getOrders(); // Cargar las órdenes al iniciar
 }
 
-
-filterOrders() {
-  if (!this.filterDate) {
-      this.filteredOrders = [...this.toDisplayOrders]; // 🔹 Mostrar todo si no hay filtro
-      return;
-  }
-
-  const selectedDate = new Date(this.filterDate).toISOString().split('T')[0];
-
-  this.filteredOrders = this.orders
-      .filter(order =>
-          order.deliveries.some(delivery =>
-              new Date(delivery.deliveryDate).toISOString().split('T')[0] === selectedDate
-          )
-      )
-      .map(order => {
-          const clientOrder = new ClientOrder(order);
-          clientOrder.totalPlates = clientOrder.deliveries.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0);
-          return clientOrder;
-      });
-
-  console.log("📌 Órdenes filtradas:", this.filteredOrders);
-}
-
-
-  resetFilter() {
-    this.filterDate = '';
-    this.filteredOrders = [...this.toDisplayOrders];
-  }
-
-
   navigateToAdmin() {
     this.router.navigate(["admin"]);
   }
@@ -211,15 +180,52 @@ filterOrders() {
       .map(order => {
         const clientOrder = new ClientOrder(order);
 
-        // ✅ Calcular total de platos correctamente
+       
         clientOrder.totalPlates = order.deliveries?.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0) || 0;
 
         return clientOrder;
       })
       .filter(order => this.showHiddenOrders || !hiddenOrders.includes(order.id));
 
+      this.toDisplayOrders.sort((a, b) => b.id - a.id);
+
+      this.filteredOrders = [...this.toDisplayOrders];
+
     console.log("📌 Órdenes visibles (Admin):", this.toDisplayOrders);
 }
+
+
+filterOrders() {
+  if (!this.filterDate) {
+      this.filteredOrders = [...this.toDisplayOrders]; // 🔹 Mostrar todo si no hay filtro
+      return;
+  }
+
+  const selectedDate = new Date(this.filterDate).toISOString().split('T')[0];
+
+  this.filteredOrders = this.orders
+      .filter(order =>
+          order.deliveries.some(delivery =>
+              new Date(delivery.deliveryDate).toISOString().split('T')[0] === selectedDate
+          )
+      )
+      .map(order => {
+          const clientOrder = new ClientOrder(order);
+          clientOrder.totalPlates = clientOrder.deliveries.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0);
+          return clientOrder;
+      });
+
+      this.filteredOrders.sort((a, b) => b.id - a.id);      
+
+  console.log("📌 Órdenes filtradas:", this.filteredOrders);
+}
+
+
+  resetFilter() {
+    this.filterDate = '';
+    this.filteredOrders = [...this.toDisplayOrders];
+  }
+
 
 async hideOrder(orderId: number) {
     const alert = document.createElement('ion-alert');
@@ -253,6 +259,11 @@ async hideOrder(orderId: number) {
     this.showHiddenOrders = !this.showHiddenOrders;
     this.formatOrders();
   }
+
+  toggleOrderCollapse(order: any) {
+  order.isCollapsed = !order.isCollapsed;
+}
+
 
   collapseOrder(order: ClientOrder) {
     order.isCollapsed = true;
