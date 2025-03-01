@@ -17,36 +17,36 @@
 </ion-header>
 
 <ion-content class="custom-content">
-  
+
   <!-- Botón flotante para abrir el filtro -->
-<div class="filter-toggle" (click)="toggleFilter()">
-  📅 Filtrar
-</div>
+  <div class="filter-toggle" (click)="toggleFilter()">
+    📅 Filtrar
+  </div>
 
-<!-- Contenedor del Filtro (oculto por defecto) -->
-<div class="filter-container" *ngIf="showFilter">
-  <ion-item class="filter-item">
-    <ion-label position="stacked">Filtrar por Fecha</ion-label>
-    <ion-datetime 
-      displayFormat="YYYY-MM-DD" 
-      [(ngModel)]="filterDate" 
-      (ionChange)="filterOrders()">
-    </ion-datetime>
-  </ion-item>
+  <!-- Contenedor del Filtro (oculto por defecto) -->
+  <div class="filter-container" *ngIf="showFilter">
+    <ion-item class="filter-item">
+      <ion-label position="stacked">Filtrar por Fecha</ion-label>
+      <ion-datetime 
+        displayFormat="YYYY-MM-DD" 
+        [(ngModel)]="filterDate" 
+        (ionChange)="filterOrders()">
+      </ion-datetime>
+    </ion-item>
 
-  <ion-button expand="block" (click)="resetFilter()" class="reset-button">
-    Restablecer
-  </ion-button>
-</div>
-
+    <ion-button expand="block" (click)="resetFilter()" class="reset-button">
+      Restablecer
+    </ion-button>
+  </div>
 
   <!-- LISTA DE ÓRDENES FILTRADAS -->
   <ion-card color="light" *ngFor="let order of filteredOrders" class="order-card">
-    <ion-card-header>
-      <b>Nro. orden: {{order.id}}</b>
+    <ion-card-header (click)="toggleOrderCollapse(order)">
+      <b>Resumen de la orden</b>
+      <ion-icon [name]="order.isCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'" class="collapse-icon"></ion-icon>
     </ion-card-header>
 
-    <ion-card-content>
+    <ion-card-content *ngIf="!order.isCollapsed">
       <div><b>Descripción: </b>{{ order.description || 'Sin descripción' }}</div>
       <div><b>Método de pago: </b> {{ order.paymentMethod === 0 ? 'Efectivo' : 'Transferencia' }}</div>
       <div><b>Cantidad de Platos: </b>{{ order.totalPlates }}</div>
@@ -63,17 +63,8 @@
         <div style="float: inline-start">Total: </div> 
         <div style="float: inline-end;">${{order.price}}</div>
       </div>
-      <div style="height: 50px;"></div> <!-- Espaciador para evitar que el botón tape el total -->
+      <div style="height: 50px;"></div> 
 
-
-      <!--div>
-        <ion-button color="danger" (click)="hideOrder(order.id)">
-          Ocultar Orden
-        </ion-button>
-        <ion-button color="success" (click)="confirmOrder(order.id)">
-          Confirmar Orden
-        </ion-button>
-      </div-->
     </ion-card-content>
   </ion-card>
 

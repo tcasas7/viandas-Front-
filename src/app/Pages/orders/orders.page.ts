@@ -40,6 +40,7 @@ export class OrdersPage {
   filterDate: string = '';
   pastOrdersHidden: boolean = false;
   showFilter: boolean = false;
+  expandedOrders: { [orderId: number]: boolean } = {};
 
   constructor(
     private http: HttpClient,
@@ -158,21 +159,21 @@ export class OrdersPage {
   formatOrders() {
     this.toDisplayOrders = [];
     const hiddenOrders: number[] = JSON.parse(localStorage.getItem("hiddenOrders_client") || "[]");
-
+  
     this.orders.forEach(order => {
       let consolidatedOrder = new ClientOrder(order);
       consolidatedOrder.totalPlates = 0;
       consolidatedOrder.daysOfWeek = [];
       consolidatedOrder.menuCounts = { estandar: 0, light: 0, proteico: 0 };
       consolidatedOrder.groupedDeliveries = {};
-
+  
       order.deliveries.forEach(delivery => {
         const deliveryDate = new Date(delivery.deliveryDate).toLocaleDateString("es-ES");
-
+  
         if (!consolidatedOrder.groupedDeliveries[deliveryDate]) {
           consolidatedOrder.groupedDeliveries[deliveryDate] = [];
         }
-
+  
         let type = "Desconocido";
         if (delivery.menuId === 1) {
           type = "Estandar";
@@ -184,48 +185,49 @@ export class OrdersPage {
           type = "Proteico";
           consolidatedOrder.menuCounts.proteico += delivery.quantity;
         }
-
+  
         consolidatedOrder.groupedDeliveries[deliveryDate].push({ type, quantity: delivery.quantity });
         consolidatedOrder.totalPlates += delivery.quantity;
       });
-
+  
       consolidatedOrder.price = order.price;
-
+  
       if (this.showHiddenOrders || !hiddenOrders.includes(order.id)) {
         this.toDisplayOrders.push(consolidatedOrder);
       }
     });
+  
+    this.toDisplayOrders.sort((a, b) => b.id - a.id);
 
-    this.filteredOrders = [...this.toDisplayOrders]; // Inicializar filtro
-    console.log('📌 Órdenes visibles (cliente):', this.toDisplayOrders);
+    this.toDisplayOrders.reverse();
+  
+    this.filteredOrders = [...this.toDisplayOrders]; 
   }
-
-
-
+  
   filterOrders() {
     if (!this.filterDate) {
-      this.filteredOrders = [...this.toDisplayOrders];
+      this.filteredOrders = [...this.toDisplayOrders]; 
       return;
     }
-
+  
     const selectedDate = new Date(this.filterDate).toISOString().split('T')[0];
-
-    this.filteredOrders = this.toDisplayOrders.filter(order =>
-      order.deliveries.some(delivery =>
-        new Date(delivery.deliveryDate).toISOString().split('T')[0] === selectedDate
-      )
-    );
-
-    console.log("📌 Órdenes filtradas:", this.filteredOrders);
+  
+    this.filteredOrders = this.toDisplayOrders
+      .filter(order =>
+        order.deliveries.some(delivery =>
+          new Date(delivery.deliveryDate).toISOString().split('T')[0] === selectedDate
+        )
+      );      
   }
-
-  // 🔹 Restablecer el filtro de fecha
+  
+  
+  
   resetFilter() {
     this.filterDate = '';
     this.filteredOrders = [...this.toDisplayOrders];
   }
 
-  // 🔹 Ocultar órdenes pasadas
+ 
   async hidePastOrders() {
     const alert = document.createElement('ion-alert');
     alert.header = this.pastOrdersHidden ? 'Mostrar órdenes viejas' : 'Confirmar limpieza';
@@ -267,6 +269,10 @@ export class OrdersPage {
     this.showFilter = !this.showFilter;
   }
   
+  toggleOrder(orderId: number) {
+    this.expandedOrders[orderId] = !this.expandedOrders[orderId];
+  }
+
   // Función auxiliar para obtener el tipo de menú según el ID
   getMenuType(menuId: number): string {
     const menuTypes: { [key: number]: string } = {

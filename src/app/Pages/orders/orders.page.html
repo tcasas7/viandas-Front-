@@ -49,13 +49,20 @@
     </ion-button>
   </div>
 
-  <!-- LISTA DE ÓRDENES FILTRADAS -->
-  <ion-card color="light" *ngFor="let order of filteredOrders" class="order-card">
-    <ion-card-header>
-      <b>Nro. orden: {{order.id}}</b>
+  <ion-card color="light" *ngFor="let order of filteredOrders.slice().reverse()" class="order-card">
+
+    
+    <!-- Cabecera de la orden -->
+    <ion-card-header (click)="toggleOrder(order.id)" class="order-header">
+      <b>Resumen de la orden </b>
+      <ion-icon 
+        [name]="expandedOrders[order.id] ? 'chevron-up-outline' : 'chevron-down-outline'" 
+        class="toggle-icon">
+      </ion-icon>
     </ion-card-header>
 
-    <ion-card-content>
+    <!-- Contenido desplegable -->
+    <ion-card-content *ngIf="expandedOrders[order.id]">
       <div><b>Descripción: </b>{{ order.description || 'Sin descripción' }}</div>
       <div><b>Método de pago: </b> {{ order.paymentMethod === 0 ? 'Efectivo' : 'Transferencia' }}</div>
       <div><b>Cantidad de Platos: </b>{{ order.totalPlates }}</div>
@@ -79,7 +86,9 @@
           💳 Realizar Pago
         </ion-button>
       </div>
+      <div style="height: 50px;"></div> 
     </ion-card-content>
+    
   </ion-card>
 
 </ion-content>

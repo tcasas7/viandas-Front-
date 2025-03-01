@@ -23,8 +23,17 @@
       <ion-input label="Código de área *" formControlName="areaCode" type="tel" placeholder="223"></ion-input>
       <ion-input label="Número *" formControlName="phone" type="tel" placeholder="1234567"></ion-input>
     </ion-item>
-    <small *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" style="color: red;">❌ Número de teléfono inválido.</small>
-
+    <small *ngIf="registerForm.get('preFix')?.invalid && registerForm.get('preFix')?.touched" style="color: red;">
+      ❌ El prefijo debe tener **2 dígitos**.
+    </small>
+    
+    <small *ngIf="registerForm.get('areaCode')?.invalid && registerForm.get('areaCode')?.touched" style="color: red;">
+      ❌ El código de área debe tener **entre 2 y 4 dígitos**.
+    </small>
+    
+    <small *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" style="color: red;">
+      ❌ El número debe tener **entre 6 y 8 dígitos**.
+    </small>
     <!-- Email -->
     <ion-item color="translucent">
       <ion-input label="Correo Electrónico *" formControlName="email" type="email" placeholder="ejemplo@dominio.com"></ion-input>
@@ -39,15 +48,17 @@
     <small *ngIf="registerForm.get('password')?.hasError('minlength')" style="color: red;">
       ❌ La contraseña debe tener al menos 6 caracteres.
     </small>
-    <small *ngIf="registerForm.hasError('mismatch')" style="color: red;">
-      ❌ Las contraseñas no coinciden.
-    </small>
+    
     
 
     <!-- Repetir Contraseña -->
     <ion-item color="translucent">
       <ion-input label="Repetir Contraseña *" formControlName="repeatPassword" [type]="showPassword ? 'text' : 'password'" placeholder="Repetir contraseña"></ion-input>
     </ion-item>
+
+    <small *ngIf="registerForm.hasError('mismatch')" style="color: red;">
+      ❌ Las contraseñas no coinciden.
+    </small>
 
   </form>
 
