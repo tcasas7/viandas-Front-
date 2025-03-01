@@ -180,7 +180,8 @@ export class AdminOrdersPage implements OnInit{
       .map(order => {
         const clientOrder = new ClientOrder(order);
 
-       
+        clientOrder.clientEmail = order.clientEmail || "No disponible";
+        clientOrder.clientPhone = order.clientPhone || "No disponible";
         clientOrder.totalPlates = order.deliveries?.reduce((sum, delivery) => sum + (delivery.quantity || 0), 0) || 0;
 
         return clientOrder;
