@@ -26,18 +26,22 @@
     </div>
   </div>
 
-  <!-- Mostrar total normal tachado y el total con descuento si aplica -->
   <div style="padding-left: 5%; font-size: large;" *ngIf="total >= 0">
-    <b *ngIf="applyGlobalDiscount()" style="display: block;">
-      <span style="text-decoration: line-through; color: red;">Total Normal: ${{ total }}</span>
-    </b>
-    <b *ngIf="applyGlobalDiscount()" style="display: block; color: green;">
-      Total con Descuento Aplicado: ${{ finalDiscountedTotal }}
-    </b>
-    <b *ngIf="!applyGlobalDiscount()" style="display: block;">
+    <!-- 🔹 Mostrar solo el total normal mientras el valor aún no se ha cargado o si no aplica el descuento -->
+    <b *ngIf="minimoPlatosDescuento === undefined || !applyGlobalDiscount()" style="display: block;">
       Total: ${{ total }}
     </b>
+  
+    <!-- 🔹 Si se aplica el descuento, mostrar el total normal tachado y el nuevo total con descuento -->
+    <b *ngIf="minimoPlatosDescuento !== undefined && applyGlobalDiscount()" style="display: block;">
+      <span style="text-decoration: line-through; color: red;">Total Normal: ${{ total }}</span>
+    </b>
+    <b *ngIf="minimoPlatosDescuento !== undefined && applyGlobalDiscount()" style="display: block; color: green;">
+      Total con Descuento Aplicado: ${{ finalDiscountedTotal }}
+    </b>
   </div>
+  
+  
 
   <div class="button-container" style="display: flex; justify-content: space-between; padding: 10px;">
     <ion-button class="login-button" style="width: 45%;" (click)="closeModal()">Cancelar Orden</ion-button>
