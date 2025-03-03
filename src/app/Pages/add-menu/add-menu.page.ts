@@ -6,6 +6,7 @@ import { MenusService } from 'src/app/Services/MenusService/menus.service';
 import { AlertTool } from 'src/app/Tools/AlertTool';
 import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-menu',
@@ -16,17 +17,69 @@ import { Router } from '@angular/router';
 
 export class AddMenuPage {
 
+  minimoPlatosDescuento?: number;
+
+  apiUrl = 'http://localhost:5009/api/configuracion';
+
   constructor(
     private menusService: MenusService,
     private alertTool: AlertTool,
     private loadingCtrl: LoadingController,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
     
   ) {
     // Cargar menús al iniciar
     this.loadMenusFromBackend();
+    this.getMinimoPlatosDescuento();
   }
 
+  getMinimoPlatosDescuento() {
+    this.http.get<{ minimoPlatosDescuento: number }>(`${this.apiUrl}/minimo-platos-descuento`).subscribe(response => {
+      this.minimoPlatosDescuento = response.minimoPlatosDescuento;
+    });
+  }
+
+  async updateMinimoPlatosDescuento() {
+    if (!this.minimoPlatosDescuento || this.minimoPlatosDescuento < 1) {
+      this.alertTool.presentToast("⚠️ Ingrese un valor válido mayor a 0.");
+      return;
+    }
+  
+    const loading = await this.loadingCtrl.create({ message: "Actualizando..." });
+    await loading.present();
+  
+    this.http.post(`${this.apiUrl}/minimo-platos-descuento`, this.minimoPlatosDescuento, {
+      headers: { 'Content-Type': 'application/json' }
+    }).subscribe(() => {
+      loading.dismiss();
+      this.alertTool.presentToast("✅ Se actualizó la cantidad mínima de platos.");
+    }, error => {
+      loading.dismiss();
+      console.error("Error al actualizar el mínimo de platos:", error);
+      this.alertTool.presentToast("❌ Hubo un error al actualizar el mínimo de platos.");
+    });
+  }
+  
+  
+  async saveMinimoPlatosDescuento(newValue: number) {
+    const loading = await this.loadingCtrl.create({ message: "Actualizando..." });
+    await loading.present();
+  
+    this.http.post(`${this.apiUrl}/minimo-platos-descuento`, newValue, {
+      headers: { 'Content-Type': 'application/json' }
+    }).subscribe(() => {
+      this.minimoPlatosDescuento = newValue;
+      loading.dismiss();
+      this.alertTool.presentToast("✅ Se actualizó la cantidad mínima de platos.");
+    }, error => {
+      loading.dismiss();
+      console.error("Error al actualizar el mínimo de platos:", error);
+      this.alertTool.presentToast("❌ Hubo un error al actualizar el mínimo de platos.");
+    });
+  }
+  
+  
 navigateToAddImages() {
 this.router.navigate(['/add-images']);
 }

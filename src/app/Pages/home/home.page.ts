@@ -14,6 +14,7 @@ import { ToDisplayOrderDTO } from 'src/app/Models/ToDisplayOrderDTO';
 import { ToDisplayDeliveryDTO } from 'src/app/Models/ToDisplayDeliveryDTO';
 import { PlaceOrderDTO } from 'src/app/Models/PlaceOrderDTO';
 import { OrderDTO } from 'src/app/Models/OrderDTO';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -76,9 +77,10 @@ export class HomePage implements OnInit {
   orderFriday: ToDisplayOrderDTO = new ToDisplayOrderDTO();
 
   total: number = 0;
+  
 
   placeOrder!: PlaceOrderDTO;
-item: CartItem;
+  item: CartItem;
   baseRoute: any;
 
   constructor(
@@ -89,7 +91,8 @@ item: CartItem;
     private menuService: MenusService,
     private cdr: ChangeDetectorRef,
     private userService: UsersService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private http: HttpClient
   ) {
     this.item = new CartItem();
     this.menus = new Array<MenuDTO>();
@@ -280,76 +283,68 @@ item: CartItem;
 
   navigateToOrderResume() {
     this.total = 0;
-    this.finalDiscountedTotal = 0; // Inicializar el total con descuento
+    this.finalDiscountedTotal = 0; // Reiniciar total con descuento
   
-    // Calcular el total de platos para la orden completa
-    const totalPlatesForOrder = this.orders.reduce(
-      (acc, order) =>
-        acc +
-        order.deliveries.reduce((dayAcc, delivery) => dayAcc + delivery.quantity, 0),
-      0
-    );
+    // Obtener la cantidad mínima de platos desde el backend
+    this.http.get<{ minimoPlatosDescuento: number }>('http://localhost:5009/api/configuracion/minimo-platos-descuento')
+      .subscribe(response => {
+        const minimoPlatosDescuento = response.minimoPlatosDescuento;
   
-    console.log(`Total de Platos en la Orden: ${totalPlatesForOrder}`);
+        // Contar total de platos en la orden
+        const totalPlatesForOrder = this.orders.reduce(
+          (acc, order) =>
+            acc +
+            order.deliveries.reduce((dayAcc, delivery) => dayAcc + delivery.quantity, 0),
+          0
+        );
   
-    // Procesar cada día y sus entregas
-    this.orders.forEach((order) => {
-      let totalPlatesForDay = 0; // Total de platos para cada día
-      order.deliveries.forEach((delivery) => {
-        if (delivery.quantity > 0) {
-          totalPlatesForDay += delivery.quantity;
+        console.log(`Total de Platos: ${totalPlatesForOrder} | Mínimo para descuento: ${minimoPlatosDescuento}`);
   
-          // Encontrar el producto correspondiente
-          const menu = this.menus.find((menu) =>
-            menu.products.some((product) => product.id === delivery.productId)
-          );
-          const product = menu?.products.find((p) => p.id === delivery.productId);
+        // Procesar cada pedido y actualizar precios
+        this.orders.forEach((order) => {
+          let totalPlatesForDay = 0;
+          order.deliveries.forEach((delivery) => {
+            if (delivery.quantity > 0) {
+              totalPlatesForDay += delivery.quantity;
   
-          if (product && menu) {
-            // Inicializar precios del producto
-            delivery.productPrice = menu.price ?? 0;
-            delivery.productPromoPrice = menu.precioPromo ?? menu.price ?? 0;
+              const menu = this.menus.find((menu) =>
+                menu.products.some((product) => product.id === delivery.productId)
+              );
+              const product = menu?.products.find((p) => p.id === delivery.productId);
   
-            // Determinar el precio aplicado
-            if (totalPlatesForOrder >= 4) {
-              delivery.discountApplied = true;
-              delivery.appliedPrice = delivery.productPromoPrice;
-            } else {
-              delivery.discountApplied = false;
-              delivery.appliedPrice = delivery.productPrice;
+              if (product && menu) {
+                // Obtener precios desde el menú
+                delivery.productPrice = menu.price ?? 0;
+                delivery.productPromoPrice = menu.precioPromo ?? menu.price ?? 0;
+  
+                // Aplicar descuento si corresponde
+                delivery.appliedPrice = totalPlatesForOrder >= minimoPlatosDescuento
+                  ? delivery.productPromoPrice
+                  : delivery.productPrice;
+                delivery.discountApplied = totalPlatesForOrder >= minimoPlatosDescuento;
+  
+                // Sumar precios al total
+                this.total += delivery.productPrice * delivery.quantity;
+                this.finalDiscountedTotal += delivery.appliedPrice * delivery.quantity;
+  
+                console.log(
+                  `Producto: ${delivery.productName}, Cantidad: ${delivery.quantity}, ` +
+                  `Normal: ${delivery.productPrice}, Promo: ${delivery.productPromoPrice}, ` +
+                  `Aplicado: ${delivery.appliedPrice}`
+                );
+              }
             }
+          });
   
-            // Calcular subtotales
-            const normalPriceTotal = delivery.productPrice * delivery.quantity;
-            const discountedPriceTotal = delivery.appliedPrice * delivery.quantity;
+          order.hasOrder = totalPlatesForDay > 0;
+        });
   
-            // Sumar subtotales a los totales generales
-            this.total += normalPriceTotal;
-            this.finalDiscountedTotal += discountedPriceTotal;
-  
-            // Debugging para asegurar que los cálculos son correctos
-            console.log(
-              `Producto: ${delivery.productName}, Cantidad: ${delivery.quantity}, ` +
-                `Precio Normal: ${delivery.productPrice}, Precio Promocional: ${delivery.productPromoPrice}, ` +
-                `Subtotal Normal: ${normalPriceTotal}, Subtotal con Descuento: ${discountedPriceTotal}`
-            );
-          } else {
-            console.warn(
-              `Producto no encontrado para delivery con ID: ${delivery.productId}`
-            );
-          }
-        }
+        // Mostrar resumen de la orden
+        console.log(`Total Normal: ${this.total}, Total con Descuento: ${this.finalDiscountedTotal}`);
+        this.showOrderResumeModal = true;
       });
-  
-      order.hasOrder = totalPlatesForDay > 0;
-    });
-  
-    // Debugging para mostrar los totales calculados
-    console.log(`Total Normal: ${this.total}, Total con Descuento: ${this.finalDiscountedTotal}`);
-    this.showOrderResumeModal = true;
   }
   
-
   navigateToOrderDetails() {
     this.showOrderResumeModal = false;
     this.showOrderDetailsModal = true;
