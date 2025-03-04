@@ -26,7 +26,7 @@ export class AlertTool {
       async presentToast(message: string) {
         await this.toastController.create({
           message: message,
-          duration: 2000,
+          duration: 5000,
           position: 'bottom',
           cssClass: "centeredToast",
           color: 'light'
