@@ -39,7 +39,7 @@ export class AddDetailsModalComponent implements OnInit {
 
     // 🚨 Validar fechas antes de enviar el pedido
     if (!this.isOrderValid()) {
-        this.alertTool.presentToast("🚫 Error: No puedes hacer pedidos para el mismo día, días pasados o de la próxima semana.");
+        this.alertTool.presentToast("🚫 Error: No puedes hacer pedidos para el mismo día, días pasados o de la próxima semana. Los pedidos para la semana que viene se habilitan el viernes a las 10 AM.");
         return;
     }
 
