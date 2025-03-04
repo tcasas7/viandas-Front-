@@ -34,34 +34,68 @@ export class AddDetailsModalComponent implements OnInit {
   makeOrder() {
     if (this.paymentMethod === -1 || this.selectedLocation === 'empty') {
         this.alertTool.presentToast("Campos vacíos, por favor llene todos los campos.");
-    } else {
-        // Recorremos cada orden para asegurarnos de que los campos estén asignados correctamente
-        this.orders.Orders.forEach(o => {
-            o.id = 0;
-            o.location = this.selectedLocation;
-            o.description = this.description;
-            o.paymentMethod = this.paymentMethod;
-            o.hasSalt = false;
-            o.orderDate = new Date(); // ✅ Ahora es Date en vez de string
+        return;
+    }
 
-            // ✅ Convertimos deliveryDate a Date en cada entrega
-            o.deliveries.forEach(d => {
-                d.deliveryDate = new Date(d.deliveryDate);
-            });
+    // 🚨 Validar fechas antes de enviar el pedido
+    if (!this.isOrderValid()) {
+        this.alertTool.presentToast("🚫 Error: No puedes hacer pedidos para el mismo día, días pasados o de la próxima semana.");
+        return;
+    }
 
-            // Agregar log detallado para depuración
-            console.log(`Orden ID: ${o.id}`);
-            console.log(`Fecha de la orden (orderDate): ${o.orderDate}`);
-            console.log(`Método de pago: ${o.paymentMethod}`);
-            console.log(`Ubicación seleccionada: ${this.selectedLocation}`);
+    // ✅ Si la validación pasa, completar datos y continuar
+    this.orders.Orders.forEach(o => {
+        o.id = 0;
+        o.location = this.selectedLocation;
+        o.description = this.description;
+        o.paymentMethod = this.paymentMethod;
+        o.hasSalt = false;
+        o.orderDate = new Date();
+
+        // Convertimos deliveryDate a Date en cada entrega
+        o.deliveries.forEach(d => {
+            d.deliveryDate = new Date(d.deliveryDate);
         });
 
-        // Loguear toda la estructura de la orden para ver cómo está antes de enviarla
-        console.log('Estructura completa de las órdenes:', JSON.stringify(this.orders.Orders, null, 2));
+        // Log para depuración
+        console.log(`📦 Orden ID: ${o.id}, Fecha de orden: ${o.orderDate}, Método de pago: ${o.paymentMethod}, Ubicación: ${this.selectedLocation}`);
+    });
 
-        this.placeOrder();
-    }
+    console.log('📦 Estructura final de las órdenes antes de enviar:', JSON.stringify(this.orders.Orders, null, 2));
+
+    this.placeOrder();
 }
+
+isOrderValid(): boolean {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); 
+
+  const dayOfWeek = today.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+
+  return this.orders.Orders.every((order) =>
+      order.deliveries.every((delivery) => {
+          let deliveryDate = new Date(delivery.deliveryDate);
+          deliveryDate.setHours(0, 0, 0, 0);
+
+          let deliveryDayOfWeek = deliveryDate.getDay(); 
+
+          // 🚨 No permitir pedidos para el mismo día o días pasados
+          if (deliveryDate <= today) {
+              console.warn(`🚫 Pedido bloqueado: No se puede pedir para el mismo día o días pasados (${deliveryDate.toDateString()}).`);
+              return false;
+          }
+
+          // 🚨 Bloquear lunes y martes de la próxima semana si hoy es martes o más adelante
+          if ((deliveryDayOfWeek === 1 || deliveryDayOfWeek === 2) && today.getDay() >= 2) {
+              console.warn(`🚫 Pedido bloqueado: No se puede hacer pedidos para la próxima semana (${deliveryDate.toDateString()}).`);
+              return false;
+          }
+
+          return true; // ✅ Fecha válida
+      })
+  );
+}
+
 
     ngOnInit() {
       if (this.locations.length === 0) {
