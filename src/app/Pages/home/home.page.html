@@ -88,13 +88,13 @@
 
     <div class="carousel-content-wrapper" #carouselContentWrapper>
       <div class="carousel-content">
-        <div class="carousel-set" *ngFor="let set of carouselSets">
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 1 && !isDesktop">Lunes</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 2 && !isDesktop">Martes</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 3 && !isDesktop">Miércoles</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 4 && !isDesktop">Jueves</div>
-          <div style="font-size: large; font-weight: bold; margin: auto;" *ngIf="getDayNumber(set[0].day) === 5 && !isDesktop">Viernes</div>
+        <div class="carousel-set" *ngFor="let set of carouselSets; let i = index">
           
+          <!-- 🔹 Mostrar el día dinámicamente (solo para mobile) -->
+          <div class="day-label" *ngIf="!isDesktop">
+            {{ getDayName(i) }}
+          </div>
+    
           <div class="carousel-item" *ngFor="let item of set">
             <div class="image-container">
               <!-- Mostrar la imagen del producto -->
@@ -102,20 +102,21 @@
               <!-- Imagen predeterminada -->
               <img class="image-default" *ngIf="!item.hasImage || !item.sanitizedImagePath" src="./assets/media/Default.png">
             </div>
-            <div style="margin-top: 0.5vh; margin-bottom: 0px; padding-top: 0px; font-size: 2vh;">
+            <div style="margin-top: 0.5vh; font-size: 2vh;">
               {{item.name}}
             </div>
             <div style="padding-top: 0.15vh; font-size: 2.5vh; font-weight: bold;">
               ${{item.price}}
-              <ion-icon *ngIf="item.cartPressed === true" class="cart-badge" name="add-outline" (click)="addToCart(item)"></ion-icon>
-              <ion-icon *ngIf="item.cartPressed === false" class="cart-badge" [name]="icon" (click)="pressCart(item)"></ion-icon>
-              <ion-badge style="cursor: default;" *ngIf="item.cartPressed === true" class="cart-badge" color="light">{{item.total}}</ion-badge>
-              <ion-icon *ngIf="item.cartPressed === true && item.total >= 1" class="cart-badge" name="remove-outline" (click)="removeFromCart(item)"></ion-icon>
+              <ion-icon *ngIf="item.cartPressed" class="cart-badge" name="add-outline" (click)="addToCart(item)"></ion-icon>
+              <ion-icon *ngIf="!item.cartPressed" class="cart-badge" [name]="icon" (click)="pressCart(item)"></ion-icon>
+              <ion-badge *ngIf="item.cartPressed" class="cart-badge" color="light">{{item.total}}</ion-badge>
+              <ion-icon *ngIf="item.cartPressed && item.total >= 1" class="cart-badge" name="remove-outline" (click)="removeFromCart(item)"></ion-icon>
             </div>
           </div>
         </div>
       </div>
     </div>
+    
   </div>
 
   <!-- Botón para realizar pedido -->

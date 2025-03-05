@@ -535,6 +535,11 @@ export class HomePage implements OnInit {
    return day === 0 || day === 6 ? -1 : day; // Si es sábado o domingo, devolver -1 (no debería pasar)
   }
 
+  getDayName(index: number): string {
+    const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+    return days[index] || "Día desconocido";
+  }
+  
 
   makeDeliveryDTO(prod: CartItem) {
     var delivDTO = new ToDisplayDeliveryDTO();

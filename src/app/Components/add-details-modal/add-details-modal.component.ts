@@ -21,7 +21,7 @@ export class AddDetailsModalComponent implements OnInit {
   description: string = '';
   paymentMethod: number = -1;
   selectedLocation: string = 'empty';
-  
+  isSubmitting: boolean = false;
   response: ResponseObject = new ResponseObject();
 
   constructor(private loadingCtrl: LoadingController, private alertTool: AlertTool, private ordersService: OrdersService) {}
@@ -66,9 +66,9 @@ export class AddDetailsModalComponent implements OnInit {
     this.placeOrder();
 }
 
-isOrderValid(): boolean {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); 
+  isOrderValid(): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
 
   const dayOfWeek = today.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
 
@@ -107,32 +107,34 @@ isOrderValid(): boolean {
     }
         
 
-  placeOrder() {
+    placeOrder() {
+      this.isSubmitting = true; 
       this.makeLoadingAnimation();
-      this.doRequest();
+  
+      this.ordersService.PlaceOrder(this.orders).subscribe(
+        response => {
+          this.response = response as ResponseObject;
+  
+          if (this.response.statusCode === 200) {
+            this.closeLoader();
+            this.alertTool.presentToast("✅ Orden enviada con éxito!");
+            this.makeOrderEvent.emit();
+            this.closeModal(); 
+          } else {
+            this.closeLoader();
+            this.alertTool.presentToast(this.response.message);
+          }
+  
+          this.isSubmitting = false; 
+        },
+        error => {
+          this.closeLoader();
+          this.alertTool.presentToast("🚫 Error: No puedes hacer pedidos para el mismo día, días pasados o de la próxima semana. Los pedidos para la semana que viene se habilitan el viernes a las 10 AM.");
+          this.isSubmitting = false; 
+        }
+      );
   }
-
-  doRequest() {
-    this.ordersService.PlaceOrder(this.orders).subscribe( response => {
-      this.response = response as ResponseObject
-      console.log(this.response);
-      if(this.response.statusCode === 200) {
-        this.closeLoader();
-        this.alertTool.presentToast("Orden enviada con éxito!");
-        this.makeOrderEvent.emit();
-      } else {
-        this.closeLoader();
-        this.alertTool.presentToast(this.response.message);
-      }
-    }, error => {
-      if(error) {
-        this.closeLoader();
-        this.alertTool.presentToast("Oops... Ocurrió un error!");  
-      }
-    })
-  }
-
-
+  
 
   handleSelectionDir(event: any) {
     this.selectedLocation = event.detail.value;
