@@ -52,14 +52,15 @@
   <ion-card color="light" *ngFor="let order of filteredOrders.slice().reverse()" class="order-card">
 
     
-    <!-- Cabecera de la orden -->
-    <ion-card-header (click)="toggleOrder(order.id)" class="order-header">
-      <b>Resumen de la orden </b>
-      <ion-icon 
-        [name]="expandedOrders[order.id] ? 'chevron-up-outline' : 'chevron-down-outline'" 
-        class="toggle-icon">
-      </ion-icon>
-    </ion-card-header>
+<!-- Cabecera de la orden con fecha -->
+<ion-card-header (click)="toggleOrder(order.id)" class="order-header">
+  <b>Resumen de la orden - {{ order.orderDate | date: 'dd/MM/yyyy HH:mm' }}</b>
+  <ion-icon 
+    [name]="expandedOrders[order.id] ? 'chevron-up-outline' : 'chevron-down-outline'" 
+    class="toggle-icon">
+  </ion-icon>
+</ion-card-header>
+
 
     <!-- Contenido desplegable -->
     <ion-card-content *ngIf="expandedOrders[order.id]">

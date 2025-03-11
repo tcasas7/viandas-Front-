@@ -44,7 +44,10 @@
   
 
   <div class="button-container" style="display: flex; justify-content: space-between; padding: 10px;">
-    <ion-button class="login-button" style="width: 45%;" (click)="closeModal()">Cancelar Orden</ion-button>
-    <ion-button class="login-button" color="success" style="width: 45%;" (click)="makeOrder()">Confirmar Orden</ion-button>
+    <ion-button class="cancel-button" style="background-color: red !important; border-color: red !important; color: rgba(0, 0, 0, 0.473) !important; width: 45%;"  (click)="closeModal()">Cancelar Orden</ion-button>
+    <ion-button class="confirm-button" style="background-color: #A5D6A7 !important; border-color: #81C784 !important; color: rgba(0, 0, 0, 0.473) !important; width: 45%;" (click)="makeOrder()">
+      Confirmar Orden
+    </ion-button>
+    
   </div>
 </ion-card>

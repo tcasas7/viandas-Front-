@@ -56,8 +56,9 @@ export class ProfilePage implements OnInit {
     }
 
     this.getData();
-    
+  
   }
+  
 
   navigateToHome() {
     this.router.navigate(["/home"]);
@@ -126,12 +127,15 @@ navigateToChangePhone() {
 
 handleSelection(event: any) {
   if (event.detail.value === 'add_new') {
-    // Si selecciona "Agregar nueva dirección", abrir el modal
     this.onAddNewAddress();
   } else {
-    // Actualizar la dirección seleccionada
     this.selectedLocationId = event.detail.value;
     this.selectedLocation = this.locations.find(location => location.id === this.selectedLocationId) || null;
+
+    // Guardar dirección seleccionada en localStorage
+    if (this.selectedLocation) {
+      localStorage.setItem("selectedLocation", this.selectedLocation.id?.toString() || '');
+    }
   }
 }
 
@@ -216,6 +220,21 @@ async getData() {
     localStorage.setItem("firstName", this.dataResponse.model.firstName);
     localStorage.setItem("lastName", this.dataResponse.model.lastName);
     this.locations = this.user.locations;
+
+    const storedAddress = localStorage.getItem("selectedLocation");
+    
+    if (storedAddress) {
+      this.selectedLocationId = storedAddress;
+      this.selectedLocation = this.locations.find(location => location.id === this.selectedLocationId) || null;
+    } else {
+      // Si no hay dirección guardada, tomar la predeterminada
+      const defaultLocation = this.locations.find(e => e.isDefault);
+      if (defaultLocation) {
+        this.selectedLocationId = defaultLocation.id;
+        this.selectedLocation = defaultLocation;
+      }
+    }
+
     this.saveRole(this.dataResponse.model.role);
 
     this.didLoad = true;

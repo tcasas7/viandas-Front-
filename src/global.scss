@@ -83,6 +83,15 @@
     box-shadow: rgba(var(--ion-color-rose-rgb), 0.3) 0px 10px 15px -3px;
   }
 
+  .toast-button-highlight {
+    color: white !important;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff5733, #ff8d00) !important;
+    border-radius: 8px;
+    padding: 6px 12px;
+    text-transform: uppercase;
+  }
+  
 .centeredToast {
     text-align:center;
 }
@@ -111,4 +120,12 @@ ion-modal {
 
   .modal-wrapper{
     background: transparent !important;
+}
+.centeredToast {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
 }

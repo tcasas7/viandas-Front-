@@ -12,7 +12,7 @@ import { ResponseObjectModel } from 'src/app/Models/Response/ResponseObjModel';
 })
 export class OrdersService extends MainService {
 
-  private baseUrl = 'http://localhost:5009/api/Orders';
+  private baseUrl = 'https://5d4lf267-5009.brs.devtunnels.ms/api/Orders';
 
   GetAll(): Observable<ResponseObjectModel<Array<OrderDTO>>> {
     const token = localStorage.getItem('Token'); // Obtén el token del almacenamiento

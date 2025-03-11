@@ -60,7 +60,7 @@ export class AddImagesPage implements OnInit {
       'Authorization': `Bearer ${token}` // Agregar el token al header
     });
   
-    return this.http.post(`http://localhost:5009/api/menus/changeImage/${productId}`, formData, { headers });
+    return this.http.post(`https://5d4lf267-5009.brs.devtunnels.ms/api/menus/changeImage/${productId}`, formData, { headers });
   }
   
 

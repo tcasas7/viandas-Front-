@@ -8,16 +8,6 @@
   font-weight: bold;
 }
 
-.login-button { 
-  margin-top: 4%;
-  font-size: 16px;
-  font-weight: bold;
-  height: 6%;
-  width: 80%;
-  color: #595755;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
 
 .button-container {
   display: flex;
@@ -145,4 +135,40 @@ ion-label {
 ion-card {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
+}
+
+.cancel-button {
+  background-color: #d9534f !important; /* Rojo fuerte */
+  border-color: #d43f3a !important;
+  color: white !important;
+  margin-top: 4%;
+  font-size: 16px;
+  font-weight: bold;
+  height: 6%;
+  width: 80%;
+  border-radius: 15px;
+}
+
+ion-button[color="danger"], .cancel-button {
+  --background: #d9534f !important;
+  --border-color: #d43f3a !important;
+  --color: black !important;
+}
+
+.confirm-button {
+  background-color: #A5D6A7 !important; /* Verde claro */
+  border-color: #81C784 !important;
+  color: rgba(0, 0, 0, 0.479) !important;
+  margin-top: 4%;
+  font-size: 16px;
+  font-weight: bold;
+  height: 6%;
+  width: 80%;
+  border-radius: 15px;
+}
+
+ion-button[color="success"], .confirm-button {
+  --background: #A5D6A7 !important;
+  --border-color: #81C784 !important;
+  --color: black !important;
 }

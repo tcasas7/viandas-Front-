@@ -21,10 +21,10 @@
     
 📌 **Pedido con más de dos platos** - Ejemplo (4 platos, x2 Estandar, x1 Light, x1 Proteico):
 
-- x1 Estandar sin sal.
-- x1 Estandar sin mayonesa.
-- x1 Light sin sal.
-- x1 Proteico sin cebolla.
+- x1 Estandar sin sal para el Lunes.
+- x1 Estandar sin mayonesa para el miercoles
+- x1 Light sin sal para el miercoles.
+- x1 Proteico sin cebolla para el viernes. 
  
 📌 Puede dejar este campo vacío si no tiene indicaciones especiales.
 ">
@@ -33,13 +33,22 @@
     <p style="font-size: small; color: gray; margin-top: 5px;">Ej: Sin sal.</p>
   </ion-card>
 
-  <!-- Selector de dirección de envío -->
-  <div style="margin-left: 5%; margin-right: 5%; margin-bottom: 1%;">
-    <ion-select interface="popover" placeholder="Dirección de envío" [(ngModel)]="selectedLocation" (ionChange)="handleSelectionDir($event)" style="float:inline-start">
-      <ion-select-option *ngFor="let item of locations" [value]="item.dir">&nbsp;{{item.dir}}</ion-select-option>
-      <ion-select-option *ngIf="locations.length === 0" [value]="'empty'">No hay direcciones</ion-select-option>  
-    </ion-select>
-  </div>
+<!-- Selector de dirección de envío -->
+<div style="margin-left: 5%; margin-right: 5%; margin-bottom: 1%;">
+  <ion-select 
+    interface="popover" 
+    placeholder="Dirección de envío" 
+    [(ngModel)]="selectedLocation" 
+    (ionChange)="handleSelectionDir($event)">
+    
+    <ion-select-option *ngFor="let item of locations" [value]="item.dir">
+      {{ item.dir }}
+    </ion-select-option>
+    
+    <ion-select-option *ngIf="locations.length === 0" [value]="'add_new'">➕ Agregar nueva dirección</ion-select-option>  
+  </ion-select>
+</div>
+
 
   <!-- Opciones de método de pago -->
   <div style="margin-left: 7%; margin-right: 7%;">
@@ -54,7 +63,11 @@
   </div>
 
   <!-- Botón para enviar la orden -->
-  <div class="button-container">
-    <ion-button class="login-button" (click)="makeOrder()">Enviar orden</ion-button>
-  </div>
+<!-- Botón para enviar la orden -->
+<div class="button-container">
+  <ion-button class="login-button" (click)="makeOrder()" [disabled]="selectedLocation === 'empty' || !selectedLocation">
+    Enviar orden
+  </ion-button>
+</div>
+
 </ion-card>

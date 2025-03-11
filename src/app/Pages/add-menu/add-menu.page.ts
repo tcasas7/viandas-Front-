@@ -19,7 +19,7 @@ export class AddMenuPage {
 
   minimoPlatosDescuento?: number;
 
-  apiUrl = 'http://localhost:5009/api/configuracion';
+  apiUrl = 'https://5d4lf267-5009.brs.devtunnels.ms/api/configuracion';
 
   constructor(
     private menusService: MenusService,
