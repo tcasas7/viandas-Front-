@@ -73,6 +73,35 @@
     width: 50%;
   }
   
+  .order-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 10px; /* Espaciado entre los botones */
+  }
+  
+  .copy-icon {
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #595755;
+  }
+  
+  .copy-icon:hover {
+    color: #000;
+  }
+  
+  .collapse-icon {
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #595755;
+  }
+  
+
   .register-button:hover {
     transition: all 0.18s ease;
     color: rgb(116, 116, 241);

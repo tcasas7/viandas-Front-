@@ -25,6 +25,25 @@ export class AddDetailsModalComponent implements OnInit {
   response: ResponseObject = new ResponseObject();
 
   constructor(private loadingCtrl: LoadingController, private alertTool: AlertTool, private ordersService: OrdersService) {}
+  
+  ngOnInit(): void {
+    this.setDefaultLocation();
+  }
+
+  setDefaultLocation() {
+    if (this.locations.length > 0) {
+      const defaultLocation = this.locations.find(e => e.isDefault);
+      this.selectedLocation = defaultLocation ? defaultLocation.dir : this.locations[0].dir;
+    }
+  }
+
+  handleSelectionDir(event: any) {
+    if (event.detail.value === 'add_new') {
+      this.alertTool.presentToastWithRedirect("No tienes direcciones guardadas. Apretar *IR* para agregar direccion.", "/profile");
+    } else {
+      this.selectedLocation = event.detail.value;
+    }
+  }
 
   closeModal() {
     this.closeModalEvent.emit();
@@ -32,14 +51,14 @@ export class AddDetailsModalComponent implements OnInit {
 
 
   makeOrder() {
-    if (this.paymentMethod === -1 || this.selectedLocation === 'empty') {
-        this.alertTool.presentToast("Campos vacíos, por favor llene todos los campos.");
+    if (this.paymentMethod === -1 || this.selectedLocation === 'empty' || this.selectedLocation === 'add_new' || !this.selectedLocation) {
+        this.alertTool.presentToast("⚠️ Debes seleccionar una dirección válida antes de enviar la orden.");
         return;
     }
 
     // 🚨 Validar fechas antes de enviar el pedido
     if (!this.isOrderValid()) {
-        this.alertTool.presentToast("🚫 Error: No puedes hacer pedidos para el mismo día, días pasados o de la próxima semana. Los pedidos para la semana que viene se habilitan el viernes a las 10 AM.");
+        this.alertTool.presentToast("🚫 No puedes hacer pedidos para el mismo día, días pasados o de la próxima semana.");
         return;
     }
 
@@ -65,6 +84,7 @@ export class AddDetailsModalComponent implements OnInit {
 
     this.placeOrder();
 }
+
 
   isOrderValid(): boolean {
     const today = new Date();
@@ -95,18 +115,7 @@ export class AddDetailsModalComponent implements OnInit {
       })
   );
 }
-
-
-    ngOnInit() {
-      if (this.locations.length === 0) {
-        this.locations = [{
-          dir: 'Dirección de prueba', isDefault: true,
-          id: 0
-        }];
-      }
-    }
-        
-
+ 
     placeOrder() {
       this.isSubmitting = true; 
       this.makeLoadingAnimation();
@@ -135,10 +144,6 @@ export class AddDetailsModalComponent implements OnInit {
       );
   }
   
-
-  handleSelectionDir(event: any) {
-    this.selectedLocation = event.detail.value;
-  }
   handleSelectionPay(event: any) {
     this.paymentMethod = event.detail.value;
   }

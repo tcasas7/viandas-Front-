@@ -30,9 +30,8 @@ export class RegisterModalComponent {
     this.registerForm = new FormGroup({
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
-      preFix: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{2}$')]), // Prefijo de 2 dígitos
-      areaCode: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{2,4}$')]), 
-      phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7}$')]), // Número de 7 dígitos
+      phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+      countryCode: new FormControl('+54', [Validators.required]), 
       email: new FormControl('', [Validators.required, Validators.email]), // Email válido
       password: new FormControl('', [
         Validators.required,
@@ -51,16 +50,15 @@ export class RegisterModalComponent {
 
     this.registerData.firstName = this.registerForm.get("firstName")?.value;
     this.registerData.lastName = this.registerForm.get("lastName")?.value;
-    this.registerData.phone = '+' + this.registerForm.get("preFix")?.value + ' ' + 
-                              this.registerForm.get("areaCode")?.value + ' ' + 
-                              this.registerForm.get("phone")?.value;
+    this.registerData.phone = this.registerForm.get("countryCode")?.value + this.registerForm.get("phone")?.value; // ☑️ Se guarda directamente como un solo número
+    //this.registerData.address = this.registerForm.get("address")?.value; // ☑️ Se asocia la dirección
     this.registerData.email = this.registerForm.get("email")?.value;
     this.registerData.password = this.registerForm.get("password")?.value;
 
     this.makeLoadingAnimation();
     this.doRequest();
   }
-
+  
   doRequest() {
     this.userService.Register(this.registerData).subscribe(response => {
       this.response = response as ResponseObject;

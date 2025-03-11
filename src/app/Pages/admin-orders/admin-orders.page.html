@@ -42,8 +42,21 @@
   <!-- LISTA DE ÓRDENES FILTRADAS -->
   <ion-card color="light" *ngFor="let order of filteredOrders" class="order-card">
     <ion-card-header (click)="toggleOrderCollapse(order)">
-      <b>Resumen de la orden</b>
-      <ion-icon [name]="order.isCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'" class="collapse-icon"></ion-icon>
+      <div class="order-header-container">
+      <b>Resumen de la orden - {{ order.orderDate | date: 'dd/MM/yyyy HH:mm' }}</b>
+     
+      <div class="button-container">
+        <ion-icon 
+          name="clipboard-outline" 
+          class="copy-icon"
+          (click)="copyOrderSummary(order)">
+        </ion-icon>
+        <ion-icon 
+          [name]="order.isCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'" 
+          class="collapse-icon">
+        </ion-icon>
+      </div>
+    </div>
     </ion-card-header>
 
     <ion-card-content *ngIf="!order.isCollapsed">
@@ -60,6 +73,8 @@
           🍽️ {{ delivery.type }} - Cantidad: {{ delivery.quantity }}
         </div>
       </div>
+
+      
 
       <div style="font-size: x-large; font-weight: bold;">
         <div style="float: inline-start">Total: </div> 

@@ -16,7 +16,7 @@ export class OrderResumeComponent implements OnInit {
 
   minimoPlatosDescuento?: number;
 
-  apiUrl = 'http://localhost:5009/api/configuracion/minimo-platos-descuento';
+  apiUrl = 'https://5d4lf267-5009.brs.devtunnels.ms/api/configuracion/minimo-platos-descuento';
 
   constructor(private http: HttpClient, private cdRef: ChangeDetectorRef) {}
   

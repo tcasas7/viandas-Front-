@@ -375,4 +375,29 @@ async hideOrder(orderId: number) {
   closeModal() {
     this.activeModal = 0;
   }
+
+  copyOrderSummary(order: any) {
+    const formattedDate = new Date(order.orderDate).toLocaleString('es-ES', {
+      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  
+    const summary = `
+    Resumen de la orden - ${formattedDate}
+    Descripción: ${order.description || 'Sin descripción'}
+    Método de pago: ${order.paymentMethod === 0 ? 'Efectivo' : 'Transferencia'}
+    Cantidad de Platos: ${order.totalPlates ?? 'No disponible'}
+    Cliente: ${order.clientEmail}
+    Teléfono: ${order.clientPhone}
+    Dirección: ${order.location}
+    Total: $${order.price ?? 'No disponible'}
+    `;
+  
+    navigator.clipboard.writeText(summary.trim()).then(() => {
+      this.alertTool.presentToast("📋 Resumen copiado al portapapeles");
+    }).catch(err => {
+      this.alertTool.presentToast("⚠️ Error al copiar el resumen");
+    });
+  }
+  
+
 }

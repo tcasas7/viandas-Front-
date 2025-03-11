@@ -232,11 +232,30 @@ export class HomePage implements OnInit {
   }
 
   addToCart(item: CartItem) {
+    if (this.isPastDayOrToday(item.day)) {
+      this.alertTool.presentAlert(
+        "Los viernes se actualiza el Menú", 
+        "", 
+        "🚫 No puedes agregar un pedido para el mismo día o días pasados."
+      );
+      return; // Bloqueamos la acción de agregar al carrito
+    }
+  
     item.total++;
     this.totalUnits++;
     this.modifyItemInOrders(item);
   }
 
+  isPastDayOrToday(dayNumber: number): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Elimina la hora para comparar solo la fecha
+  
+    const todayDayOfWeek = today.getDay(); // 0=Domingo, 1=Lunes, ..., 6=Sábado
+  
+    return dayNumber <= todayDayOfWeek && todayDayOfWeek !== 5;
+  }
+  
+  
   modifyItemInOrders(item: CartItem) {
     for (const order of this.orders) {
       for (const deliv of order.deliveries) {
@@ -286,7 +305,7 @@ export class HomePage implements OnInit {
     this.finalDiscountedTotal = 0; // Reiniciar total con descuento
   
     // Obtener la cantidad mínima de platos desde el backend
-    this.http.get<{ minimoPlatosDescuento: number }>('http://localhost:5009/api/configuracion/minimo-platos-descuento')
+    this.http.get<{ minimoPlatosDescuento: number }>('https://5d4lf267-5009.brs.devtunnels.ms/api/configuracion/minimo-platos-descuento')
       .subscribe(response => {
         const minimoPlatosDescuento = response.minimoPlatosDescuento;
   
