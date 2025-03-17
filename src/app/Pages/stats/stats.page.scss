@@ -98,3 +98,30 @@ button.reject:hover {
   display: block;
   margin-bottom: 10px;
 }
+@media (max-width: 768px) {
+  .table-container {
+    width: 100%;
+    overflow-x: auto; // 🔹 Permite hacer scroll horizontal
+  }
+
+  table {
+    min-width: 600px; // 🔹 Evita que la tabla se comprima demasiado en pantallas pequeñas
+  }
+
+  th, td {
+    white-space: nowrap; // 🔹 Evita que el texto se corte o haga saltos de línea
+    font-size: 14px; // 🔹 Reduce el tamaño del texto en mobile para mejorar legibilidad
+    padding: 8px; // 🔹 Ajusta el padding para que no se vea tan grande
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column; // 🔹 Apila los botones "Aprobar" y "Rechazar"
+    gap: 5px;
+  }
+
+  button {
+    font-size: 12px; // 🔹 Reduce el tamaño de los botones en mobile
+    padding: 6px 10px;
+  }
+}

@@ -7,6 +7,69 @@
   transform: translateY(-50%);
 }
 
+.scroll-hint {
+  text-align: center;
+  font-size: 1rem;
+  color: #777;
+  margin-top: 10px;
+  animation: blink 1.5s infinite;
+  
+  @media (min-width: 769px) { // Ocultar en desktop
+    display: none;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 768px) { // Solo en mobile
+  .carousel-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center; // Centra los productos
+    text-align: center;
+    width: 100%;
+  }
+
+  .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+    max-width: 90%; // Mantiene un tamaño uniforme en mobile
+  }
+
+  .price-cart-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; // Asegura que el precio y carrito queden bien alineados
+    width: 100%;
+    padding: 0 10px; // Añade un pequeño margen para evitar que se vea mal en los lados
+    gap: 10px;
+  }
+
+  .cart-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px; // Espaciado uniforme entre los íconos del carrito
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-content-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth; // Desplazamiento más fluido
+    padding: 0 5%; // Asegura que el contenido se vea alineado con los bordes
+  }
+  .carousel-content-wrapper {
+    padding-bottom: 6vh; // Espacio para evitar que el botón tape el último producto
+  }
+}
+
 #container strong {
   font-size: 20px;
   line-height: 26px;
@@ -32,6 +95,7 @@
   padding-left: 2vw;
   font-weight: bold;
 }
+
 
 .user-label {
   margin-right: 2vw;
@@ -136,18 +200,53 @@ ion-content {
 }
 
 .order-button {
-  margin-top: 2vh;
-  font-size: 16px;
+  position: fixed;
+  bottom: 20px; // Flotante en la parte inferior
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  
+  font-size: 14px;
   font-weight: bold;
-  height: 6vh;
-  width: 88vw;
+  height: 5vh; // 🔹 Reduce altura para que no se vea tan grande
+  width: 100%;
   color: #595755;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: #4CAF50; // Verde sólido
+  border-radius: 5px;
+}
+@media (max-width: 768px) { // Solo en mobile
+  .order-button {
+    border-radius: 3px; // Bordes casi rectos
+    height: 6vh;
+    width: 85vw; // Un poco menos de ancho para que no ocupe toda la pantalla
+    max-width: 350px; // Evita que sea demasiado grande en pantallas anchas
+  }
 }
 
-ion-button {
-  text-transform: none;
+.order-button-container {
+  text-align: center;
+
+  @media (max-width: 768px) { // Solo cambia en mobile
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75%; // Evita que se haga más ancho de lo necesario
+    max-width: 280%; // Elimina la limitación de 400px si no es necesaria
+    z-index: 100;
+  }
+}
+
+
+
+ion-button.order-button {
+  text-transform: none; // Evita que el texto se ponga en mayúsculas
+  border-radius: 3px; // Lo hace más rectangular
+  height: 6vh;
+  width: 80vw; 
+  
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .image-container {

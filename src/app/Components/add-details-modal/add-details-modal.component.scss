@@ -105,4 +105,45 @@
     --indicator-color: var(--ion-color-primary) !important;
   }
   
+  @media (max-width: 768px) {
+    ion-card {
+      padding: 5px;
+      max-height: 55vh !important;  // 🔹 Reduce la altura para evitar espacio extra
+      overflow-y: auto !important;
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .auto-resize-textarea {
+      min-height: 10vh;  // 🔹 Reduce el área de texto
+      max-height: 15vh;
+      margin-bottom: 5px;
+      overflow-y: auto;
+      padding: 5px; // 🔹 Ajustar padding interno
+    }
+  
+    ion-textarea {
+      padding: 8px;
+    }
+  
+    // 🔹 Ajustar el contenedor de la dirección
+    div[style*="margin-left: 5%; margin-right: 5%;"] {
+      margin-bottom: 0 !important;
+    }
+  
+    // 🔹 Ajustar el contenedor del método de pago
+    div[style*="margin-left: 7%; margin-right: 7%;"] {
+      margin-top: 5px;
+      padding: 0;
+    }
+  
+    // 🔹 Ajuste del botón
+    .button-container {
+      position: relative; // Permite que el botón fluya correctamente
+      bottom: 0;
+      background: none;
+      padding: 5px 0;
+    }
+  }
+  
   

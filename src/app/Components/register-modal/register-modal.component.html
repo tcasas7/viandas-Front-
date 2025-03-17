@@ -19,28 +19,37 @@
 
 
 
-<ion-item color="translucent">
-  <ion-input label="Número *" formControlName="phone" type="tel" placeholder="Ej: 2231234567" maxlength="10"></ion-input>
-  <ion-select formControlName="countryCode" interface="popover" class="country-select">
-    <ion-select-option value="+54">🇦🇷 +54 (Argentina)</ion-select-option>
-    <ion-select-option value="+598">🇺🇾 +598 (Uruguay)</ion-select-option>
-    <ion-select-option value="+56">🇨🇱 +56 (Chile)</ion-select-option>
-    <ion-select-option value="+591">🇧🇴 +591 (Bolivia)</ion-select-option>
-    <ion-select-option value="+595">🇵🇾 +595 (Paraguay)</ion-select-option>
-    <ion-select-option value="+51">🇵🇪 +51 (Perú)</ion-select-option>
-    <ion-select-option value="+57">🇨🇴 +57 (Colombia)</ion-select-option>
-    <ion-select-option value="+507">🇵🇦 +507 (Panamá)</ion-select-option>
-    <ion-select-option value="+503">🇸🇻 +503 (El Salvador)</ion-select-option>
-    <ion-select-option value="+502">🇬🇹 +502 (Guatemala)</ion-select-option>
-    <ion-select-option value="+505">🇳🇮 +505 (Nicaragua)</ion-select-option>
-    <ion-select-option value="+506">🇨🇷 +506 (Costa Rica)</ion-select-option>
-    <ion-select-option value="+593">🇪🇨 +593 (Ecuador)</ion-select-option>
-    <ion-select-option value="+1">🇺🇸 +1 (EE.UU.)</ion-select-option>
-    <ion-select-option value="+34">🇪🇸 +34 (España)</ion-select-option>
-    <ion-select-option value="+52">🇲🇽 +52 (México)</ion-select-option>
-    <ion-select-option value="+55">🇧🇷 +55 (Brasil)</ion-select-option>
-  </ion-select>
-</ion-item>
+    <ion-item color="translucent">
+      <div class="phone-container">
+        <!-- Selector de país -->
+        <ion-select formControlName="countryCode" interface="popover" class="country-select">
+          <ion-select-option value="+54">🇦🇷 +54 (Argentina)</ion-select-option>
+          <ion-select-option value="+598">🇺🇾 +598 (Uruguay)</ion-select-option>
+          <ion-select-option value="+56">🇨🇱 +56 (Chile)</ion-select-option>
+          <ion-select-option value="+591">🇧🇴 +591 (Bolivia)</ion-select-option>
+          <ion-select-option value="+595">🇵🇾 +595 (Paraguay)</ion-select-option>
+          <ion-select-option value="+51">🇵🇪 +51 (Perú)</ion-select-option>
+          <ion-select-option value="+57">🇨🇴 +57 (Colombia)</ion-select-option>
+          <ion-select-option value="+507">🇵🇦 +507 (Panamá)</ion-select-option>
+          <ion-select-option value="+503">🇸🇻 +503 (El Salvador)</ion-select-option>
+          <ion-select-option value="+502">🇬🇹 +502 (Guatemala)</ion-select-option>
+          <ion-select-option value="+505">🇳🇮 +505 (Nicaragua)</ion-select-option>
+          <ion-select-option value="+506">🇨🇷 +506 (Costa Rica)</ion-select-option>
+          <ion-select-option value="+593">🇪🇨 +593 (Ecuador)</ion-select-option>
+          <ion-select-option value="+1">🇺🇸 +1 (EE.UU.)</ion-select-option>
+          <ion-select-option value="+34">🇪🇸 +34 (España)</ion-select-option>
+          <ion-select-option value="+52">🇲🇽 +52 (México)</ion-select-option>
+          <ion-select-option value="+55">🇧🇷 +55 (Brasil)</ion-select-option>
+          <ion-select-option value="+53">🇨🇺 +53 (Cuba)</ion-select-option>
+          <ion-select-option value="+58">🇻🇪 +58 (Venezuela)</ion-select-option>
+
+        </ion-select>
+    
+        <!-- Campo de número de teléfono -->
+        <ion-input label="Número *" formControlName="phone" type="tel" placeholder="Ej: 2231234567" maxlength="10"></ion-input>
+      </div>
+    </ion-item>
+    
 
 <small *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" style="color: red;">
   ❌ Ingrese un número de **10 dígitos** sin espacios ni guiones.

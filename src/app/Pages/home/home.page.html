@@ -72,6 +72,11 @@
     <div [class]="day.class" *ngFor="let day of daysOfWeek">{{day.day}}</div>
   </ion-item>
 
+  <p class="scroll-hint" style="margin-left: 31.00vw; text-align: left; width: fit-content;color: rgba(100, 100, 100, 0.7);">
+    ← Desliza para ver más →
+</p>
+
+  
   <!-- Carrusel de productos -->
   <div class="carousel-container">
     <div *ngIf="!isDesktop" style="padding-top: 2.7vh;" class="card-container">
@@ -119,8 +124,9 @@
     
   </div>
 
-  <!-- Botón para realizar pedido -->
-  <div style="text-align: center;">
-    <ion-button lines="none" color="primary" class="order-button" (click)="makeOrder()">Realizar pedido</ion-button>
-  </div>
-</ion-content>
+ 
+  <div style="height: 30px;"></div> 
+<!-- Botón para realizar pedido -->
+<div class="order-button-container">
+  <ion-button lines="none" color="primary" class="order-button" (click)="makeOrder()">Realizar pedido</ion-button>
+</div>

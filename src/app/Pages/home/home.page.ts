@@ -82,6 +82,7 @@ export class HomePage implements OnInit {
   placeOrder!: PlaceOrderDTO;
   item: CartItem;
   baseRoute: any;
+  
 
   constructor(
     private alertTool: AlertTool,
