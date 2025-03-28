@@ -294,7 +294,7 @@ export class OrdersPage {
     }
   
     if (!(date instanceof Date) || isNaN(date.getTime())) {
-      console.error("❌ Error: Fecha inválida", date);
+      //console.error("❌ Error: Fecha inválida", date);
       return "Fecha inválida"; 
     }
   
@@ -323,7 +323,7 @@ export class OrdersPage {
         this.contactResponse = response as ResponseObjectModel<ContactDTO>;
         this.contact = this.contactResponse.model;
         
-        console.log("📌 Modal activado con datos:", this.contact); // Debugging
+        //console.log("📌 Modal activado con datos:", this.contact); // Debugging
         
         this.paymentInfoModalIsActive = true; // Activamos el modal
       },
@@ -338,13 +338,13 @@ export class OrdersPage {
       response => {
         if (response.status === 200) {
           this.toDisplayOrders = response.data;
-          console.log('Órdenes cargadas:', this.toDisplayOrders);
+          //console.log('Órdenes cargadas:', this.toDisplayOrders);
         } else {
-          console.error('Error al cargar órdenes:', response.message);
+          //console.error('Error al cargar órdenes:', response.message);
         }
       },
       error => {
-        console.error('Error al cargar órdenes:', error);
+        //console.error('Error al cargar órdenes:', error);
       }
     );
   }
@@ -352,7 +352,7 @@ export class OrdersPage {
   viewProducts(orderId: number) {
     this.ordersService.GetProductsByOrderId(orderId).subscribe(
       products => {
-        console.log(products);
+        //console.log(products);
       },
       error => {
         this.alertTool.presentToast('Error al obtener los productos de la orden.');
@@ -362,7 +362,7 @@ export class OrdersPage {
 
   closePaymentInfoModal() {
     this.paymentInfoModalIsActive = false;
-    console.log("📌 Modal cerrado"); // Debugging
+    //console.log("📌 Modal cerrado"); // Debugging
 }
 
 }

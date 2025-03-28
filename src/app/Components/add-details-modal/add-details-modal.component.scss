@@ -1,149 +1,107 @@
 .menu {
-    float: left;
-    width: 50%;
-    text-align: left;
-    vertical-align: bottom;
-    font-size: 1.5rem;
-    width: 50%;
-    height: 24px;
-    padding-left: 2vw;
-    font-weight: bold;
-  }
-  
-  .login-button { 
-    margin-top: 4%;
-    font-size: 16px;
-    font-weight: bold;
-    height: 6%;
-    width: 80%;
-    color: #595755;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.2vh;
-  }
-  
-  .register-button {
-    text-align: right;
-    float: right;
-    transition: all 0.18s ease;
-    margin-top: 1.2vh;
-    margin-bottom: 1.5vh;
-    padding-right: 3vw;
-    color: blue;
-    cursor: pointer;
-    font-size: 1.7vh;
-    width: 50%;
-  }
-  
-  .register-button:hover {
-    transition: all 0.18s ease;
-    color: rgb(116, 116, 241);
-    text-decoration: underline;
-  }
-  
-  .retrieve-password-button {
-    text-align: left;
-    float: left;
-    transition: all 0.18s ease;
-    margin-top: 1.2vh;
-    margin-bottom: 1.5vh;
-    padding-left: 3vw;
-    cursor: pointer;
-    font-size: 1.7vh;
-    width: 50%;
-  }
-  
-  .retrieve-password-button:hover {
-    transition: all 0.18s ease;
-    color: gray;
-  }
-  
-  .tittle-item {
-    margin-bottom: 0px;
-    font-weight: bold;
-    font-size: larger;
-  }
-  
-  .user-div {
-    vertical-align: bottom;
-    margin-left: 2vw;
-    font-size: 2.5vh;
-    text-align: left;
-    width: 50%;
-  }
-  
-  .user-label {
-    vertical-align: bottom;
-    cursor: pointer;
-  }
+  float: left;
+  width: 50%;
+  text-align: left;
+  vertical-align: bottom;
+  font-size: 1.5rem;
+  width: 50%;
+  height: 24px;
+  padding-left: 2vw;
+  font-weight: bold;
+}
 
-  .auto-resize-textarea {
-    height: auto;
-    min-height: 30vh;
-    max-height: 70vh;
-    overflow: hidden;
-  }
-  
-  .auto-resize-textarea textarea {
-    height: auto !important;
-    min-height: 30vh;
-    max-height: 70vh;
-    overflow: hidden !important;
-    resize: none;
-  }
+.login-button { 
+  margin-top: 4%;
+  font-size: 16px;
+  font-weight: bold;
+  height: 6%;
+  width: 80%;
+  color: #595755;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
-  ion-segment {
-    --indicator-color: var(--ion-color-primary) !important;
-  }
-  
-  ion-segment-button {
-    --indicator-color: var(--ion-color-primary) !important;
-  }
-  
-  @media (max-width: 768px) {
-    ion-card {
-      padding: 5px;
-      max-height: 55vh !important;  // 🔹 Reduce la altura para evitar espacio extra
-      overflow-y: auto !important;
-      display: flex;
-      flex-direction: column;
-    }
-  
-    .auto-resize-textarea {
-      min-height: 10vh;  // 🔹 Reduce el área de texto
-      max-height: 15vh;
-      margin-bottom: 5px;
-      overflow-y: auto;
-      padding: 5px; // 🔹 Ajustar padding interno
-    }
-  
-    ion-textarea {
-      padding: 8px;
-    }
-  
-    // 🔹 Ajustar el contenedor de la dirección
-    div[style*="margin-left: 5%; margin-right: 5%;"] {
-      margin-bottom: 0 !important;
-    }
-  
-    // 🔹 Ajustar el contenedor del método de pago
-    div[style*="margin-left: 7%; margin-right: 7%;"] {
-      margin-top: 5px;
-      padding: 0;
-    }
-  
-    // 🔹 Ajuste del botón
-    .button-container {
-      position: relative; // Permite que el botón fluya correctamente
-      bottom: 0;
-      background: none;
-      padding: 5px 0;
-    }
-  }
-  
-  
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.2vh;
+}
+
+.register-button {
+  text-align: right;
+  float: right;
+  transition: all 0.18s ease;
+  margin-top: 1.2vh;
+  margin-bottom: 1.5vh;
+  padding-right: 3vw;
+  color: blue;
+  cursor: pointer;
+  font-size: 1.7vh;
+  width: 50%;
+}
+
+.register-button:hover {
+  transition: all 0.18s ease;
+  color: rgb(116, 116, 241);
+  text-decoration: underline;
+}
+
+.retrieve-password-button {
+  text-align: left;
+  float: left;
+  transition: all 0.18s ease;
+  margin-top: 1.2vh;
+  margin-bottom: 1.5vh;
+  padding-left: 3vw;
+  cursor: pointer;
+  font-size: 1.7vh;
+  width: 50%;
+}
+
+.retrieve-password-button:hover {
+  transition: all 0.18s ease;
+  color: gray;
+}
+
+.tittle-item {
+  margin-bottom: 0px;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.user-div {
+  vertical-align: bottom;
+  margin-left: 2vw;
+  font-size: 2.5vh;
+  text-align: left;
+  width: 50%;
+}
+
+.user-label {
+  vertical-align: bottom;
+  cursor: pointer;
+}
+
+.auto-resize-textarea {
+  height: auto;
+  min-height: 30vh;
+  max-height: 70vh;
+  overflow: hidden;
+}
+
+.auto-resize-textarea textarea {
+  height: auto !important;
+  min-height: 30vh;
+  max-height: 70vh;
+  overflow: hidden !important;
+  resize: none;
+}
+
+ion-segment {
+  --indicator-color: var(--ion-color-primary) !important;
+}
+
+ion-segment-button {
+  --indicator-color: var(--ion-color-primary) !important;
+}
+

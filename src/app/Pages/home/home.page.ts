@@ -149,16 +149,16 @@ export class HomePage implements OnInit {
   
       // Iterar sobre los menús y productos para obtener las imágenes
       this.menus.forEach(menu => {
-        console.log(`Menú: ${menu.category}, Productos:`, menu.products);
+        //console.log(`Menú: ${menu.category}, Productos:`, menu.products);
         menu.products.forEach(product => {
-          console.log(`Producto ${product.name} tiene ID: ${product.id}`);
+          //console.log(`Producto ${product.name} tiene ID: ${product.id}`);
           this.menuService.Image(product.id).subscribe(blob => {
             const objectURL = URL.createObjectURL(blob);
             // Asegúrate de agregar el prefijo 'media/' a la URL de la imagen
             product.imagePath = `${this.baseRoute}media/${product.imagePath}`;
-            console.log(`Image URL for product ${product.id}:`, objectURL);
+            //console.log(`Image URL for product ${product.id}:`, objectURL);
           }, error => {
-            console.error('Error fetching image', error);
+            //console.error('Error fetching image', error);
           });
         });
       });
@@ -169,7 +169,7 @@ export class HomePage implements OnInit {
     } catch (error) {
       this.closeLoader();
       this.alertTool.presentToast("Oops... Ocurrió un error");
-      console.error('Error fetching data:', error);
+      //console.error('Error fetching data:', error);
     }
   }
   
@@ -318,7 +318,7 @@ export class HomePage implements OnInit {
           0
         );
   
-        console.log(`Total de Platos: ${totalPlatesForOrder} | Mínimo para descuento: ${minimoPlatosDescuento}`);
+        //console.log(`Total de Platos: ${totalPlatesForOrder} | Mínimo para descuento: ${minimoPlatosDescuento}`);
   
         // Procesar cada pedido y actualizar precios
         this.orders.forEach((order) => {
@@ -347,11 +347,11 @@ export class HomePage implements OnInit {
                 this.total += delivery.productPrice * delivery.quantity;
                 this.finalDiscountedTotal += delivery.appliedPrice * delivery.quantity;
   
-                console.log(
+                /*console.log(
                   `Producto: ${delivery.productName}, Cantidad: ${delivery.quantity}, ` +
                   `Normal: ${delivery.productPrice}, Promo: ${delivery.productPromoPrice}, ` +
                   `Aplicado: ${delivery.appliedPrice}`
-                );
+                );*/
               }
             }
           });
@@ -441,9 +441,9 @@ export class HomePage implements OnInit {
     try {
       const blob = await this.fetchImageBlob(item.id);
       item.sanitizedImagePath = this.getSanitizedUrl(blob);
-      console.log(item.sanitizedImagePath); // Para verificar si la URL de la imagen es correcta
+      //console.log(item.sanitizedImagePath); // Para verificar si la URL de la imagen es correcta
     } catch (error) {
-      console.error('Error fetching image:', error);
+      //console.error('Error fetching image:', error);
       item.sanitizedImagePath = ''; // Manejar el error asignando un valor vacío
     }
   }
@@ -455,7 +455,7 @@ export class HomePage implements OnInit {
           resolve(response);
         },
         (error) => {
-          console.error('Error fetching image from API:', error);
+          //console.error('Error fetching image from API:', error);
           reject(error);
         }
       );
@@ -577,7 +577,7 @@ export class HomePage implements OnInit {
         case 3: this.orderWednesday.deliveries.push(delivDTO); break;
         case 4: this.orderThursday.deliveries.push(delivDTO); break;
         case 5: this.orderFriday.deliveries.push(delivDTO); break;
-        default: console.log('Día de entrega inválido:', prod.day); break;
+        //default: console.log('Día de entrega inválido:', prod.day); break;
     }
 }
 

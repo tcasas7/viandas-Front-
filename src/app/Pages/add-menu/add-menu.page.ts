@@ -56,7 +56,7 @@ export class AddMenuPage {
       this.alertTool.presentToast("✅ Se actualizó la cantidad mínima de platos.");
     }, error => {
       loading.dismiss();
-      console.error("Error al actualizar el mínimo de platos:", error);
+      //console.error("Error al actualizar el mínimo de platos:", error);
       this.alertTool.presentToast("❌ Hubo un error al actualizar el mínimo de platos.");
     });
   }
@@ -74,7 +74,7 @@ export class AddMenuPage {
       this.alertTool.presentToast("✅ Se actualizó la cantidad mínima de platos.");
     }, error => {
       loading.dismiss();
-      console.error("Error al actualizar el mínimo de platos:", error);
+      //console.error("Error al actualizar el mínimo de platos:", error);
       this.alertTool.presentToast("❌ Hubo un error al actualizar el mínimo de platos.");
     });
   }
@@ -139,7 +139,7 @@ this.router.navigate(['/admin']);
       this.proteicPromoPrice = this.proteicMenu.precioPromo || 0;
   
     }, error => {
-      console.error("Error al cargar menús:", error);
+      //console.error("Error al cargar menús:", error);
     });
   }
 
@@ -165,7 +165,7 @@ this.router.navigate(['/admin']);
         this.alertTool.presentToast('Error al actualizar los menús');
       }
     }, error => {
-      console.error("Error al enviar menús:", error);
+      //console.error("Error al enviar menús:", error);
       this.alertTool.presentToast('Error al enviar los menús');
     });
   }

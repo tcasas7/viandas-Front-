@@ -266,15 +266,15 @@ async getData() {
 
   getUserProfile() {
     this.userService.getUserProfile().subscribe((response: any) => {
-      console.log("Perfil del usuario:", response);
+      //console.log("Perfil del usuario:", response);
       this.user = response.model;  // Aquí debe estar el modelo completo
-      console.log("¿Es repartidor?", this.user.role === 1);
+      //Console.log("¿Es repartidor?", this.user.role === 1);
       this.isDeliveryRole = this.user.role === 1;
   });
   
   }
 
   viewAssignedAddresses() {
-    console.log('Mostrando direcciones asignadas...');
+    //console.log('Mostrando direcciones asignadas...');
   }
 }

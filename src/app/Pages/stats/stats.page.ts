@@ -64,7 +64,7 @@ export class StatsPage {
       (response: any) => {
         if (response && response.model) {
           this.clientes = response.model;
-          console.log('Clientes cargados:', this.clientes);
+          //console.log('Clientes cargados:', this.clientes);
         } else {
           this.alertTool.presentToast('No se encontraron clientes pendientes.');
         }
@@ -95,14 +95,14 @@ export class StatsPage {
                 : 'Sin direcciones'
             }));
   
-          console.log('Clientes activos:', this.clientesActivos);
+          //console.log('Clientes activos:', this.clientesActivos);
         } else {
           this.alertTool.presentToast('No se encontraron clientes activos.');
         }
         this.cdr.detectChanges();
       },
       (error: any) => {
-        console.error('Error al cargar clientes activos:', error);
+        //console.error('Error al cargar clientes activos:', error);
         this.alertTool.presentToast('Oops... Error al cargar los clientes activos!');
         this.cdr.detectChanges();
       }
@@ -130,7 +130,7 @@ export class StatsPage {
         this.alertTool.presentToast('Cliente rechazado exitosamente!');
       },
       error: (err) => {
-        console.error('Error al rechazar cliente:', err);
+        //console.error('Error al rechazar cliente:', err);
         this.alertTool.presentToast('Oops... No se pudo rechazar el cliente!');
       }
     });

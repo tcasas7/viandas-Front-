@@ -192,7 +192,7 @@ export class AdminOrdersPage implements OnInit{
 
       this.filteredOrders = [...this.toDisplayOrders];
 
-    console.log("📌 Órdenes visibles (Admin):", this.toDisplayOrders);
+    //console.log("📌 Órdenes visibles (Admin):", this.toDisplayOrders);
 }
 
 
@@ -218,7 +218,7 @@ filterOrders() {
 
       this.filteredOrders.sort((a, b) => b.id - a.id);      
 
-  console.log("📌 Órdenes filtradas:", this.filteredOrders);
+  //console.log("📌 Órdenes filtradas:", this.filteredOrders);
 }
 
 
@@ -292,7 +292,7 @@ async hideOrder(orderId: number) {
   }
 
   showDates() {
-    this.dates.forEach(element => console.log(element));
+    //this.dates.forEach(element => console.log(element));
   }
 
   loadOrders(): void {
@@ -300,13 +300,13 @@ async hideOrder(orderId: number) {
       (response) => {
         if (response?.status === 200) {
           this.toDisplayOrders = response.data.map((order: OrderDTO) => new ClientOrder(order));
-          console.log('Órdenes cargadas:', this.toDisplayOrders);
+          //.log('Órdenes cargadas:', this.toDisplayOrders);
         } else {
-          console.error('Error al cargar órdenes:', response?.message);
+          //console.error('Error al cargar órdenes:', response?.message);
         }
       },
       (error) => {
-        console.error('Error al cargar órdenes:', error);
+        //console.error('Error al cargar órdenes:', error);
       }
     );
   }
