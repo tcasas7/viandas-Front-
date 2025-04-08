@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <ion-header style="align-items: end">
   <ion-toolbar style="background: #c59fbe; border-radius: 0px; width: 50%;" class="gradient-toolbar custom-header">
   </ion-toolbar>
@@ -10,7 +9,7 @@
       <ion-icon (click)="navigateToAdmin()" class="user-label-left" name="arrow-back-outline"></ion-icon>
     </div>
     <ion-buttons slot="end">
-      <ion-button expand="full" color="black" (click)="hidePastOrders()">
+      <ion-button expand="full" color="dark" (click)="hidePastOrders()">
         {{ pastOrdersHidden ? 'Mostrar Órdenes Viejas' : 'Limpiar Órdenes Viejas' }}
       </ion-button>      
     </ion-buttons>

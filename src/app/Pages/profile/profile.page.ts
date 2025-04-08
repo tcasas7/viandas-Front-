@@ -220,26 +220,23 @@ async getData() {
     localStorage.setItem("firstName", this.dataResponse.model.firstName);
     localStorage.setItem("lastName", this.dataResponse.model.lastName);
     this.locations = this.user.locations;
-
     const storedAddress = localStorage.getItem("selectedLocation");
-    
+
     if (storedAddress) {
-      this.selectedLocationId = storedAddress;
+      this.selectedLocationId = Number(storedAddress); // <- Esto es clave
       this.selectedLocation = this.locations.find(location => location.id === this.selectedLocationId) || null;
     } else {
-      // Si no hay dirección guardada, tomar la predeterminada
       const defaultLocation = this.locations.find(e => e.isDefault);
       if (defaultLocation) {
         this.selectedLocationId = defaultLocation.id;
         this.selectedLocation = defaultLocation;
       }
     }
-
+    
     this.saveRole(this.dataResponse.model.role);
 
     this.didLoad = true;
     this.closeLoader();
-    this.selectedLocationId = null;
   }, error => {
     this.closeLoader();
     this.router.navigate(["/unauthorized"]);
