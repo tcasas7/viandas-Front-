@@ -86,33 +86,43 @@ export class AddDetailsModalComponent implements OnInit {
 }
 
 
-  isOrderValid(): boolean {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+isValidOrderDate(date: Date): boolean {
+  const now = new Date();
+  const currentDay = now.getDay(); // 0: domingo, 1: lunes, ..., 5: viernes, 6: sábado
+  const currentTime = now.getHours() + now.getMinutes() / 60;
+  
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  const dayOfWeek = today.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+  const deliveryDate = new Date(date);
+  deliveryDate.setHours(0, 0, 0, 0);
 
+  // 🚫 1. No se puede pedir para días anteriores
+  if (deliveryDate < today) return false;
+
+  // 🚫 2. No se puede pedir para el mismo día después de las 8 AM
+  if (deliveryDate.getTime() === today.getTime() && currentTime >= 8) return false;
+
+  // 🚫 3. Bloqueo total los viernes desde las 8 AM hasta el sábado 00:00
+  if (currentDay === 5 && currentTime >= 8) return false;
+  //if (currentDay === 6 && currentTime < 24) return false;
+
+  // 🚫 4. No se puede pedir para la próxima semana si es de lunes a viernes
+  const daysUntilNextMonday = (8 - currentDay) % 7;
+  const nextMonday = new Date(today);
+  nextMonday.setDate(today.getDate() + daysUntilNextMonday);
+
+  if (deliveryDate >= nextMonday && currentDay >= 1 && currentDay <= 5) return false;
+
+  return true;
+}
+
+isOrderValid(): boolean {
   return this.orders.Orders.every((order) =>
-      order.deliveries.every((delivery) => {
-          let deliveryDate = new Date(delivery.deliveryDate);
-          deliveryDate.setHours(0, 0, 0, 0);
-
-          let deliveryDayOfWeek = deliveryDate.getDay(); 
-
-          // 🚨 No permitir pedidos para el mismo día o días pasados
-          if (deliveryDate <= today) {
-              console.warn(`🚫 Pedido bloqueado: No se puede pedir para el mismo día o días pasados (${deliveryDate.toDateString()}).`);
-              return false;
-          }
-
-          // 🚨 Bloquear lunes y martes de la próxima semana si hoy es martes o más adelante
-          if ((deliveryDayOfWeek === 1 || deliveryDayOfWeek === 2) && today.getDay() >= 2) {
-              console.warn(`🚫 Pedido bloqueado: No se puede hacer pedidos para la próxima semana (${deliveryDate.toDateString()}).`);
-              return false;
-          }
-
-          return true; // ✅ Fecha válida
-      })
+    order.deliveries.every((delivery) => {
+      const deliveryDate = new Date(delivery.deliveryDate);
+      return this.isValidOrderDate(deliveryDate);
+    })
   );
 }
  

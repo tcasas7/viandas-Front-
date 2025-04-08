@@ -109,10 +109,30 @@
   text-align: right;
 }
 
-ion-content {
-  --padding-start: 0;
-  --padding-end: 0;
+html, body, ion-app {
+  height: 90%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
+
+
+ion-content {
+  min-height: 97vh;
+  --padding-bottom: 180px;// evita espacio bajo
+}
+
+.mobile-bottom-spacer {
+  display: none;
+  height: 120px;
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-spacer {
+    display: block;
+  }
+}
+
 
 .carousel-container {
   display: flex;
@@ -125,6 +145,48 @@ ion-content {
   align-items: flex-start;
   padding-left: 1vw;
 }
+
+.footer-social-static {
+  margin-bottom: 0 !important;
+  margin-top: 40px;
+  padding: 24px 16px;
+  background-color: #c59fbe;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-text {
+  max-width: 600px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 24px;
+}
+
+.social-icons ion-icon {
+  font-size: 28px;
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.social-icons ion-icon:hover {
+  transform: scale(1.2);
+  color: #ffffffcc;
+}
+
 
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

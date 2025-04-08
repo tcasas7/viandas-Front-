@@ -124,10 +124,28 @@
     </div>
     
   </div>
-
+  
+  
  
   <div style="height: 30px;"></div> 
 <!-- Botón para realizar pedido -->
-<div class="order-button-container">
-  <ion-button lines="none" color="primary" class="order-button" (click)="makeOrder()">Realizar pedido</ion-button>
-</div>
+<ion-button class="order-button" (click)="makeOrder()">REALIZAR PEDIDO</ion-button>
+
+<!-- Footer no flotante -->
+<footer class="footer-social-static">
+  <div class="footer-content">
+    <div class="footer-text">
+      © 2025 Viandas del Sur - Comidas saludables y caseras todos los días.
+    </div>
+    <div class="social-icons">
+      <a href="https://www.instagram.com/viandasdelsur.mdq/" target="_blank">
+        <ion-icon name="logo-instagram"></ion-icon>
+      </a>
+      <a href="https://web.facebook.com/viandasdelsurmdp" target="_blank">
+        <ion-icon name="logo-facebook"></ion-icon>
+      </a>
+    </div>
+  </div>
+</footer>
+<div class="mobile-bottom-spacer"></div>
+</ion-content>

@@ -233,29 +233,63 @@ export class HomePage implements OnInit {
   }
 
   addToCart(item: CartItem) {
-    if (this.isPastDayOrToday(item.day)) {
+    const deliveryDate = this.getDeliveryDateFromDay(item.day); // convertir número de día a fecha
+  
+    if (!this.isValidOrderDate(deliveryDate)) {
       this.alertTool.presentAlert(
-        "Los viernes se actualiza el Menú", 
-        "", 
-        "🚫 No puedes agregar un pedido para el mismo día o días pasados."
+      "🚫 Los pedidos para la semana que viene se habilitan el sabado 12 AM.",  
+        "",
+      "🚫 No puedes agregar un pedido para el mismo día (después de las 8 AM) ni días pasados."
       );
-      return; // Bloqueamos la acción de agregar al carrito
+      return;
     }
   
     item.total++;
     this.totalUnits++;
     this.modifyItemInOrders(item);
   }
-
-  isPastDayOrToday(dayNumber: number): boolean {
+  
+  getDeliveryDateFromDay(dayNumber: number): Date {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Elimina la hora para comparar solo la fecha
-  
-    const todayDayOfWeek = today.getDay(); // 0=Domingo, 1=Lunes, ..., 6=Sábado
-  
-    return dayNumber <= todayDayOfWeek && todayDayOfWeek !== 5;
+    const todayDay = today.getDay();
+    const daysToAdd = ((dayNumber + 7 - todayDay) % 7);
+    const deliveryDate = new Date(today);
+    deliveryDate.setDate(today.getDate() + daysToAdd);
+    deliveryDate.setHours(0, 0, 0, 0);
+    return deliveryDate;
   }
   
+  
+  isValidOrderDate(date: Date): boolean {
+    const now = new Date();
+    const currentDay = now.getDay(); // 0: domingo, 1: lunes, ..., 5: viernes, 6: sábado
+    const currentTime = now.getHours() + now.getMinutes() / 60;
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+  
+    const deliveryDate = new Date(date);
+    deliveryDate.setHours(0, 0, 0, 0);
+  
+    // 🚫 1. No se puede pedir para días anteriores
+    if (deliveryDate < today) return false;
+  
+    // 🚫 2. No se puede pedir para el mismo día después de las 8 AM
+    if (deliveryDate.getTime() === today.getTime() && currentTime >= 8) return false;
+  
+    // 🚫 3. Bloqueo total los viernes desde las 8 AM hasta el sábado 00:00
+    if (currentDay === 5 && currentTime >= 8) return false;
+    //if (currentDay === 6 && currentTime < 24) return false;
+  
+    // 🚫 4. No se puede pedir para la próxima semana si es de lunes a viernes
+    const daysUntilNextMonday = (8 - currentDay) % 7;
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + daysUntilNextMonday);
+  
+    if (deliveryDate >= nextMonday && currentDay >= 1 && currentDay <= 5) return false;
+  
+    return true;
+  }
   
   modifyItemInOrders(item: CartItem) {
     for (const order of this.orders) {
