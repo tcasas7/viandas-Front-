@@ -30,8 +30,9 @@
   <div class="register-button" (click)="openRegisterModal()">
     No tienes cuenta?
   </div>
-  <div class="retrieve-password-button" (click)="openChangePasswordModal()">
+  <div class="retrieve-password-button" [routerLink]="['/forgot-password']">
     Olvidé mi contraseña
   </div>
+  
 </ion-card>
 

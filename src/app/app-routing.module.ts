@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { ForgotPasswordComponent } from './Pages/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './Pages/reset-password/reset-password.component';
+
 
 const routes: Routes = [
   {
@@ -46,6 +49,14 @@ const routes: Routes = [
   {
     path: 'add-images',
     loadChildren: () => import('./Pages/add-images/add-images.module').then( m => m.AddImagesPageModule)
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent
   }
   
   

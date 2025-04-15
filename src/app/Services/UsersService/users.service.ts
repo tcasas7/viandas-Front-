@@ -137,4 +137,16 @@ export class UsersService extends MainService {
     const headers = this.createHeader(token);
     return this.http.get<UserDTO>(`${this.baseRoute}Users/data`, { headers });
   }
+  
+  resetPassword(payload: { token: string, newPassword: string }) {
+    const headers = this.createHeader(null);
+    return this.http.post(`${this.baseRoute}Users/reset-password`, payload, { headers });
+  }
+  
+  forgotPassword(email: string) {
+    const headers = this.createHeader(null);
+    return this.http.post(`${this.baseRoute}Users/forgot-password`, { email }, { headers });
+  }
+  
+  
 }

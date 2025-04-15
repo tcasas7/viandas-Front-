@@ -381,15 +381,28 @@ async hideOrder(orderId: number) {
       day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
     });
   
+    let deliverySummary = '';
+    const grouped = order.groupedDeliveries;
+  
+    if (grouped && typeof grouped === 'object') {
+      for (const date of Object.keys(grouped)) {
+        deliverySummary += `\n${date}\n`;
+        for (const delivery of grouped[date]) {
+          deliverySummary += `🍽️ ${delivery.type} - Cantidad: ${delivery.quantity}\n`;
+        }
+      }
+    }
+  
     const summary = `
-    Resumen de la orden - ${formattedDate}
-    Descripción: ${order.description || 'Sin descripción'}
-    Método de pago: ${order.paymentMethod === 0 ? 'Efectivo' : 'Transferencia'}
-    Cantidad de Platos: ${order.totalPlates ?? 'No disponible'}
-    Cliente: ${order.clientEmail}
-    Teléfono: ${order.clientPhone}
-    Dirección: ${order.location}
-    Total: $${order.price ?? 'No disponible'}
+  Resumen de la orden - ${formattedDate}
+  Descripción: ${order.description || 'Sin descripción'}
+  Método de pago: ${order.paymentMethod === 0 ? 'Efectivo' : 'Transferencia'}
+  Cantidad de Platos: ${order.totalPlates ?? 'No disponible'}
+  Cliente: ${order.clientEmail}
+  Teléfono: ${order.clientPhone}
+  Dirección: ${order.location}
+  ${deliverySummary.trim()}
+  Total: $${order.price ?? 'No disponible'}
     `;
   
     navigator.clipboard.writeText(summary.trim()).then(() => {
@@ -398,6 +411,7 @@ async hideOrder(orderId: number) {
       this.alertTool.presentToast("⚠️ Error al copiar el resumen");
     });
   }
+  
   
 
 }
